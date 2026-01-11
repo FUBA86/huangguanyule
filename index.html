@@ -382,25 +382,29 @@ body {
 .tab-qs:hover::after { background: #60a5fa; }
 
 .tab-new:hover { border-color: #4ade80; }
-.tab-new:hover::after { background: #4ade80; }</style><script role="script" id="twine-user-script" type="text/twine-javascript"></script><tw-tag name="系统" color="red"></tw-tag><tw-tag name="widget" color="purple"></tw-tag><tw-passagedata pid="1" name="Buy_Gossip" tags="" position="2350,1200" size="100,100">&lt;&lt;set $money -= 50&gt;&gt;
-&lt;&lt;set _rnd to random(1, 100)&gt;&gt;
-
-/* 生成瓜的算法 */
-&lt;&lt;if _rnd &lt; 60&gt;&gt;
-  /* 普通瓜 */
-  &lt;&lt;set _new_gossip to { type: &quot;🟢普通&quot;, level: &quot;green&quot;, desc: &quot;某小花红毯假摔&quot; }&gt;&gt;
-&lt;&lt;elseif _rnd &lt; 90&gt;&gt;
-  /* 大瓜 */
-  &lt;&lt;set _new_gossip to { type: &quot;🔵大瓜&quot;, level: &quot;blue&quot;, desc: &quot;帝国娱乐偷税漏税&quot; }&gt;&gt;
-&lt;&lt;else&gt;&gt;
-  /* 惊天瓜 */
-  &lt;&lt;set _new_gossip to { type: &quot;🔴核弹&quot;, level: &quot;red&quot;, desc: &quot;某顶流甚至有私生子&quot; }&gt;&gt;
-&lt;&lt;/if&gt;&gt;
-
-&lt;&lt;set $gossips.push(_new_gossip)&gt;&gt;
-狗仔发来了一张照片...
-&lt;br&gt;获得情报：_new_gossip.desc
-&lt;br&gt;[[确定|Gossip_Center]]</tw-passagedata><tw-passagedata pid="2" name="Buy_Res_Exec" tags="" position="2450,800" size="100,100">&lt;&lt;set $money -= $cost&gt;&gt;
+.tab-new:hover::after { background: #4ade80; }</style><script role="script" id="twine-user-script" type="text/twine-javascript">/* 全局禁用自动换行：所有节点默认都不会产生空行 */
+Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag><tw-tag name="widget" color="purple"></tw-tag><tw-passagedata pid="1" name="Buy_Gossip" tags="" position="2350,1200" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;div class=&quot;tech-card&quot;&gt;
+    &lt;div class=&quot;header-banner&quot;&gt;&lt;span&gt;📡 正在联络狗仔...&lt;/span&gt;&lt;/div&gt;
+    &lt;div style=&quot;padding:30px; text-align:center;&quot;&gt;
+        &lt;&lt;set $money -= 50&gt;&gt;
+        
+        /* 调用 Widget 生成瓜 */
+        &lt;&lt;Generate_Gossip&gt;&gt;
+        
+        &lt;div style=&quot;font-size:4em; margin-bottom:20px;&quot;&gt;📸&lt;/div&gt;
+        &lt;p&gt;你支付了 50万 信息费。&lt;/p&gt;
+        &lt;p&gt;狗仔发来了一个加密文档...&lt;/p&gt;
+        
+        &lt;div style=&quot;background:#f1f5f9; padding:15px; border-radius:8px; margin:20px auto; max-width:400px; font-weight:bold;&quot;&gt;
+            &lt;&lt;print $last_gossip.label&gt;&gt;：&lt;&lt;print $last_gossip.desc&gt;&gt;
+        &lt;/div&gt;
+        
+        &lt;br&gt;
+        [[📥 收录进档案库|Gossip_Center]]
+    &lt;/div&gt;
+&lt;/div&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="2" name="Buy_Res_Exec" tags="" position="2450,800" size="100,100">&lt;&lt;set $money -= $cost&gt;&gt;
 &lt;&lt;set $stamina -= 10&gt;&gt;
 &lt;&lt;set $resources[$type] += 1&gt;&gt;
 购买成功！获得 1 个 $type.toUpperCase() 级资源。
@@ -789,7 +793,7 @@ body {
       
       /* 执行救助逻辑 */
       &lt;&lt;set $bankruptcy_count += 1&gt;&gt;
-      &lt;&lt;set $money += 1000&gt;&gt; /* 账户增加1000万 */
+      &lt;&lt;set $money += 3000&gt;&gt; /* 账户增加3000万 */
       
       /* 2. 界面显示 */
       &lt;div style=&quot;font-size: 5em; margin-bottom: 10px;&quot;&gt;💸&lt;/div&gt;
@@ -805,7 +809,7 @@ body {
           &lt;p&gt;展鹏还穿着睡衣，一副没睡醒的样子，不耐烦地揉了揉自己乱糟糟的头发，随手将一张黑卡扔到了桌上。&lt;/p&gt;
           
           &lt;p style=&quot;color: #facc15; font-size: 1.4em; font-weight: bold; margin: 25px 0; text-align:center;&quot;&gt;
-              &quot;这里有一千万，拿去刷。&quot;
+              &quot;这里三千万，拿去刷。&quot;
           &lt;/p&gt;
           
           &lt;p&gt;&quot;你哪来的钱？&quot; 你震惊地看着他。&lt;/p&gt;
@@ -818,7 +822,7 @@ body {
           &lt;a data-passage=&quot;Office&quot; class=&quot;mega-btn&quot;&gt;
              😤 拿钱！重振旗鼓！
           &lt;/a&gt;
-          &lt;div style=&quot;margin-top:15px; color:#64748b; font-size:0.9em;&quot;&gt;( 获得资金 +1000万，返回办公室 )&lt;/div&gt;
+          &lt;div style=&quot;margin-top:15px; color:#64748b; font-size:0.9em;&quot;&gt;( 获得资金 +3000万，返回办公室 )&lt;/div&gt;
       &lt;/div&gt;
 
 
@@ -856,36 +860,121 @@ body {
   &lt;&lt;/if&gt;&gt;
 
 &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="10" name="Gossip_Center" tags="" position="2200,1075" size="100,100">!! 🍉 圈内情报局
-当前对手：$rival_company.name (热度: $rival_company.heat)
-危险值：$danger_level
-
-&lt;hr&gt;
-&lt;&lt;if $gossips.length &gt; 0&gt;&gt;
-  &lt;&lt;for _i to 0; _i &lt; $gossips.length; _i++&gt;&gt;
-    /* 使用 capture 宏来锁定循环中的变量 _i，这在 SugarCube 中非常重要！ */
-    &lt;&lt;capture _i&gt;&gt;
-    &lt;div style=&quot;border:1px dashed #666; padding:5px; margin-bottom:5px;&quot;&gt;
-      类型：$gossips[_i].type | 内容：$gossips[_i].desc
-      &lt;br&gt;
-      [[💰 卖给营销号|Use_Gossip][$gid to _i, $action to &quot;sell&quot;]] 
-      | 
-      [[💣 攻击对家|Use_Gossip][$gid to _i, $action to &quot;attack&quot;]]
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="10" name="Gossip_Center" tags="" position="2200,1075" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;div class=&quot;tech-card&quot;&gt;
+    &lt;div class=&quot;header-banner&quot; style=&quot;background:linear-gradient(135deg, #1e293b, #0f172a); border-bottom:4px solid #6366f1;&quot;&gt;
+        &lt;span&gt;🕵️‍♀️ 圈内情报交易所&lt;/span&gt;
+        &lt;span style=&quot;font-size:0.8em; opacity:0.8;&quot;&gt;资金: $money万 | 流量池: $traffic&lt;/span&gt;
     &lt;/div&gt;
-    &lt;&lt;/capture&gt;&gt;
-  &lt;&lt;/for&gt;&gt;
-&lt;&lt;else&gt;&gt;
-  (暂无情报)
-&lt;&lt;/if&gt;&gt;
 
-&lt;hr&gt;
-&lt;&lt;if $money &gt;= 50&gt;&gt;
-  [[🕵️‍♀️ 雇狗仔买瓜 (-50万)|Buy_Gossip]]
-&lt;&lt;else&gt;&gt;
-  (没钱买瓜)
-&lt;&lt;/if&gt;&gt;
+    &lt;div style=&quot;padding:20px; display:grid; grid-template-columns: 1fr 1fr; gap:20px;&quot;&gt;
+        
+        /* --- 左侧：狗仔联络站 (买瓜) --- */
+        &lt;div style=&quot;background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px; padding:15px;&quot;&gt;
+            &lt;div style=&quot;color:#0f172a; font-weight:bold; margin-bottom:10px; border-bottom:2px solid #94a3b8; padding-bottom:5px;&quot;&gt;
+                📡 搜寻情报
+            &lt;/div&gt;
+            
+            &lt;div style=&quot;font-size:0.95em; color:#020617; margin-bottom:15px; line-height:1.6; font-weight:500;&quot;&gt;
+                联系业内的狗仔、代拍、营销号，获取第一手黑料或内幕。
+            &lt;/div&gt;
 
-[[🔙 返回|Office]]</tw-passagedata><tw-passagedata pid="11" name="Job_Drama" tags="" position="700,675" size="100,100">&lt;&lt;nobr&gt;&gt;
+            &lt;div style=&quot;text-align:center;&quot;&gt;
+                &lt;&lt;if $money &gt;= 50&gt;&gt;
+                    /* 使用 data-passage 创建无错按钮 */
+                    &lt;div data-passage=&quot;Buy_Gossip&quot; 
+                         style=&quot;cursor:pointer; font-size:1em; padding:12px 30px; background:linear-gradient(to bottom, #3b82f6, #2563eb); border-radius:6px; box-shadow:0 4px 6px rgba(37,99,235,0.3); color:#ffffff; font-weight:bold; transition:transform 0.1s;&quot;&gt;
+                        💸 购买情报 (-50万)
+                    &lt;/div&gt;
+                &lt;&lt;else&gt;&gt;
+                    &lt;div style=&quot;background:#e2e8f0; color:#475569; padding:10px; border-radius:6px; font-weight:bold; border:1px solid #cbd5e1;&quot;&gt;
+                        🚫 资金不足 (需50万)
+                    &lt;/div&gt;
+                &lt;&lt;/if&gt;&gt;
+            &lt;/div&gt;
+            
+            &lt;div style=&quot;margin-top:20px; font-size:0.9em; color:#334155; background:#fff; border:1px solid #cbd5e1; padding:12px; border-radius:6px;&quot;&gt;
+                &lt;b style=&quot;color:#000;&quot;&gt;📊 概率公示：&lt;/b&gt;&lt;br&gt;
+                &lt;div style=&quot;margin-top:5px; line-height:1.6;&quot;&gt;
+                    &lt;span style=&quot;color:#16a34a; font-weight:bold;&quot;&gt;●&lt;/span&gt; 圈内趣闻 (40%)&lt;br&gt;
+                    &lt;span style=&quot;color:#2563eb; font-weight:bold;&quot;&gt;●&lt;/span&gt; 行业黑料 (30%)&lt;br&gt;
+                    &lt;span style=&quot;color:#dc2626; font-weight:bold;&quot;&gt;●&lt;/span&gt; 塌房实锤 (20%)&lt;br&gt;
+                    &lt;span style=&quot;color:#ca8a04; font-weight:bold;&quot;&gt;●&lt;/span&gt; 商业机密 (10%)
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+        /* --- 右侧：情报收容所 (库存) --- */
+        &lt;div style=&quot;background:#fff; border:1px solid #cbd5e1; border-radius:8px; padding:15px; height: 400px; overflow-y:auto;&quot;&gt;
+            &lt;div style=&quot;color:#0f172a; font-weight:bold; margin-bottom:10px; border-bottom:2px solid #94a3b8; padding-bottom:5px; display:flex; justify-content:space-between;&quot;&gt;
+                &lt;span&gt;📂 情报档案库&lt;/span&gt;
+                &lt;span style=&quot;font-size:0.8em; background:#f1f5f9; padding:2px 8px; border-radius:12px; color:#334155; border:1px solid #cbd5e1; font-weight:bold;&quot;&gt;库存: &lt;&lt;print $gossips.length&gt;&gt;&lt;/span&gt;
+            &lt;/div&gt;
+
+            &lt;&lt;if $gossips.length == 0&gt;&gt;
+                &lt;div style=&quot;text-align:center; padding-top:80px; color:#64748b;&quot;&gt;
+                    &lt;div style=&quot;font-size:4em; opacity:0.5; margin-bottom:10px;&quot;&gt;📭&lt;/div&gt;
+                    &lt;span style=&quot;font-size:1em; color:#475569; font-weight:bold;&quot;&gt;暂无情报，去左边买点？&lt;/span&gt;
+                &lt;/div&gt;
+            &lt;&lt;else&gt;&gt;
+                &lt;&lt;for _i to 0; _i &lt; $gossips.length; _i++&gt;&gt;
+                    &lt;&lt;capture _i&gt;&gt;
+                    &lt;&lt;set _g to $gossips[_i]&gt;&gt;
+                    
+                    /* --- 🛠️ 修复核心：提前计算边框颜色 --- */
+                    &lt;&lt;set _borderColor to &quot;#ccc&quot;&gt;&gt; /* 默认灰色 */
+                    &lt;&lt;if _g.type is &quot;green&quot;&gt;&gt;&lt;&lt;set _borderColor to &quot;#22c55e&quot;&gt;&gt;&lt;&lt;/if&gt;&gt;
+                    &lt;&lt;if _g.type is &quot;blue&quot;&gt;&gt;&lt;&lt;set _borderColor to &quot;#3b82f6&quot;&gt;&gt;&lt;&lt;/if&gt;&gt;
+                    &lt;&lt;if _g.type is &quot;red&quot;&gt;&gt;&lt;&lt;set _borderColor to &quot;#ef4444&quot;&gt;&gt;&lt;&lt;/if&gt;&gt;
+                    &lt;&lt;if _g.type is &quot;gold&quot;&gt;&gt;&lt;&lt;set _borderColor to &quot;#eab308&quot;&gt;&gt;&lt;&lt;/if&gt;&gt;
+
+                    /* --- 应用动态样式 (使用 @style) --- */
+                    &lt;div @style=&quot;&#39;background:#f8fafc; border:1px solid #cbd5e1; border-left: 5px solid &#39; + _borderColor + &#39;; margin-bottom:12px; padding:12px; border-radius:4px; box-shadow:0 2px 4px rgba(0,0,0,0.05);&#39;&quot;&gt;
+                        
+                        &lt;div style=&quot;display:flex; justify-content:space-between; margin-bottom:6px;&quot;&gt;
+                            &lt;span style=&quot;font-weight:bold; font-size:0.95em; color:#0f172a;&quot;&gt;_g.label&lt;/span&gt;
+                            &lt;span style=&quot;font-size:0.85em; color:#334155; background:#e2e8f0; padding:1px 6px; border-radius:4px; font-weight:bold;&quot;&gt;估值: _g.price 万&lt;/span&gt;
+                        &lt;/div&gt;
+                        
+                        &lt;div style=&quot;font-size:1em; color:#1e293b; margin-bottom:12px; line-height:1.4; font-weight:500;&quot;&gt;
+                            “_g.desc”
+                        &lt;/div&gt;
+
+                        /* 操作按钮区 */
+                        &lt;div style=&quot;display:flex; gap:12px; justify-content:flex-end; font-size:0.95em; font-weight:bold;&quot;&gt;
+                            &lt;&lt;link &quot;💰卖出&quot;&gt;&gt;
+                                &lt;&lt;set $gid to _i&gt;&gt;&lt;&lt;set $action to &quot;sell&quot;&gt;&gt;
+                                &lt;&lt;goto &quot;Use_Gossip&quot;&gt;&gt;
+                            &lt;&lt;/link&gt;&gt;
+                            
+                            &lt;&lt;if _g.type is &quot;blue&quot; or _g.type is &quot;red&quot;&gt;&gt;
+                                &lt;span style=&quot;color:#cbd5e1;&quot;&gt;|&lt;/span&gt;
+                                &lt;&lt;link &quot;💣引爆&quot;&gt;&gt;
+                                    &lt;&lt;set $gid to _i&gt;&gt;&lt;&lt;set $action to &quot;attack&quot;&gt;&gt;
+                                    &lt;&lt;goto &quot;Use_Gossip&quot;&gt;&gt;
+                                &lt;&lt;/link&gt;&gt;
+                            &lt;&lt;/if&gt;&gt;
+                            
+                            &lt;&lt;if _g.type is &quot;gold&quot;&gt;&gt;
+                                &lt;span style=&quot;color:#cbd5e1;&quot;&gt;|&lt;/span&gt;
+                                &lt;&lt;link &quot;🤝置换&quot;&gt;&gt;
+                                    &lt;&lt;set $gid to _i&gt;&gt;&lt;&lt;set $action to &quot;exchange&quot;&gt;&gt;
+                                    &lt;&lt;goto &quot;Use_Gossip&quot;&gt;&gt;
+                                &lt;&lt;/link&gt;&gt;
+                            &lt;&lt;/if&gt;&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;&lt;/capture&gt;&gt;
+                &lt;&lt;/for&gt;&gt;
+            &lt;&lt;/if&gt;&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div style=&quot;text-align:center; margin-top:20px;&quot;&gt;
+        [[🔙 返回办公室|Office]]
+    &lt;/div&gt;
+&lt;/div&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="11" name="Job_Drama" tags="" position="700,675" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;div class=&quot;tech-card&quot;&gt;
     &lt;div class=&quot;header-banner&quot;&gt;&lt;span&gt;🎬 影视拍摄结算&lt;/span&gt;&lt;/div&gt;
     
@@ -1023,38 +1112,37 @@ body {
 &lt;&lt;set _res_level to _res_map[$req_res]&gt;&gt;
 &lt;&lt;set _gap to _res_level - _act.rank_level&gt;&gt;
 
-/* --- 2. 逻辑判断 --- */
-
-/* 🛑 A. 资源或体力不足 */
+/* --- 2. 阻断性逻辑判断 (体力/资源/咖位) --- */
 &lt;&lt;if $stamina &lt; 10&gt;&gt;
     &lt;div style=&quot;background:#fef2f2; border:2px solid #ef4444; color:#b91c1c; padding:20px; border-radius:8px; text-align:center;&quot;&gt;
-        ❌ &lt;b&gt;体力不足！&lt;/b&gt;&lt;br&gt;
-        你需要至少 10 点体力。&lt;br&gt;&lt;br&gt;
-        [[🔙 返回通告中心|Work_Center]]
+        ❌ &lt;b&gt;体力不足！&lt;/b&gt;&lt;br&gt;你需要至少 10 点体力。&lt;br&gt;&lt;br&gt;[[🔙 返回通告中心|Work_Center]]
     &lt;/div&gt;
-
 &lt;&lt;elseif $resources[$req_res] &lt; 1&gt;&gt;
     &lt;div style=&quot;background:#fff7ed; border:2px solid #f97316; color:#c2410c; padding:20px; border-radius:8px; text-align:center;&quot;&gt;
-        ⚠️ &lt;b&gt;资源不足！&lt;/b&gt;&lt;br&gt;
-        没有 &lt;&lt;print $req_res.toUpperCase()&gt;&gt; 级资源券了。&lt;br&gt;&lt;br&gt;
-        [[🔙 返回通告中心|Work_Center]]
+        ⚠️ &lt;b&gt;资源不足！&lt;/b&gt;&lt;br&gt;没有 &lt;&lt;print $req_res.toUpperCase()&gt;&gt; 级资源券了。&lt;br&gt;&lt;br&gt;[[🔙 返回通告中心|Work_Center]]
     &lt;/div&gt;
-
-/* 🛑 B. 严重越级 (咖位不够) */
 &lt;&lt;elseif _gap &gt;= 2&gt;&gt;
     &lt;div style=&quot;background:#f3f4f6; border:2px solid #94a3b8; color:#1e293b; padding:20px; border-radius:8px; text-align:center; max-width:400px;&quot;&gt;
         👤 &lt;b&gt;面试被拒&lt;/b&gt;&lt;br&gt;&lt;br&gt;
         经纪人带着 &lt;b&gt;_act.name&lt;/b&gt; 去试镜了 &lt;&lt;print $req_res.toUpperCase()&gt;&gt; 级项目。&lt;br&gt;
-        &lt;div style=&quot;margin:10px 0; font-style:italic; color:#64748b;&quot;&gt;
-            &quot;不好意思，我们需要更有知名度的艺人。&lt;br&gt;您家这位...还是先从基础做起吧。&quot;
-        &lt;/div&gt;
-        @@color:red; (判定：咖位不足，无法接取)@@
-        &lt;br&gt;&lt;br&gt;
-        [[😤 知道了|Work_Center]]
+        &lt;div style=&quot;margin:10px 0; font-style:italic; color:#64748b;&quot;&gt;&quot;不好意思，我们需要更有知名度的艺人。&quot;&lt;/div&gt;
+        @@color:red; (判定：咖位不足)@@&lt;br&gt;&lt;br&gt;[[😤 知道了|Work_Center]]
     &lt;/div&gt;
 
-/* ✅ C. 成功接单 --- 这里是修改的核心 --- */
+/* ✅ C. 成功接单 --- */
 &lt;&lt;else&gt;&gt;
+    /* --- 🔥 核心修复：把文案定义提到最前面，防止 undefined --- */
+    &lt;&lt;if $type is &quot;drama&quot;&gt;&gt;
+        &lt;&lt;set _title_text to &quot;签约进组&quot;&gt;&gt;
+        &lt;&lt;set _time_label to &quot;拍摄周期&quot;&gt;&gt;
+        &lt;&lt;set _money_label to &quot;预计片酬&quot;&gt;&gt;
+    &lt;&lt;else&gt;&gt;
+        &lt;&lt;set _title_text to &quot;行程确认&quot;&gt;&gt;
+        &lt;&lt;set _time_label to &quot;工作时长&quot;&gt;&gt;
+        &lt;&lt;set _money_label to &quot;预计通告费&quot;&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
+    /* ----------------------------------------------------- */
+
     /* 1. 生成项目数据 */
     &lt;&lt;Job_Generate $type $req_res&gt;&gt;
     
@@ -1062,98 +1150,81 @@ body {
     &lt;&lt;set $stamina -= 10&gt;&gt;
     &lt;&lt;set $resources[$req_res] -= 1&gt;&gt;
     
-    /* ================================================= */
-    /* 3. 随机事件：娱乐圈的三大天坑 (20%概率触发)       */
-    /* ================================================= */
+    /* 3. 随机事件：天坑剧组 */
     &lt;&lt;set _bad_event_type to &quot;none&quot;&gt;&gt;
-    
     &lt;&lt;if random(1,100) &lt;= 20&gt;&gt;
-        /* 随机抽取一种倒霉情况 */
         &lt;&lt;set _bad_roll to random(1, 3)&gt;&gt;
-        
-        /* --- 天坑A: 死亡妆造 (针对颜粉/口碑) --- */
         &lt;&lt;if _bad_roll == 1&gt;&gt;
             &lt;&lt;set _bad_event_type to &quot;ugly&quot;&gt;&gt;
             &lt;&lt;set $generated_desc to &quot;🤡 &lt;b&gt;妆造翻车：&lt;/b&gt;得罪了造型师，路透照满脸油光，被群嘲‘普男/普女’！&quot;&gt;&gt;
-            /* 惩罚：颜粉连夜跑路，口碑大跌 */
-            &lt;&lt;set _loss_face to Math.floor(_act.fans.face * 0.1)&gt;&gt; /* 颜粉掉10% */
+            &lt;&lt;set _loss_face to Math.floor(_act.fans.face * 0.1)&gt;&gt; 
             &lt;&lt;set _act.fans.face -= _loss_face&gt;&gt;
             &lt;&lt;set _act.reputation -= 15&gt;&gt;
-            
-        /* --- 天坑B: 恶意剪辑 (针对路人缘/招黑) --- */
         &lt;&lt;elseif _bad_roll == 2&gt;&gt;
             &lt;&lt;set _bad_event_type to &quot;evil_edit&quot;&gt;&gt;
             &lt;&lt;set $generated_desc to &quot;✂️ &lt;b&gt;恶意剪辑：&lt;/b&gt;为了捧皇族，导演把你剪成了弱智反派，全网黑嘲！&quot;&gt;&gt;
-            /* 惩罚：黑红路线，流量涨，但招毒唯，口碑暴跌 */
-            &lt;&lt;set _act.topic += 100&gt;&gt;       /* 黑热搜也是热搜 */
-            &lt;&lt;set _act.reputation -= 30&gt;&gt;   /* 路人缘崩盘 */
-            &lt;&lt;set _act.fans.toxic += 500&gt;&gt;  /* 虐出毒唯 */
-            
-        /* --- 天坑C: 剧组暴雷 (针对时间) --- */
+            &lt;&lt;set _act.topic += 100&gt;&gt; 
+            &lt;&lt;set _act.reputation -= 30&gt;&gt; 
+            &lt;&lt;set _act.fans.toxic += 500&gt;&gt; 
         &lt;&lt;else&gt;&gt;
             &lt;&lt;set _bad_event_type to &quot;delay&quot;&gt;&gt;
-            &lt;&lt;set $generated_period += 3&gt;&gt; /* 周期大幅延长 */
-            &lt;&lt;set $generated_desc to &quot;🐌 &lt;b&gt;资金链断裂：&lt;/b&gt;投资方跑路，剧组停工待产，拍摄无限期延后！(周期+3)&quot; &gt;&gt;
+            &lt;&lt;set $generated_period += 3&gt;&gt; 
+            &lt;&lt;set $generated_desc to &quot;🐌 &lt;b&gt;资金链断裂：&lt;/b&gt;投资方跑路，项目无限期延后！(周期+3)&quot; &gt;&gt;
         &lt;&lt;/if&gt;&gt;
     &lt;&lt;/if&gt;&gt;
 
     /* 4. 锁定艺人数据 */
     &lt;&lt;set $actors[$target].busy_months to $generated_period&gt;&gt;
     &lt;&lt;set $actors[$target].project_name to $generated_name&gt;&gt;
-    
-    /* 5. 降级惩罚判定 (保持不变) */
+    &lt;&lt;set $actors[$target].job_type to $type&gt;&gt;
+
+    /* 5. 降级惩罚判定 */
     &lt;&lt;set _penalty_text to &quot;&quot;&gt;&gt;
     &lt;&lt;if _gap &lt;= -2&gt;&gt;
         &lt;&lt;set $actors[$target].reputation -= 10&gt;&gt;
         &lt;&lt;set _penalty_text to &quot;&lt;br&gt;📉 &lt;b&gt;降级接戏警告：&lt;/b&gt;粉丝觉得太掉价，口碑 -10！&quot;&gt;&gt;
     &lt;&lt;/if&gt;&gt;
 
-    /* 6. 显示签约卡片 */
+    /* 6. 显示卡片 */
     &lt;div style=&quot;background:#ecfdf5; border:2px solid #10b981; color:#065f46; padding:20px; border-radius:8px; text-align:center; width:100%; max-width:500px;&quot;&gt;
         
-        /* 标题动态变化 */
+        /* 标题 */
         &lt;&lt;if _bad_event_type neq &quot;none&quot;&gt;&gt;
             &lt;div style=&quot;font-size:3em; margin-bottom:10px;&quot;&gt;🌩️&lt;/div&gt;
             &lt;b style=&quot;color:#b91c1c; font-size:1.2em;&quot;&gt;前途未卜...&lt;/b&gt;
         &lt;&lt;else&gt;&gt;
             &lt;div style=&quot;font-size:3em; margin-bottom:10px;&quot;&gt;🎉&lt;/div&gt;
-            &lt;b style=&quot;font-size:1.2em;&quot;&gt;签约成功！&lt;/b&gt;
+            &lt;b style=&quot;font-size:1.2em;&quot;&gt;&lt;&lt;print _title_text&gt;&gt;成功！&lt;/b&gt;
         &lt;&lt;/if&gt;&gt;
         &lt;hr style=&quot;border-color:#10b981; opacity:0.3;&quot;&gt;
         
         &lt;div style=&quot;font-size:1.1em; margin:10px 0;&quot;&gt;
-            &lt;b&gt;_act.name&lt;/b&gt; 确认进组&lt;br&gt;
+            &lt;b&gt;_act.name&lt;/b&gt; 确认接下&lt;br&gt;
             &lt;span style=&quot;font-size:1.3em; color:#059669;&quot;&gt;$generated_name&lt;/span&gt;
         &lt;/div&gt;
         
-        /* 信息展示区：如果是坏事，显示红色背景 */
+        /* 简介/坏事件 */
         &lt;&lt;if _bad_event_type neq &quot;none&quot;&gt;&gt;
              &lt;div style=&quot;background:#fef2f2; border:1px solid #fecaca; padding:10px; border-radius:4px; margin-top:10px; text-align:left;&quot;&gt;
                  &lt;span style=&quot;color:#b91c1c;&quot;&gt;$generated_desc&lt;/span&gt;
-                 &lt;br&gt;&lt;br&gt;
-                 /* 显示具体损失 */
-                 &lt;span style=&quot;font-size:0.85em; color:#7f1d1d;&quot;&gt;
-                 &lt;&lt;if _bad_event_type is &quot;ugly&quot;&gt;&gt;
-                    💔 颜粉流失: -_loss_face | 口碑: -15
-                 &lt;&lt;elseif _bad_event_type is &quot;evil_edit&quot;&gt;&gt;
-                    📈 黑热度: +100 | 口碑: -30 | 毒唯: +500
-                 &lt;&lt;elseif _bad_event_type is &quot;delay&quot;&gt;&gt;
-                    ⏳ 档期被锁死，无法接其他通告！
-                 &lt;&lt;/if&gt;&gt;
-                 &lt;/span&gt;
              &lt;/div&gt;
         &lt;&lt;else&gt;&gt;
-             /* 正常简介 */
              &lt;div style=&quot;background:rgba(255,255,255,0.6); padding:10px; border-radius:4px; margin-top:10px;&quot;&gt;
                  &lt;div style=&quot;color:#64748b; font-size:0.9em; margin-bottom:5px;&quot;&gt;“ $generated_desc ”&lt;/div&gt;
              &lt;/div&gt;
         &lt;&lt;/if&gt;&gt;
 
-        &lt;div style=&quot;margin-top:10px; font-family:monospace; color:#047857;&quot;&gt;
-             📅 周期: &lt;b&gt;$generated_period&lt;/b&gt; 月 | 🎫 消耗: &lt;b&gt;&lt;&lt;print $req_res.toUpperCase()&gt;&gt;&lt;/b&gt;
+        /* --- 💰 收入预览 --- */
+        &lt;div style=&quot;margin-top:15px; font-size:1.2em; font-weight:bold; color:#059669;&quot;&gt;
+            💰 &lt;&lt;print _money_label&gt;&gt;: 
+            &lt;span style=&quot;font-size:1.2em;&quot;&gt;$&lt;&lt;Calc_Income_Preview $target $req_res&gt;&gt; 万&lt;/span&gt;
+        &lt;/div&gt;
+        /* ------------------ */
+
+        &lt;div style=&quot;margin-top:5px; font-family:monospace; color:#047857; font-size:0.9em;&quot;&gt;
+             📅 &lt;&lt;print _time_label&gt;&gt;: &lt;b&gt;$generated_period&lt;/b&gt; 月 | 🎫 消耗: &lt;b&gt;&lt;&lt;print $req_res.toUpperCase()&gt;&gt;&lt;/b&gt;
         &lt;/div&gt;
 
-        /* 降级警告 */
         &lt;&lt;if _penalty_text neq &quot;&quot;&gt;&gt;
             &lt;div style=&quot;margin-top:10px; color:#b91c1c; background:#fee2e2; padding:5px; border-radius:4px;&quot;&gt;
                 &lt;&lt;print _penalty_text&gt;&gt;
@@ -1423,15 +1494,13 @@ body {
 /* 1. 先在后台默默把所有帐都算好 */
 &lt;&lt;Process_Month_Logic&gt;&gt;
 
-/* 2. 开始显示结果 (CSS 容器控制布局) */
+/* 2. 开始显示结果 */
 &lt;div style=&quot;display:flex; flex-direction:column; gap:10px; color:#334155;&quot;&gt;
 
     /* --- A. 杀青结算区 --- */
     &lt;&lt;if _finished_actors.length &gt; 0&gt;&gt;
         &lt;&lt;for _i to 0; _i &lt; _finished_actors.length; _i++&gt;&gt;
-            /* 提取本次循环的艺人Key */
             &lt;&lt;set _key to _finished_actors[_i]&gt;&gt;
-            /* 设置当前艺人，供 Widget 使用 */
             &lt;&lt;set $current_actor to _key&gt;&gt;
             &lt;&lt;set _a to $actors[_key]&gt;&gt;
 
@@ -1440,15 +1509,12 @@ body {
                     🎉 &lt;&lt;print _a.name&gt;&gt; 的 &lt;&lt;print _a.project_name&gt;&gt; 杀青了！
                 &lt;/div&gt;
                 
-                /* 执行结算并显示绿色账单 */
                 &lt;&lt;if def _a.job_type&gt;&gt;
                     &lt;&lt;Job_Settle _a.job_type&gt;&gt;
                 &lt;&lt;else&gt;&gt;
                     &lt;&lt;Job_Settle &quot;drama&quot;&gt;&gt;
                 &lt;&lt;/if&gt;&gt;
 
-                /* 善后清理 */
-                &lt;&lt;set $gossips.push({desc: &quot;【杀青】&quot; + _a.name + &quot; 的项目《&quot; + _a.project_name + &quot;》顺利完结。&quot;})&gt;&gt;
                 &lt;&lt;set _a.project_name to &quot;&quot;&gt;&gt;&lt;&lt;set _a.job_type to &quot;&quot;&gt;&gt;
             &lt;/div&gt;
         &lt;&lt;/for&gt;&gt;
@@ -1488,13 +1554,23 @@ body {
         &lt;/div&gt;
     &lt;&lt;/if&gt;&gt;
 
-    /* --- F. 下月预热 --- */
+/* --- F. 新情报掉落 (显示批量信息) --- */
+    &lt;div style=&quot;background:#f1f5f9; padding:8px; border-radius:4px; border-left:4px solid #3b82f6; font-size:0.9em; color:#1e293b;&quot;&gt;
+        🤫 &lt;b&gt;酒局听闻：&lt;/b&gt; 
+        本月搜集到 &lt;b&gt;&lt;&lt;print _new_gossips_count&gt;&gt;&lt;/b&gt; 条新情报。
+        &lt;&lt;if _expired_count &gt; 0&gt;&gt;
+            &lt;br&gt;&lt;span style=&quot;color:#94a3b8; font-size:0.85em;&quot;&gt;(🗑️ 清理了 &lt;&lt;print _expired_count&gt;&gt; 条过期情报)&lt;/span&gt;
+        &lt;&lt;/if&gt;&gt;
+        &lt;div style=&quot;margin-top:2px; font-size:0.85em; color:#64748b;&quot;&gt;快去【圈内情报交易所】查看吧！&lt;/div&gt;
+    &lt;/div&gt;
+
+    /* --- G. 下月预热 --- */
     &lt;div style=&quot;font-size:0.95em;&quot;&gt;
         &lt;span style=&quot;font-weight:bold; color:#be185d;&quot;&gt;🔥 预热：&lt;/span&gt;
         &lt;&lt;print _next_hotsearch&gt;&gt;
     &lt;/div&gt;
 
-    /* --- G. 按钮区 --- */
+    /* --- H. 按钮区 --- */
     &lt;div style=&quot;margin-top:15px; text-align:center;&quot;&gt;
         &lt;&lt;if $money &lt; 0&gt;&gt;
             @@color:red;font-size:1.1em;&lt;b&gt;你破产了！&lt;/b&gt;@@&lt;br&gt;
@@ -1678,7 +1754,7 @@ body {
 &lt;&lt;set $traffic += 500&gt;&gt;
 &lt;&lt;set $gossips.deleteAt($gossip_id)&gt;&gt;
 &lt;br&gt;获得 500 流量。
-&lt;br&gt;[[确定|Gossip_Center]]</tw-passagedata><tw-passagedata pid="24" name="StoryCaption" tags="" position="50,25" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;br&gt;[[确定|Gossip_Center]]</tw-passagedata><tw-passagedata pid="24" name="StoryCaption" tags="系统" position="1525,75" size="100,200">&lt;&lt;nobr&gt;&gt;
 
 /* =========================== */
 /* 顶部 Logo 与 基础数据        */
@@ -1818,10 +1894,10 @@ body {
   &lt;/div&gt;
 &lt;/div&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="25" name="StoryInit" tags="" position="250,25" size="100,100">/* ==============================
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="25" name="StoryInit" tags="系统" position="1675,75" size="100,200">/* ==============================
    1. 基础资源配置
    ============================== */
-&lt;&lt;set $money to 1000&gt;&gt;        
+&lt;&lt;set $money to 2000&gt;&gt;        
 &lt;&lt;set $month to 1&gt;&gt;           
 &lt;&lt;set $total_months to 60&gt;&gt;   
 &lt;&lt;set $stamina to 100&gt;&gt;       
@@ -1934,27 +2010,72 @@ body {
 }&gt;&gt;
 
 /* 白小纯嬷嬷特供 */
-&lt;&lt;set $momo_new to [&quot;哭得好漂亮。&quot;, &quot;易推倒体质。&quot;, &quot;全娱乐圈都是他老攻。&quot;, &quot;想看他被虐...&quot;, &quot;老婆好娇。&quot;]&gt;&gt;</tw-passagedata><tw-passagedata pid="26" name="Use_Gossip" tags="" position="2075,1275" size="100,100">&lt;&lt;set _g to $gossips[$gid]&gt;&gt;
+&lt;&lt;set $momo_new to [&quot;哭得好漂亮。&quot;, &quot;易推倒体质。&quot;, &quot;全娱乐圈都是他老攻。&quot;, &quot;想看他被虐...&quot;, &quot;老婆好娇。&quot;]&gt;&gt;</tw-passagedata><tw-passagedata pid="26" name="Use_Gossip" tags="" position="2075,1275" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;set _g to $gossips[$gid]&gt;&gt;
+&lt;div class=&quot;tech-card&quot;&gt;
+    &lt;div class=&quot;header-banner&quot;&gt;&lt;span&gt;📠 操作执行中...&lt;/span&gt;&lt;/div&gt;
+    &lt;div style=&quot;padding:30px; text-align:center;&quot;&gt;
+        
+        /* === 卖给营销号 (换钱) === */
+        &lt;&lt;if $action is &quot;sell&quot;&gt;&gt;
+            &lt;div style=&quot;font-size:3em; margin-bottom:10px;&quot;&gt;💰&lt;/div&gt;
+            &lt;h3&gt;交易成功！&lt;/h3&gt;
+            &lt;p&gt;你把这条情报独家卖给了“娱乐圈扒皮王”。&lt;/p&gt;
+            &lt;p&gt;对方支付了 &lt;b style=&quot;color:#ea580c;&quot;&gt;$_g.price 万&lt;/b&gt; 爆料费。&lt;/p&gt;
+            &lt;&lt;set $money += _g.price&gt;&gt;
+            
+            /* 如果是普通瓜，可能会被骂，稍微扣点流量 */
+            &lt;&lt;if _g.type is &quot;green&quot;&gt;&gt;
+                &lt;span style=&quot;font-size:0.8em; color:#94a3b8;&quot;&gt;(这种小料没什么人看，流量微涨)&lt;/span&gt;
+                &lt;&lt;set $traffic += 50&gt;&gt;
+            &lt;&lt;/if&gt;&gt;
 
-&lt;&lt;if $action is &quot;sell&quot;&gt;&gt;
-  你把“&lt;&lt;print _g.desc&gt;&gt;”卖给了营销号。
-  &lt;&lt;set $traffic += 300&gt;&gt;
-  /* 安全的属性读取 */
-  &lt;&lt;if _g.level is &quot;blue&quot;&gt;&gt;&lt;&lt;set $traffic += 500&gt;&gt;&lt;&lt;/if&gt;&gt;
-  &lt;&lt;if _g.level is &quot;red&quot;&gt;&gt;&lt;&lt;set $traffic += 2000&gt;&gt;&lt;&lt;/if&gt;&gt;
-  流量大增！
+        /* === 攻击对家 (换流量 + 削弱对手) === */
+        &lt;&lt;elseif $action is &quot;attack&quot;&gt;&gt;
+            &lt;div style=&quot;font-size:3em; margin-bottom:10px;&quot;&gt;💣&lt;/div&gt;
+            &lt;h3&gt;全网推送！&lt;/h3&gt;
+            &lt;p&gt;你安排水军将这条黑料顶上了热搜！&lt;/p&gt;
+            &lt;div style=&quot;background:#fef2f2; color:#b91c1c; padding:10px; margin:10px 0;&quot;&gt;
+                🔥 热搜爆：&lt;&lt;print _g.desc&gt;&gt;
+            &lt;/div&gt;
+            
+            &lt;p&gt;对手公司 &lt;b&gt;$rival_company.name&lt;/b&gt; 陷入公关危机！&lt;/p&gt;
+            
+            &lt;&lt;set _dmg to _g.power&gt;&gt;
+            &lt;&lt;set $rival_company.heat -= _dmg&gt;&gt;
+            &lt;&lt;set $traffic += Math.floor(_dmg * 0.5)&gt;&gt; /* 吃瓜流量归你 */
+            
+            &lt;ul style=&quot;text-align:left; display:inline-block; color:#475569;&quot;&gt;
+                &lt;li&gt;对手热度: -_dmg&lt;/li&gt;
+                &lt;li&gt;我方流量: +&lt;&lt;print Math.floor(_dmg * 0.5)&gt;&gt;&lt;/li&gt;
+            &lt;/ul&gt;
 
-&lt;&lt;elseif $action is &quot;attack&quot;&gt;&gt;
-  全网通稿：“&lt;&lt;print _g.desc&gt;&gt;”。
-  $rival_company.name 股价暴跌！
-  &lt;&lt;set $rival_company.heat -= 1000&gt;&gt;
-  &lt;&lt;set $traffic += 200&gt;&gt;
-&lt;&lt;/if&gt;&gt;
+        /* === 商业机密置换 (换资源) === */
+        &lt;&lt;elseif $action is &quot;exchange&quot;&gt;&gt;
+            &lt;div style=&quot;font-size:3em; margin-bottom:10px;&quot;&gt;🤝&lt;/div&gt;
+            &lt;h3&gt;资源置换！&lt;/h3&gt;
+            &lt;p&gt;你利用这条商业机密，提前与资方达成了合作。&lt;/p&gt;
+            
+            &lt;&lt;set _res_gain to &quot;b&quot;&gt;&gt;
+            &lt;&lt;if random(1,100) &lt; 30&gt;&gt;&lt;&lt;set _res_gain to &quot;a&quot;&gt;&gt;&lt;&lt;/if&gt;&gt;
+            
+            &lt;&lt;if _res_gain is &quot;a&quot;&gt;&gt;
+                &lt;b style=&quot;color:#d97706;&quot;&gt;获得 A级 资源 x1&lt;/b&gt;
+                &lt;&lt;set $resources.a += 1&gt;&gt;
+            &lt;&lt;else&gt;&gt;
+                &lt;b style=&quot;color:#3b82f6;&quot;&gt;获得 B级 资源 x2&lt;/b&gt;
+                &lt;&lt;set $resources.b += 2&gt;&gt;
+            &lt;&lt;/if&gt;&gt;
+        &lt;&lt;/if&gt;&gt;
 
-/* 删除瓜 */
-&lt;&lt;set $gossips.deleteAt($gid)&gt;&gt;
+        /* 最终删除这个瓜 */
+        &lt;&lt;set $gossips.deleteAt($gid)&gt;&gt;
 
-&lt;br&gt;[[确定|Gossip_Center]]</tw-passagedata><tw-passagedata pid="27" name="Visit_Set" tags="" position="900,200" size="100,100">!! 🚗 剧组探班
+        &lt;br&gt;&lt;br&gt;
+        [[🔙 返回情报局|Gossip_Center]]
+    &lt;/div&gt;
+&lt;/div&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="27" name="Visit_Set" tags="" position="900,200" size="100,100">!! 🚗 剧组探班
 &lt;&lt;set _a to $actors[$current_actor]&gt;&gt;
 &lt;&lt;set $stamina -= 10&gt;&gt;
 
@@ -1972,7 +2093,7 @@ body {
   
   &lt;&lt;if _roll is 1&gt;&gt;
     展鹏正躲在保姆车里打游戏，看到你来立刻把手机藏到屁股底下。
-    “老板，剧组盒饭太难吃了，我想吃火锅……”他眨巴着大眼睛看着你。
+    “老公~剧组盒饭太难吃了，我想吃火锅……”他眨巴着大眼睛看着你。
     &lt;br&gt;💖 &lt;span style=&quot;color: hotpink&quot;&gt;路透照流出，CP粉磕到了你们的眼神拉丝。&lt;/span&gt;
     &lt;&lt;set _a.fans.cp += _add_fans&gt;&gt;
   
@@ -2270,14 +2391,17 @@ body {
     &lt;div style=&quot;text-align:center;&quot;&gt;[[🔙 返回办公室|Office]]&lt;/div&gt;
   &lt;/div&gt;
 &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="30" name="Widget_Fan_War" tags="widget" position="1200,1175" size="100,100">&lt;&lt;widget &quot;Generate_Fan_War&quot;&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="30" name="Widget_Fan_War" tags="widget" position="1200,1175" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;widget &quot;Generate_Fan_War&quot;&gt;&gt;
     &lt;&lt;set $fan_war_report to &quot;&quot;&gt;&gt; /* 清空上月战报 */
     
     /* 30% 概率触发粉圈混战 */
     &lt;&lt;if random(1, 100) &lt; 30&gt;&gt;
-        /* 默认针对展鹏，因为他是主角流量大 */
+        /* 默认针对展鹏，因为他是主角流量大，也是CP粉重灾区 */
         &lt;&lt;set _target to $actors[&quot;zp&quot;]&gt;&gt;
-        &lt;&lt;set _war_type to random(1, 3)&gt;&gt;
+        
+        /* 现在的战争类型增加到了 5 种 */
+        &lt;&lt;set _war_type to random(1, 5)&gt;&gt;
         
         /* --- 战争类型 1: 梦女手撕CP粉 (提纯之战) --- */
         &lt;&lt;if _war_type == 1&gt;&gt;
@@ -2286,7 +2410,6 @@ body {
             &lt;&lt;set _target.fans.cp -= _loss_cp&gt;&gt;
             &lt;&lt;set _target.fans.dream -= _loss_dream&gt;&gt;
             
-            /* 战报文案 */
             &lt;&lt;set $fan_war_report to `
                 &lt;div style=&#39;background:#fdf2f8; border-left:4px solid #db2777; padding:10px; margin:10px 0; color:#831843;&#39;&gt;
                     🔥 &lt;b&gt;粉圈前线：梦女 VS CP粉&lt;/b&gt;&lt;br&gt;
@@ -2299,8 +2422,8 @@ body {
         /* --- 战争类型 2: 毒唯大战歪屁股 (反黑之战) --- */
         &lt;&lt;elseif _war_type == 2&gt;&gt;
             &lt;&lt;set _loss_toxic to random(50, 100)&gt;&gt;
-            &lt;&lt;set _target.fans.cp -= 300&gt;&gt; /* 歪屁股通常混在CP粉里 */
-            &lt;&lt;set _target.reputation -= 5&gt;&gt; /* 路人觉得吵 */
+            &lt;&lt;set _target.fans.cp -= 300&gt;&gt;
+            &lt;&lt;set _target.reputation -= 5&gt;&gt;
             
             &lt;&lt;set $fan_war_report to `
                 &lt;div style=&#39;background:#fef2f2; border-left:4px solid #ef4444; padding:10px; margin:10px 0; color:#b91c1c;&#39;&gt;
@@ -2312,8 +2435,7 @@ body {
             `&gt;&gt;
 
         /* --- 战争类型 3: 梦女围剿嬷嬷 (净化之战) --- */
-        &lt;&lt;else&gt;&gt;
-             /* 嬷嬷通常算在 CP 或 乐子人 里，这里扣除乐子人 */
+        &lt;&lt;elseif _war_type == 3&gt;&gt;
              &lt;&lt;set _loss_clown to random(300, 600)&gt;&gt;
              &lt;&lt;set _target.fans.clown -= _loss_clown&gt;&gt;
              
@@ -2325,86 +2447,151 @@ body {
                     &lt;i style=&#39;font-size:0.8em&#39;&gt;“拒绝泥塑，请尊重艺人男性特质！”&lt;/i&gt;
                 &lt;/div&gt;
              `&gt;&gt;
+
+        /* --- 🆕 战争类型 4: CP粉回踩辱骂 (披皮黑) --- */
+        &lt;&lt;elseif _war_type == 4&gt;&gt;
+             /* 这种行为非常伤路人缘，也会气跑事业粉 */
+             &lt;&lt;set _loss_cp to random(100, 200)&gt;&gt;
+             &lt;&lt;set _target.fans.cp -= _loss_cp&gt;&gt;
+             &lt;&lt;set _target.fans.career -= 100&gt;&gt;
+             &lt;&lt;set _target.reputation -= 15&gt;&gt; /* 口碑大跌，因为骂得很难听 */
+             
+             &lt;&lt;set $fan_war_report to `
+                &lt;div style=&#39;background:#fff1f2; border-left:4px solid #9f1239; padding:10px; margin:10px 0; color:#881337;&#39;&gt;
+                    🐍 &lt;b&gt;粉圈前线：CP粉脱粉回踩&lt;/b&gt;&lt;br&gt;
+                    起因：某大粉脱饭，并发表长文辱骂展鹏“只有脸能看”、“废物挂件”、“配不上另一半”。&lt;br&gt;
+                    结果：广场乌烟瘴气，口碑暴跌 &lt;span style=&#39;color:red&#39;&gt;-15&lt;/span&gt;，事业粉心寒 &lt;span style=&#39;color:red&#39;&gt;-100&lt;/span&gt;。&lt;br&gt;
+                    &lt;i style=&#39;font-size:0.8em&#39;&gt;“他就是个吸血包，赶紧解绑吧！”&lt;/i&gt;
+                &lt;/div&gt;
+             `&gt;&gt;
+
+        /* --- 🆕 战争类型 5: CP粉资敌 (给竞对投票) --- */
+        &lt;&lt;elseif _war_type == 5&gt;&gt;
+             /* 这种行为会导致公司危机上升，对手变强 */
+             &lt;&lt;set _rival to $rivals.random()&gt;&gt;
+             &lt;&lt;set _rival.heat += 500&gt;&gt; /* 对手热度上升 */
+             &lt;&lt;set $danger_level += 10&gt;&gt; /* 公司危机上升 */
+             &lt;&lt;set _target.fans.toxic += 300&gt;&gt; /* 这种行为会激怒毒唯，导致毒唯增加 */
+             
+             &lt;&lt;set $fan_war_report to `
+                &lt;div style=&#39;background:#fff7ed; border-left:4px solid #c2410c; padding:10px; margin:10px 0; color:#7c2d12;&#39;&gt;
+                    📉 &lt;b&gt;粉圈前线：CP粉“资敌”行为&lt;/b&gt;&lt;br&gt;
+                    起因：CP粉为了“虐粉”或者“教训公司”，竟然在人气投票中把票投给了竞对 &lt;span style=&#39;font-weight:bold;&#39;&gt;_rival.name&lt;/span&gt;！&lt;br&gt;
+                    结果：对手热度 &lt;span style=&#39;color:red&#39;&gt;+500&lt;/span&gt;，激起自家毒唯逆反心理 &lt;span style=&#39;color:green&#39;&gt;+300&lt;/span&gt;。&lt;br&gt;
+                    &lt;i style=&#39;font-size:0.8em&#39;&gt;“只有让数据难看点，公司才知道珍惜！”&lt;/i&gt;
+                &lt;/div&gt;
+             `&gt;&gt;
         &lt;&lt;/if&gt;&gt;
         
-        /* 增加一点热度，毕竟吵架也是流量 */
+        /* 只要吵架就有热度 */
         &lt;&lt;set _target.topic += 20&gt;&gt;
         
+        /* 确保粉丝数不为负 */
+        &lt;&lt;set _target.fans.cp to Math.max(0, _target.fans.cp)&gt;&gt;
+        &lt;&lt;set _target.fans.career to Math.max(0, _target.fans.career)&gt;&gt;
+        &lt;&lt;set _target.fans.dream to Math.max(0, _target.fans.dream)&gt;&gt;
+        &lt;&lt;set _target.fans.clown to Math.max(0, _target.fans.clown)&gt;&gt;
+        
     &lt;&lt;/if&gt;&gt;
-&lt;&lt;/widget&gt;&gt;</tw-passagedata><tw-passagedata pid="31" name="Widget_Salary_Calc" tags="widget" position="800,325" size="100,100">/* 用法：&lt;&lt;Calc_Income_Preview &quot;艺人ID&quot; &quot;资源等级&quot;&gt;&gt; 
-   例如：&lt;&lt;Calc_Income_Preview &quot;zp&quot; &quot;s&quot;&gt;&gt;
-*/
-&lt;&lt;widget &quot;Calc_Income_Preview&quot;&gt;&gt;
+&lt;&lt;/widget&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="31" name="Widget_Salary_Calc" tags="widget" position="800,325" size="100,100">&lt;&lt;widget &quot;Calc_Income_Preview&quot;&gt;&gt;
+&lt;&lt;nobr&gt;&gt;
     &lt;&lt;set _key to $args[0]&gt;&gt;
     &lt;&lt;set _res to $args[1]&gt;&gt;
     &lt;&lt;set _act to $actors[_key]&gt;&gt;
 
-    /* 1. 基础底薪 (根据咖位) */
-    /* 对应 Job_Drama 中的逻辑 */
-    &lt;&lt;set _base_income to 50&gt;&gt;
-    &lt;&lt;if _act.rank_label is &quot;顶流&quot;&gt;&gt;&lt;&lt;set _base_income to 300&gt;&gt;
-    &lt;&lt;elseif _act.rank_label is &quot;一线&quot;&gt;&gt;&lt;&lt;set _base_income to 150&gt;&gt;
-    &lt;&lt;elseif _act.rank_label is &quot;二线&quot;&gt;&gt;&lt;&lt;set _base_income to 80&gt;&gt;
-    &lt;&lt;elseif _act.rank_label is &quot;三线&quot;&gt;&gt;&lt;&lt;set _base_income to 60&gt;&gt;
-    &lt;&lt;elseif _act.rank_label is &quot;糊咖&quot;&gt;&gt;&lt;&lt;set _base_income to 30&gt;&gt;
+    /* 1. 基础底薪 */
+    /* {1: 20, 2: 80, 3: 150, 4: 400, 5: 800} */
+    &lt;&lt;set _base to 20&gt;&gt;
+    &lt;&lt;if _act.rank_level is 5&gt;&gt;&lt;&lt;set _base to 800&gt;&gt;
+    &lt;&lt;elseif _act.rank_level is 4&gt;&gt;&lt;&lt;set _base to 400&gt;&gt;
+    &lt;&lt;elseif _act.rank_level is 3&gt;&gt;&lt;&lt;set _base to 150&gt;&gt;
+    &lt;&lt;elseif _act.rank_level is 2&gt;&gt;&lt;&lt;set _base to 80&gt;&gt;
     &lt;&lt;/if&gt;&gt;
 
-    /* 2. 资源等级加成 (S级资源给钱多) */
-    &lt;&lt;set _res_mult to 1&gt;&gt;
-    &lt;&lt;if _res is &quot;s&quot;&gt;&gt;&lt;&lt;set _res_mult to 2.0&gt;&gt;
-    &lt;&lt;elseif _res is &quot;a&quot;&gt;&gt;&lt;&lt;set _res_mult to 1.5&gt;&gt;
+    /* 2. 资源加成 */
+    &lt;&lt;set _res_mult to 0.8&gt;&gt;
+    &lt;&lt;if _res is &quot;s&quot;&gt;&gt;&lt;&lt;set _res_mult to 2.5&gt;&gt;
+    &lt;&lt;elseif _res is &quot;a&quot;&gt;&gt;&lt;&lt;set _res_mult to 1.8&gt;&gt;
     &lt;&lt;elseif _res is &quot;b&quot;&gt;&gt;&lt;&lt;set _res_mult to 1.2&gt;&gt;
     &lt;&lt;/if&gt;&gt;
 
-    /* 3. 流量加成 (Topic 越高钱越多) */
-    &lt;&lt;set _traffic_bonus to Math.floor(_act.topic * 0.5)&gt;&gt;
+    /* 3. 流量加成 */
+    &lt;&lt;set _traffic_bonus to Math.floor(_base * (_act.topic / 80))&gt;&gt;
 
-    /* 4. 计算预览总额 */
-    &lt;&lt;set _preview_money to Math.floor((_base_income * _res_mult) + _traffic_bonus)&gt;&gt;
+    /* 4. 计算并输出 */
+    &lt;&lt;set _est_income to Math.floor((_base + _traffic_bonus) * _res_mult)&gt;&gt;
+    
+    /* 这里是唯一的输出内容 */
+    &lt;&lt;print _est_income&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;
+&lt;&lt;/widget&gt;&gt;</tw-passagedata><tw-passagedata pid="32" name="Widget_Job_Settlement" tags="widget" position="750,475" size="100,100">&lt;&lt;widget &quot;Job_Settle&quot;&gt;&gt;
+&lt;&lt;nobr&gt;&gt;
+    /* --- 🛡️ 1. 防崩溃检查 --- */
+    &lt;&lt;if not def $actors or not def $current_actor or not def $actors[$current_actor]&gt;&gt;
+        &lt;div style=&quot;color:red; background:#fee; padding:10px;&quot;&gt;⚠️ 结算错误：数据丢失&lt;/div&gt;&lt;&lt;return&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
 
-    /* 输出结果 */
-    &lt;&lt;print _preview_money&gt;&gt;
-&lt;&lt;/widget&gt;&gt;</tw-passagedata><tw-passagedata pid="32" name="Widget_Job_Settlement" tags="widget" position="750,475" size="100,100">&lt;&lt;nobr&gt;&gt;
-&lt;&lt;widget &quot;Job_Settle&quot;&gt;&gt;
     &lt;&lt;set _job_type to $args[0]&gt;&gt;
     &lt;&lt;set _a to $actors[$current_actor]&gt;&gt;
+    &lt;&lt;if not def $req_res&gt;&gt;&lt;&lt;set $req_res to &quot;c&quot;&gt;&gt;&lt;&lt;/if&gt;&gt;
 
-    /* --- 🛡️ 核心修复：防止报错的保险丝 --- */
-    /* 1. 如果资源等级丢失，默认设为 c 级 */
-    &lt;&lt;if not def $req_res&gt;&gt;
-        &lt;&lt;set $req_res to &quot;c&quot;&gt;&gt;
-    &lt;&lt;/if&gt;&gt;
+    /* --- 🔧 核心修复：智能修正分成比例 --- */
+    /* 如果 split 丢失，或者你是旧档玩家，这里会强制根据咖位重置比例 */
+    /* 逻辑：咖位越大(rank高)，公司拿的越少(split低) */
     
-    /* 2. 如果分账比例丢失（旧档），默认 0.5 */
     &lt;&lt;if not def _a.split&gt;&gt;
-        &lt;&lt;set _a.split to 0.5&gt;&gt;
+        /* 如果完全没有 split，初始化它 */
+        &lt;&lt;set _need_fix to true&gt;&gt;
+    &lt;&lt;else&gt;&gt;
+        /* 这里可以加个强制刷新，确保升级后分成变化 */
+        &lt;&lt;set _need_fix to true&gt;&gt; 
+    &lt;&lt;/if&gt;&gt;
+
+    &lt;&lt;if _need_fix&gt;&gt;
+        &lt;&lt;if _a.rank_level is 1&gt;&gt;
+            &lt;&lt;set _a.split to 0.8&gt;&gt; /* 糊咖：公司8成 */
+        &lt;&lt;elseif _a.rank_level is 2&gt;&gt;
+            &lt;&lt;set _a.split to 0.5&gt;&gt; /* 三线：五五开 */
+        &lt;&lt;elseif _a.rank_level is 3&gt;&gt;
+            &lt;&lt;set _a.split to 0.4&gt;&gt; /* 二线：公司4成 */
+        &lt;&lt;elseif _a.rank_level is 4&gt;&gt;
+            &lt;&lt;set _a.split to 0.3&gt;&gt; /* 一线：公司3成 */
+        &lt;&lt;elseif _a.rank_level &gt;= 5&gt;&gt;
+            &lt;&lt;set _a.split to 0.2&gt;&gt; /* 顶流：公司2成 */
+        &lt;&lt;else&gt;&gt;
+            &lt;&lt;set _a.split to 0.5&gt;&gt; /* 兜底 */
+        &lt;&lt;/if&gt;&gt;
     &lt;&lt;/if&gt;&gt;
     /* ------------------------------------- */
-
-    /* 1. 计算【总片酬】 (Gross Income) */
     
-    /* A. 基础底薪 */
-    &lt;&lt;set _base_map to {1: 10, 2: 30, 3: 60, 4: 150, 5: 300}&gt;&gt;
+    /* 确保其他属性存在 */
+    &lt;&lt;if not def _a.topic&gt;&gt;&lt;&lt;set _a.topic to 0&gt;&gt;&lt;&lt;/if&gt;&gt;
+
+    /* --- 2. 动态称呼 --- */
+    &lt;&lt;if _job_type is &quot;drama&quot;&gt;&gt;
+        &lt;&lt;set _income_label to &quot;片酬&quot;&gt;&gt;
+    &lt;&lt;else&gt;&gt;
+        &lt;&lt;set _income_label to &quot;通告费&quot;&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
+
+    /* --- 3. 计算总收入 --- */
+    &lt;&lt;set _base_map to {1: 20, 2: 80, 3: 150, 4: 400, 5: 800}&gt;&gt;
     &lt;&lt;set _base to _base_map[_a.rank_level]&gt;&gt;
+    &lt;&lt;set _traffic_bonus to Math.floor(_base * (_a.topic / 80))&gt;&gt;
     
-    /* B. 流量溢价 */
-    &lt;&lt;set _traffic_bonus to Math.floor(_base * (_a.topic / 100))&gt;&gt;
+    &lt;&lt;set _res_mult_map to {s: 2.5, a: 1.8, b: 1.2, c: 0.8}&gt;&gt;
+    &lt;&lt;if def _res_mult_map[$req_res]&gt;&gt;&lt;&lt;set _res_mult to _res_mult_map[$req_res]&gt;&gt;
+    &lt;&lt;else&gt;&gt;&lt;&lt;set _res_mult to 0.8&gt;&gt;&lt;&lt;/if&gt;&gt;
     
-    /* C. 资源等级倍率 */
-    &lt;&lt;set _res_mult_map to {s: 2.0, a: 1.5, b: 1.2, c: 0.8}&gt;&gt;
-    &lt;&lt;set _res_mult to _res_mult_map[$req_res]&gt;&gt;
-    
-    /* D. 市场波动 */
     &lt;&lt;set _fluctuation to random(90, 130) / 100&gt;&gt;
-
-    /* 计算总包 */
     &lt;&lt;set _gross_income to Math.floor((_base + _traffic_bonus) * _res_mult * _fluctuation)&gt;&gt;
     
-    /* 2. 计算【分账】 */
+    /* --- 4. 计算分账 (现在 split 一定是正确的) --- */
     &lt;&lt;set _company_income to Math.floor(_gross_income * _a.split)&gt;&gt;
     &lt;&lt;set _artist_income to _gross_income - _company_income&gt;&gt;
     
-    /* 3. 属性结算 */
+    /* --- 5. 属性结算 --- */
     &lt;&lt;set _msg to &quot;&quot;&gt;&gt;
     &lt;&lt;if _job_type is &quot;drama&quot;&gt;&gt;
         &lt;&lt;set _a.acting += 3&gt;&gt;&lt;&lt;set _a.fans.career += 200&gt;&gt;&lt;&lt;set _msg to &quot;演技 +3 | 事业粉 +200&quot;&gt;&gt;
@@ -2416,38 +2603,39 @@ body {
         &lt;&lt;set _a.stage += 3&gt;&gt;&lt;&lt;set _a.fans.mom += 100&gt;&gt;&lt;&lt;set _a.fans.live += 200&gt;&gt;&lt;&lt;set _msg to &quot;唱跳 +3 | 妈粉 +100&quot;&gt;&gt;
     &lt;&lt;/if&gt;&gt;
 
-    /* 4. 加钱 */
+    /* --- 6. 加钱 --- */
     &lt;&lt;set $money += _company_income&gt;&gt;
     
-    /* 5. 显示结果 */
-    &lt;div style=&quot;background:#f0fdf4; border:1px solid #bbf7d0; padding:15px; border-radius:8px; margin-top:10px;&quot;&gt;
+    /* --- 7. UI 显示 --- */
+    &lt;div style=&quot;background:#f0fdf4; border:1px solid #bbf7d0; padding:10px; border-radius:6px; margin-top:5px;&quot;&gt;
         &lt;div style=&quot;display:flex; justify-content:space-between; align-items:center;&quot;&gt;
-            &lt;b style=&quot;font-size:1.2em; color:#15803d;&quot;&gt;💰 结算清单&lt;/b&gt;
+            &lt;b style=&quot;font-size:1.1em; color:#15803d;&quot;&gt;💰 结算清单&lt;/b&gt;
             &lt;span style=&quot;font-size:0.8em; color:#64748b;&quot;&gt;资源等级: &lt;&lt;print $req_res.toUpperCase()&gt;&gt;&lt;/span&gt;
         &lt;/div&gt;
-        &lt;hr style=&quot;opacity:0.2; margin:8px 0;&quot;&gt;
+        &lt;hr style=&quot;opacity:0.2; margin:5px 0;&quot;&gt;
         
-        &lt;div style=&quot;display:flex; justify-content:space-between; font-family:monospace; margin-bottom:5px;&quot;&gt;
-            &lt;span&gt;总通告费:&lt;/span&gt;
+        &lt;div style=&quot;display:flex; justify-content:space-between; font-family:monospace; margin-bottom:2px; font-size:0.9em;&quot;&gt;
+            &lt;span&gt;总&lt;&lt;print _income_label&gt;&gt;:&lt;/span&gt;
             &lt;span&gt;$&lt;&lt;print _gross_income&gt;&gt; 万&lt;/span&gt;
         &lt;/div&gt;
         
-        &lt;div style=&quot;display:flex; justify-content:space-between; font-family:monospace; color:#ef4444;&quot;&gt;
+        &lt;div style=&quot;display:flex; justify-content:space-between; font-family:monospace; color:#ef4444; font-size:0.9em;&quot;&gt;
+            /* 显示分账百分比 */
             &lt;span&gt;艺人分成 (&lt;&lt;print Math.round((1-_a.split)*100)&gt;&gt;%):&lt;/span&gt;
             &lt;span&gt;- $&lt;&lt;print _artist_income&gt;&gt; 万&lt;/span&gt;
         &lt;/div&gt;
         
-        &lt;div style=&quot;display:flex; justify-content:space-between; font-family:monospace; color:#15803d; font-weight:bold; font-size:1.2em; margin-top:5px; border-top:1px dashed #cbd5e1; padding-top:5px;&quot;&gt;
-            &lt;span&gt;公司实收:&lt;/span&gt;
+        &lt;div style=&quot;display:flex; justify-content:space-between; font-family:monospace; color:#15803d; font-weight:bold; font-size:1.1em; margin-top:4px; border-top:1px dashed #cbd5e1; padding-top:4px;&quot;&gt;
+            &lt;span&gt;公司实收 (&lt;&lt;print Math.round(_a.split*100)&gt;&gt;%):&lt;/span&gt;
             &lt;span&gt;+ $&lt;&lt;print _company_income&gt;&gt; 万&lt;/span&gt;
         &lt;/div&gt;
         
-        &lt;div style=&quot;margin-top:10px; font-size:0.9em; color:#0f766e; background:#ccfbf1; padding:5px; border-radius:4px;&quot;&gt;
+        &lt;div style=&quot;margin-top:5px; font-size:0.85em; color:#0f766e; background:#ccfbf1; padding:3px 6px; border-radius:4px;&quot;&gt;
             📈 &lt;&lt;print _msg&gt;&gt;
         &lt;/div&gt;
     &lt;/div&gt;
-&lt;&lt;/widget&gt;&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="33" name="Widget_Month_Logic" tags="widget" position="2450,350" size="100,100">&lt;&lt;widget &quot;Process_Month_Logic&quot;&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;
+&lt;&lt;/widget&gt;&gt;</tw-passagedata><tw-passagedata pid="33" name="Widget_Month_Logic" tags="widget" position="2450,350" size="100,100">&lt;&lt;widget &quot;Process_Month_Logic&quot;&gt;&gt;
     &lt;&lt;silently&gt;&gt;
     
     /* ==============================
@@ -2458,6 +2646,14 @@ body {
     &lt;&lt;set _rank_up_events to []&gt;&gt;  /* 存一下谁升咖了 */
     &lt;&lt;set _rival_event to null&gt;&gt;   /* 存商战事件 */
     &lt;&lt;set _resource_event to null&gt;&gt;/* 存资源事件 */
+    &lt;&lt;set _new_gossips_count to 0&gt;&gt; /* 记录本月新增数量 */
+    
+    /* 🗑️ 核心功能：清理 3 个月前的过期瓜 */
+    /* 只有当瓜的 (当前月 - 创建月) &lt; 3 时才保留 */
+    /* 注意：旧存档的瓜没有 created_at，默认保留或给它补一个 */
+    &lt;&lt;set _old_count to $gossips.length&gt;&gt;
+    &lt;&lt;set $gossips to $gossips.filter(g =&gt; !def g.created_at or ($month - g.created_at &lt; 3))&gt;&gt;
+    &lt;&lt;set _expired_count to _old_count - $gossips.length&gt;&gt;
 
     /* ==============================
        2. 艺人循环 (工期与升咖)
@@ -2540,7 +2736,16 @@ body {
         &lt;&lt;set $resources.c += 2&gt;&gt;
         &lt;&lt;set _resource_event to {type: &quot;normal&quot;, desc: &quot;📩 收到了一些 C级 边角料资源。&quot;}&gt;&gt;
     &lt;&lt;/if&gt;&gt;
-
+    
+/* ==============================
+       5. 🆕 批量获取情报 (1~3个)
+       ============================== */
+    &lt;&lt;set _gossip_count to random(1, 3)&gt;&gt;
+    &lt;&lt;for _i to 0; _i &lt; _gossip_count; _i++&gt;&gt;
+        &lt;&lt;Generate_Gossip&gt;&gt;
+    &lt;&lt;/for&gt;&gt;
+    &lt;&lt;set _new_gossips_count to _gossip_count&gt;&gt;
+    
     /* ==============================
        5. 恢复与预热
        ============================== */
@@ -2555,6 +2760,81 @@ body {
     &lt;&lt;set _next_hotsearch to _hot_events.random()&gt;&gt;
 
     &lt;&lt;/silently&gt;&gt;
+&lt;&lt;/widget&gt;&gt;</tw-passagedata><tw-passagedata pid="34" name="Widget_Gossip_System" tags="widget" position="2350,1075" size="100,100">&lt;&lt;widget &quot;Generate_Gossip&quot;&gt;&gt;
+    &lt;&lt;set _rnd to random(1, 100)&gt;&gt;
+    
+    /* === 1. 定义瓜的等级与库 === */
+    
+    /* 🟢 绿色：圈内趣闻 (40%) - 价值低，用来换点零花钱 */
+    &lt;&lt;if _rnd &lt;= 40&gt;&gt;
+        &lt;&lt;set _type to &quot;green&quot;&gt;&gt;
+        &lt;&lt;set _label to &quot;🟢趣闻&quot;&gt;&gt;
+        &lt;&lt;set _pool to [
+            &quot;某古偶男主拍戏全靠眼药水&quot;,
+            &quot;某女星红毯假摔是为了抢头条&quot;,
+            &quot;某剧组盒饭太难吃，群演集体罢工&quot;,
+            &quot;某综艺导演喜欢在片场骂人&quot;,
+            &quot;某男团成员其实是假唱惯犯&quot;
+        ]&gt;&gt;
+        &lt;&lt;set _price to random(5, 10)&gt;&gt;&lt;&lt;set _power to 100&gt;&gt;
+
+    /* 🔵 蓝色：行业黑料 (30%) - 价值中，能打击对手 */
+    &lt;&lt;elseif _rnd &lt;= 70&gt;&gt;
+        &lt;&lt;set _type to &quot;blue&quot;&gt;&gt;
+        &lt;&lt;set _label to &quot;🔵黑料&quot;&gt;&gt;
+        &lt;&lt;set _pool to [
+            &quot;某公司为了捧新人，恶意打压老艺人&quot;,
+            &quot;某流量小生片场耍大牌，让替身站桩&quot;,
+            &quot;某女星整容后遗症爆发，脸部僵硬&quot;,
+            &quot;某剧组涉嫌洗钱，被资方调查&quot;,
+            &quot;某二线艺人隐婚生子，人设崩塌&quot;
+        ]&gt;&gt;
+        &lt;&lt;set _price to random(20, 40)&gt;&gt;&lt;&lt;set _power to 300&gt;&gt;
+
+    /* 🔴 红色：塌房实锤 (20%) - 价值高，重创对手 */
+    &lt;&lt;elseif _rnd &lt;= 90&gt;&gt;
+        &lt;&lt;set _type to &quot;red&quot;&gt;&gt;
+        &lt;&lt;set _label to &quot;🔴核弹&quot;&gt;&gt;
+        &lt;&lt;set _pool to [
+            &quot;某顶流涉嫌偷税漏税，数额巨大&quot;,
+            &quot;某知名导演潜规则录音曝光&quot;,
+            &quot;某影帝被实锤出轨，原配下场锤人&quot;,
+            &quot;某当红小花知三当三&quot;,
+            &quot;某公司做假账，面临监管重罚&quot;
+        ]&gt;&gt;
+        &lt;&lt;set _price to random(50, 80)&gt;&gt;&lt;&lt;set _power to 1000&gt;&gt;
+
+    /* 🟡 金色：商业机密 (10%) - 极稀有，可换取资源 */
+    &lt;&lt;else&gt;&gt;
+        &lt;&lt;set _type to &quot;gold&quot;&gt;&gt;
+        &lt;&lt;set _label to &quot;🟡机密&quot;&gt;&gt;
+        &lt;&lt;set _pool to [
+            &quot;某奢侈品牌下季度要换代言人&quot;,
+            &quot;S级大制北境》正在秘密选角&quot;,
+            &quot;某电视台高层变动，资源面临洗牌&quot;,
+            &quot;某视频平台将推出这就S+级综艺&quot;
+        ]&gt;&gt;
+        &lt;&lt;set _price to random(100, 200)&gt;&gt;&lt;&lt;set _power to 0&gt;&gt; /* 机密不用于攻击，只卖钱或换资源 */
+    &lt;&lt;/if&gt;&gt;
+
+   /* === 2. 生成瓜对象 (新增：created_at) === */
+    &lt;&lt;set _desc to _pool.random()&gt;&gt;
+    &lt;&lt;if random(1,100) &lt; 50 and _type neq &quot;gold&quot;&gt;&gt;
+        &lt;&lt;set _rival to $rivals.random()&gt;&gt;
+        &lt;&lt;set _desc to _rival.name + &quot;旗下&quot; + _desc&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
+
+    &lt;&lt;set _new_gossip to {
+        type: _type,
+        label: _label,
+        desc: _desc,
+        price: _price,
+        power: _power,
+        created_at: $month  /* 🕒 核心新增：记录产生月份 */
+    }&gt;&gt;
+    
+    &lt;&lt;set $gossips.push(_new_gossip)&gt;&gt;
+    &lt;&lt;set $last_gossip to _new_gossip&gt;&gt; /* 用于显示 */
 &lt;&lt;/widget&gt;&gt;</tw-passagedata></tw-storydata>
 	<script id="script-sugarcube" type="text/javascript">
 	/*! SugarCube JS */
