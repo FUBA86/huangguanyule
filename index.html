@@ -1996,6 +1996,12 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
            &lt;&lt;link &quot;📹 艺人直播澄清 (0w)&quot; &quot;PR_Execute&quot;&gt;&gt;&lt;&lt;set $type to &quot;live_apology&quot;, $cost to 0&gt;&gt;&lt;&lt;/link&gt;&gt;
            &lt;div style=&quot;font-size:0.75em; color:#94a3b8;&quot;&gt;效果拔群但可能翻车&lt;/div&gt;
         &lt;/div&gt;
+        
+        /* E. 慈善公益 (新增) */
+        &lt;div style=&quot;grid-column: 1 / -1; background:#f0fdf4; border:1px solid #bbf7d0; padding:10px; border-radius:4px; text-align:center;&quot;&gt;
+           &lt;&lt;link &quot;💖 公益慈善 (花费50万)&quot; &quot;PR_Execute&quot;&gt;&gt;&lt;&lt;set $type to &quot;charity&quot;, $cost to 50&gt;&gt;&lt;&lt;/link&gt;&gt;
+           &lt;div style=&quot;font-size:0.75em; color:#15803d;&quot;&gt;稳步提升口碑，降低危险值&lt;/div&gt;
+        &lt;/div&gt;
       &lt;/div&gt;
     &lt;/div&gt;
 
@@ -2215,11 +2221,11 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
       &lt;div class=&quot;btn-sub&quot;&gt;Items &amp; Shop&lt;/div&gt;
     &lt;/div&gt;
 
-    /* Box 7: 休息/结束本月 (红色特供版 - 已修改为占满整行) */
-    /* style=&quot;grid-column: 1 / -1;&quot; 让它横跨所有列 */
+/* Box 7: 休息/结束本月 (红色特供版 - 已修改为占满整行) */
     &lt;div class=&quot;btn-box&quot; style=&quot;border-color:#ef4444; background:#fef2f2; grid-column: 1 / -1;&quot;&gt;
+      /* 修改这里：跳转到 Rest_Transition */
       &lt;&lt;link &quot;🛌 休息 (结束本月)&quot;&gt;&gt;
-        &lt;&lt;goto &quot;Next_Month&quot;&gt;&gt;
+        &lt;&lt;goto &quot;Rest_Transition&quot;&gt;&gt;
       &lt;&lt;/link&gt;&gt;
       &lt;div class=&quot;btn-sub&quot; style=&quot;color:#b91c1c&quot;&gt;End Turn &gt;&gt;&lt;/div&gt;
     &lt;/div&gt;
@@ -2277,6 +2283,18 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
         &lt;&lt;/if&gt;&gt;
     &lt;&lt;/if&gt;&gt;
     
+    /* --- 5. 慈善公益 (新增) --- */
+    &lt;&lt;if $type is &quot;charity&quot;&gt;&gt;
+        你以艺人的名义向山区捐赠了一所希望小学，并低调地流出了捐赠证书。
+        &lt;br&gt;
+        网友：“这才是正能量偶像！”
+        &lt;br&gt;
+        @@color:green; 全员口碑 +5 | 危险值 -15@@
+        &lt;&lt;set $actors.zp.reputation += 5&gt;&gt;
+        &lt;&lt;set $actors.qs.reputation += 5&gt;&gt;
+        &lt;&lt;set $actors.new.reputation += 5&gt;&gt;
+        &lt;&lt;set $danger_level -= 15&gt;&gt;
+        
     /* 危机解除判断 */
     &lt;&lt;if $danger_level &lt; 10&gt;&gt;
         &lt;&lt;set $current_crisis_desc to &quot;暂无异常&quot;&gt;&gt;
@@ -2507,8 +2525,8 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
         &lt;/div&gt;
     &lt;/a&gt;
 
-    /* --- 剧情图标 --- */
-    &lt;div style=&quot;font-size:4em; margin-bottom:20px;&quot;&gt;👮‍♂️&lt;/div&gt;
+    /* --- 剧情图标 (已替换为无脸版) --- */
+    &lt;div style=&quot;font-size:4em; margin-bottom:20px;&quot;&gt;🚓 ➔ 👔&lt;/div&gt;
     
     /* --- 正文 --- */
     &lt;div style=&quot;width: 85%; text-align: left; line-height: 1.8; color: #334155;&quot;&gt;
@@ -2999,13 +3017,24 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
 &lt;&lt;/if&gt;&gt;
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="32" name="Visit_Set" tags="" position="900,200" size="100,100">&lt;&lt;nobr&gt;&gt;
 !! 🚗 剧组探班
-&lt;&lt;set _a to $actors[$current_actor]&gt;&gt;
-&lt;&lt;set _a.current_energy -= 10&gt;&gt;
 
-/* 防止体力低于0 */
-&lt;&lt;if _a.current_energy &lt; 0&gt;&gt;
-    &lt;&lt;set _a.current_energy = 0&gt;&gt;
-&lt;&lt;/if&gt;&gt;
+/* 1. 体力检查 */
+&lt;&lt;if $stamina &lt; 10&gt;&gt;
+    &lt;div style=&quot;padding:20px; border:1px solid red; background:#fff1f2; text-align:center;&quot;&gt;
+        ❌ &lt;b&gt;你的体力不足！&lt;/b&gt;&lt;br&gt;
+        作为经纪人，你需要休息了。&lt;br&gt;
+        ( 需要 10 体力 )
+        &lt;br&gt;&lt;br&gt;
+        [[🔙 返回|Work_Center]]
+    &lt;/div&gt;
+&lt;&lt;else&gt;&gt;
+    /* 2. 扣除你的体力 */
+    &lt;&lt;set $stamina -= 10&gt;&gt;
+    
+    &lt;&lt;set _a to $actors[$current_actor]&gt;&gt;
+    
+    /* 3. 恢复艺人体力 (逻辑优化：艺人不扣体力，反而回血) */
+    /* 原逻辑有 _a.current_energy -= 10，这里建议去掉，探班应该是给艺人送温暖 */
 
 /* --- 🎲 随机生成数值 --- */
 &lt;&lt;set _add_fans to random(100, 300)&gt;&gt;
@@ -3384,13 +3413,7 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
 
     /* --- 🛡️ 保险丝 --- */
     &lt;&lt;if not def $req_res&gt;&gt;&lt;&lt;set $req_res to &quot;c&quot;&gt;&gt;&lt;&lt;/if&gt;&gt;
-    /* 检查艺人分成比例 */
-    &lt;&lt;if not _a.split&gt;&gt;
-        &lt;&lt;if $current_actor is &quot;zp&quot;&gt;&gt;&lt;&lt;set _a.split = 0.4&gt;&gt;
-        &lt;&lt;elseif $current_actor is &quot;qs&quot;&gt;&gt;&lt;&lt;set _a.split = 0.5&gt;&gt;
-        &lt;&lt;elseif $current_actor is &quot;new&quot;&gt;&gt;&lt;&lt;set _a.split = 0.8&gt;&gt;
-        &lt;&lt;else&gt;&gt;&lt;&lt;set _a.split = 0.5&gt;&gt;&lt;&lt;/if&gt;&gt;
-    &lt;&lt;/if&gt;&gt;
+    &lt;&lt;if not _a.split&gt;&gt;&lt;&lt;set _a.split = 0.5&gt;&gt;&lt;&lt;/if&gt;&gt;
 
     /* 动态称呼 */
     &lt;&lt;if _job_type is &quot;drama&quot;&gt;&gt;
@@ -3399,7 +3422,7 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
         &lt;&lt;set _income_label to &quot;通告费&quot;&gt;&gt;
     &lt;&lt;/if&gt;&gt;
 
-    /* --- 计算基础收入与加成 (保持原逻辑) --- */
+    /* --- 计算收入 --- */
     &lt;&lt;set _base_drama_map to {1: 80, 2: 300, 3: 600, 4: 1500, 5: 3000}&gt;&gt;
     &lt;&lt;set _base_variety_map to {1: 20, 2: 60, 3: 150, 4: 300, 5: 600}&gt;&gt;
     &lt;&lt;set _base_fashion_map to {1: 30, 2: 80, 3: 200, 4: 400, 5: 800}&gt;&gt;
@@ -3427,174 +3450,75 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
     
     &lt;&lt;set _gross_income to Math.floor(_base_income * _total_mult * _fluctuation)&gt;&gt;
     
-    /* --- 💰 核心修改：分账与税务计算 --- */
-    /* 1. 先分给公司 */
+    /* 税务计算 */
     &lt;&lt;set _company_share_pretax to Math.floor(_gross_income * _a.split)&gt;&gt;
-    /* 2. 艺人拿到剩下的 (艺人自己交税，这里不展示艺人的税，只显示公司视角的) */
     &lt;&lt;set _artist_income to _gross_income - _company_share_pretax&gt;&gt;
-    
-    /* 3. 公司交税 25% */
     &lt;&lt;set _tax to Math.floor(_company_share_pretax * 0.25)&gt;&gt;
     &lt;&lt;set _company_income_net to _company_share_pretax - _tax&gt;&gt;
     
-    /* --- 属性与粉丝增长 (保持原逻辑) --- */
-    &lt;&lt;set _skill_gain_map to {s: 4, a: 3, b: 2, c: 1}&gt;&gt;
-    &lt;&lt;set _base_skill_gain to _skill_gain_map[$req_res]&gt;&gt;
-    &lt;&lt;set _random_skill_gain to random(0, 2)&gt;&gt;
-    &lt;&lt;set _total_skill_gain to _base_skill_gain + _random_skill_gain&gt;&gt;
-    
+    /* --- 属性与口碑增长 --- */
     &lt;&lt;set _base_fan_growth to {1: 30, 2: 60, 3: 100, 4: 200, 5: 400}&gt;&gt;
-    &lt;&lt;set _main_fan_base to _base_fan_growth[_a.rank_level]&gt;&gt;
-    &lt;&lt;set _fan_res_mult to {s: 2.0, a: 1.5, b: 1.2, c: 1.0}&gt;&gt;
-    &lt;&lt;set _main_fan_growth to Math.floor(_main_fan_base * _fan_res_mult[$req_res])&gt;&gt;
+    &lt;&lt;set _main_fan_growth to Math.floor(_base_fan_growth[_a.rank_level] * 1.5)&gt;&gt;
+    
+    /* === 新增：计算口碑增长 (Reputation) === */
+    /* 默认每次工作 +2 到 +4 口碑 */
+    &lt;&lt;set _rep_gain to random(2, 4)&gt;&gt;
     
     &lt;&lt;set _msg to &quot;&quot;&gt;&gt;
+    
     &lt;&lt;if _job_type is &quot;drama&quot;&gt;&gt;
-        &lt;&lt;set _a.acting += _total_skill_gain&gt;&gt;
-        &lt;&lt;set _main_fan_type to &quot;career&quot;&gt;&gt;
+        &lt;&lt;set _a.acting += 3&gt;&gt;
         &lt;&lt;set _a.fans.career += _main_fan_growth&gt;&gt;
-        &lt;&lt;set _a.reputation += random(0, 3)&gt;&gt;
-        &lt;&lt;set _msg to &quot;演技 +&quot;+_total_skill_gain+&quot; | 事业粉 +&quot;+_main_fan_growth&gt;&gt;
+        &lt;&lt;set _a.reputation += _rep_gain&gt;&gt;  /* 加口碑 */
+        &lt;&lt;set _msg to &quot;演技 +3 | 事业粉 +&quot;+_main_fan_growth+&quot; | 口碑 +&quot;+_rep_gain&gt;&gt;
+        
     &lt;&lt;elseif _job_type is &quot;variety&quot;&gt;&gt;
-        &lt;&lt;set _a.topic += _total_skill_gain * 3&gt;&gt;
-        &lt;&lt;set _main_fan_type to &quot;clown&quot;&gt;&gt;
+        &lt;&lt;set _a.topic += 10&gt;&gt;
         &lt;&lt;set _a.fans.clown += _main_fan_growth&gt;&gt;
         &lt;&lt;set $traffic += Math.floor(_gross_income / 10)&gt;&gt;
-        &lt;&lt;set _msg to &quot;话题 +&quot;+(_total_skill_gain*3)+&quot; | 乐子人 +&quot;+_main_fan_growth+&quot; | 流量 +&quot;+Math.floor(_gross_income/10)&gt;&gt;
+        &lt;&lt;set _a.reputation += 1&gt;&gt; /* 综艺涨口碑较少，容易招黑 */
+        &lt;&lt;set _msg to &quot;话题 +10 | 乐子人 +&quot;+_main_fan_growth+&quot; | 口碑 +1&quot;&gt;&gt;
+        
     &lt;&lt;elseif _job_type is &quot;fashion&quot;&gt;&gt;
-        &lt;&lt;set _a.fashion += _total_skill_gain&gt;&gt;
-        &lt;&lt;set _main_fan_type to &quot;face&quot;&gt;&gt;
+        &lt;&lt;set _a.fashion += 3&gt;&gt;
         &lt;&lt;set _a.fans.face += _main_fan_growth&gt;&gt;
-        &lt;&lt;set _a.reputation += random(1, 4)&gt;&gt;
-        &lt;&lt;set _msg to &quot;时尚 +&quot;+_total_skill_gain+&quot; | 颜粉 +&quot;+_main_fan_growth+&quot; | 口碑 +&quot;+_a.reputation&gt;&gt;
+        &lt;&lt;set _a.reputation += _rep_gain&gt;&gt; /* 加口碑 */
+        &lt;&lt;set _msg to &quot;时尚 +3 | 颜粉 +&quot;+_main_fan_growth+&quot; | 口碑 +&quot;+_rep_gain&gt;&gt;
+        
     &lt;&lt;elseif _job_type is &quot;stage&quot;&gt;&gt;
-        &lt;&lt;set _a.stage += _total_skill_gain&gt;&gt;
-        &lt;&lt;set _main_fan_type to &quot;mom&quot;&gt;&gt;
+        &lt;&lt;set _a.stage += 3&gt;&gt;
         &lt;&lt;set _a.fans.mom += _main_fan_growth&gt;&gt;
-        &lt;&lt;set _a.fans.career += Math.floor(_main_fan_growth / 2)&gt;&gt;
-        &lt;&lt;set _msg to &quot;唱跳 +&quot;+_total_skill_gain+&quot; | 妈粉 +&quot;+_main_fan_growth+&quot; | 事业粉 +&quot;+Math.floor(_main_fan_growth/2)&gt;&gt;
+        &lt;&lt;set _a.reputation += _rep_gain&gt;&gt; /* 加口碑 */
+        &lt;&lt;set _msg to &quot;唱跳 +3 | 妈粉 +&quot;+_main_fan_growth+&quot; | 口碑 +&quot;+_rep_gain&gt;&gt;
     &lt;&lt;/if&gt;&gt;
 
-    /* 随机粉丝增长逻辑保持不变... */
-    &lt;&lt;set _fan_types to [&quot;career&quot;, &quot;mom&quot;, &quot;face&quot;, &quot;clown&quot;, &quot;toxic&quot;, &quot;cp&quot;, &quot;dream&quot;]&gt;&gt;
-    &lt;&lt;set _fan_types = _fan_types.filter(type =&gt; type != _main_fan_type)&gt;&gt;
-    &lt;&lt;set _num_extra_types to random(1, 2)&gt;&gt;
-    &lt;&lt;set _random_fan_msgs to []&gt;&gt;
-    &lt;&lt;for _i to 0; _i &lt; _num_extra_types; _i++&gt;&gt;
-        &lt;&lt;if _fan_types.length &gt; 0&gt;&gt;
-            &lt;&lt;set _random_type = _fan_types.random()&gt;&gt;
-            &lt;&lt;set _fan_gain_value = Math.floor(_main_fan_growth * random(30, 70) / 100)&gt;&gt;
-            &lt;&lt;set _a.fans[_random_type] += _fan_gain_value&gt;&gt;
-            &lt;&lt;set _type_name to &quot;&quot;&gt;&gt;
-            &lt;&lt;if _random_type is &quot;career&quot;&gt;&gt;&lt;&lt;set _type_name to &quot;事业粉&quot;&gt;&gt;
-            &lt;&lt;elseif _random_type is &quot;mom&quot;&gt;&gt;&lt;&lt;set _type_name to &quot;妈粉&quot;&gt;&gt;
-            &lt;&lt;elseif _random_type is &quot;face&quot;&gt;&gt;&lt;&lt;set _type_name to &quot;颜粉&quot;&gt;&gt;
-            &lt;&lt;elseif _random_type is &quot;clown&quot;&gt;&gt;&lt;&lt;set _type_name to &quot;乐子人&quot;&gt;&gt;
-            &lt;&lt;elseif _random_type is &quot;toxic&quot;&gt;&gt;&lt;&lt;set _type_name to &quot;毒唯&quot;&gt;&gt;
-            &lt;&lt;elseif _random_type is &quot;cp&quot;&gt;&gt;&lt;&lt;set _type_name to &quot;CP粉&quot;&gt;&gt;
-            &lt;&lt;elseif _random_type is &quot;dream&quot;&gt;&gt;&lt;&lt;set _type_name to &quot;梦女&quot;&gt;&gt;&lt;&lt;/if&gt;&gt;
-            &lt;&lt;set _random_fan_msgs.push(_type_name + &quot; +&quot; + _fan_gain_value)&gt;&gt;
-            &lt;&lt;set _fan_types = _fan_types.filter(type =&gt; type != _random_type)&gt;&gt;
-        &lt;&lt;/if&gt;&gt;
-    &lt;&lt;/for&gt;&gt;
-
-    /* 随机属性增长逻辑保持不变... */
-    &lt;&lt;set _other_attrs to []&gt;&gt;
-    &lt;&lt;if _job_type is &quot;drama&quot;&gt;&gt;&lt;&lt;set _other_attrs = [&quot;fashion&quot;, &quot;stage&quot;, &quot;topic&quot;]&gt;&gt;
-    &lt;&lt;elseif _job_type is &quot;variety&quot;&gt;&gt;&lt;&lt;set _other_attrs = [&quot;acting&quot;, &quot;fashion&quot;, &quot;stage&quot;]&gt;&gt;
-    &lt;&lt;elseif _job_type is &quot;fashion&quot;&gt;&gt;&lt;&lt;set _other_attrs = [&quot;acting&quot;, &quot;stage&quot;, &quot;topic&quot;]&gt;&gt;
-    &lt;&lt;elseif _job_type is &quot;stage&quot;&gt;&gt;&lt;&lt;set _other_attrs = [&quot;acting&quot;, &quot;fashion&quot;, &quot;topic&quot;]&gt;&gt;
-    &lt;&lt;/if&gt;&gt;
-    &lt;&lt;set _random_attr_msgs to []&gt;&gt;
-    &lt;&lt;if _other_attrs.length &gt; 0&gt;&gt;
-        &lt;&lt;set _num_random_attrs to random(1, 2)&gt;&gt;
-        &lt;&lt;for _i to 0; _i &lt; _num_random_attrs; _i++&gt;&gt;
-            &lt;&lt;set _random_attr = _other_attrs.random()&gt;&gt;
-            &lt;&lt;set _attr_gain to random(0, 2)&gt;&gt;
-            &lt;&lt;if _attr_gain &gt; 0&gt;&gt;
-                &lt;&lt;set _a[_random_attr] += _attr_gain&gt;&gt;
-                &lt;&lt;set _attr_name to &quot;&quot;&gt;&gt;
-                &lt;&lt;if _random_attr is &quot;acting&quot;&gt;&gt;&lt;&lt;set _attr_name to &quot;演技&quot;&gt;&gt;
-                &lt;&lt;elseif _random_attr is &quot;fashion&quot;&gt;&gt;&lt;&lt;set _attr_name to &quot;时尚&quot;&gt;&gt;
-                &lt;&lt;elseif _random_attr is &quot;stage&quot;&gt;&gt;&lt;&lt;set _attr_name to &quot;唱跳&quot;&gt;&gt;
-                &lt;&lt;elseif _random_attr is &quot;topic&quot;&gt;&gt;&lt;&lt;set _attr_name to &quot;话题&quot;&gt;&gt;&lt;&lt;/if&gt;&gt;
-                &lt;&lt;set _random_attr_msgs.push(_attr_name + &quot; +&quot; + _attr_gain)&gt;&gt;
-                &lt;&lt;set _other_attrs = _other_attrs.filter(attr =&gt; attr != _random_attr)&gt;&gt;
-            &lt;&lt;/if&gt;&gt;
-        &lt;&lt;/for&gt;&gt;
-    &lt;&lt;/if&gt;&gt;
-
-    /* 坑爹剧组惩罚保持不变... */
+    /* 坑爹剧组惩罚 (保持不变，如果坑爹则扣分) */
     &lt;&lt;set _penalty_msg to &quot;&quot;&gt;&gt;
     &lt;&lt;if _job_type is &quot;drama&quot; and def $is_bad_project and $is_bad_project&gt;&gt;
-        &lt;&lt;set _penalty_rate to random(40, 60) / 100&gt;&gt; 
-        &lt;&lt;set _main_fan_growth = Math.floor(_main_fan_growth * _penalty_rate)&gt;&gt;
-        &lt;&lt;set _a.reputation -= random(5, 10)&gt;&gt;
-        &lt;&lt;set _penalty_msg to &quot;⚠️ 坑爹剧组！粉丝增长和口碑大幅降低！&quot;&gt;&gt;
-        &lt;&lt;if $current_actor is &quot;zp&quot;&gt;&gt;&lt;&lt;set _a.fans.career += _main_fan_growth - (_main_fan_growth * 2)&gt;&gt;
-        &lt;&lt;elseif $current_actor is &quot;qs&quot;&gt;&gt;&lt;&lt;set _a.fans.career += _main_fan_growth - (_main_fan_growth * 2)&gt;&gt;
-        &lt;&lt;elseif $current_actor is &quot;new&quot;&gt;&gt;&lt;&lt;set _a.fans.mom += _main_fan_growth - (_main_fan_growth * 2)&gt;&gt;
-        &lt;&lt;/if&gt;&gt;
+        &lt;&lt;set _a.reputation -= 10&gt;&gt; /* 扣除刚才加的，再倒扣 */
+        &lt;&lt;set _penalty_msg to &quot;⚠️ 坑爹剧组！口碑大幅下降！&quot;&gt;&gt;
         &lt;&lt;unset $is_bad_project&gt;&gt;
     &lt;&lt;/if&gt;&gt;
 
-    /* --- 核心修改：加钱加的是税后收入 --- */
     &lt;&lt;set $money += _company_income_net&gt;&gt;
     
     /* --- 界面显示 --- */
     &lt;div style=&quot;background:#f0fdf4; border:1px solid #bbf7d0; padding:15px; border-radius:6px; margin-top:10px;&quot;&gt;
-        &lt;div style=&quot;display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;&quot;&gt;
-            &lt;b style=&quot;font-size:1.1em; color:#15803d;&quot;&gt;💰 &lt;&lt;print _income_label&gt;&gt;结算 (含税)&lt;/b&gt;
-            &lt;span style=&quot;font-size:0.8em; color:#64748b;&quot;&gt;
-                咖位: &lt;&lt;print _a.rank_label&gt;&gt; | 等级: &lt;&lt;print $req_res.toUpperCase()&gt;&gt;
-            &lt;/span&gt;
-        &lt;/div&gt;
-        &lt;hr style=&quot;opacity:0.2; margin:5px 0;&quot;&gt;
-        
-        &lt;div style=&quot;display:grid; grid-template-columns: 2fr 1fr; gap:8px; font-family:monospace; font-size:0.9em;&quot;&gt;
-            &lt;div&gt;总&lt;&lt;print _income_label&gt;&gt;:&lt;/div&gt;
-            &lt;div style=&quot;text-align:right;&quot;&gt;$&lt;&lt;print _gross_income&gt;&gt; 万&lt;/div&gt;
-            
-            &lt;div style=&quot;color:#ef4444;&quot;&gt;艺人分成 (&lt;&lt;print Math.round((1-_a.split)*100)&gt;&gt;%):&lt;/div&gt;
-            &lt;div style=&quot;text-align:right; color:#ef4444;&quot;&gt;- $&lt;&lt;print _artist_income&gt;&gt; 万&lt;/div&gt;
-            
-            &lt;div style=&quot;color:#1e40af;&quot;&gt;公司分成 (税前):&lt;/div&gt;
-            &lt;div style=&quot;text-align:right; color:#1e40af;&quot;&gt;$&lt;&lt;print _company_share_pretax&gt;&gt; 万&lt;/div&gt;
-
-            &lt;div style=&quot;color:#b45309; border-bottom:1px solid #cbd5e1; padding-bottom:3px;&quot;&gt;
-                公司税金 (25%):
-            &lt;/div&gt;
-            &lt;div style=&quot;text-align:right; color:#b45309; border-bottom:1px solid #cbd5e1; padding-bottom:3px;&quot;&gt;
-                - $&lt;&lt;print _tax&gt;&gt; 万
-            &lt;/div&gt;
-            
-            &lt;div style=&quot;font-weight:bold;&quot;&gt;公司实收 (税后):&lt;/div&gt;
-            &lt;div style=&quot;text-align:right; font-weight:bold; color:#15803d; font-size:1.1em;&quot;&gt;
-                + $&lt;&lt;print _company_income_net&gt;&gt; 万
-            &lt;/div&gt;
+        &lt;div style=&quot;font-weight:bold; color:#15803d;&quot;&gt;💰 &lt;&lt;print _income_label&gt;&gt;结算&lt;/div&gt;
+        &lt;div style=&quot;font-family:monospace; margin-top:5px;&quot;&gt;
+            总收入: $&lt;&lt;print _gross_income&gt;&gt; 万&lt;br&gt;
+            &lt;span style=&quot;color:#15803d; font-weight:bold;&quot;&gt;公司实收: + $&lt;&lt;print _company_income_net&gt;&gt; 万&lt;/span&gt; (税后)
         &lt;/div&gt;
         
         &lt;&lt;if _penalty_msg neq &quot;&quot;&gt;&gt;
-            &lt;div style=&quot;margin-top:8px; font-size:0.85em; color:#b91c1c; background:#fee2e2; padding:5px 8px; border-radius:4px;&quot;&gt;
-                ⚠️ &lt;&lt;print _penalty_msg&gt;&gt;
+            &lt;div style=&quot;margin-top:8px; color:#b91c1c; background:#fee2e2; padding:5px;&quot;&gt;
+                &lt;&lt;print _penalty_msg&gt;&gt;
             &lt;/div&gt;
         &lt;&lt;/if&gt;&gt;
         
-        &lt;div style=&quot;margin-top:8px; font-size:0.85em; color:#0f766e; background:#ccfbf1; padding:5px 8px; border-radius:4px;&quot;&gt;
+        &lt;div style=&quot;margin-top:8px; color:#0f766e; background:#ccfbf1; padding:5px;&quot;&gt;
             📈 &lt;&lt;print _msg&gt;&gt;
         &lt;/div&gt;
-        
-        &lt;&lt;if _random_fan_msgs.length &gt; 0&gt;&gt;
-            &lt;div style=&quot;margin-top:5px; font-size:0.8em; color:#7c2d12; background:#fed7aa; padding:4px 6px; border-radius:4px;&quot;&gt;
-                🎲 随机粉丝增长: &lt;&lt;print _random_fan_msgs.join(&quot; | &quot;)&gt;&gt;
-            &lt;/div&gt;
-        &lt;&lt;/if&gt;&gt;
-        
-        &lt;&lt;if _random_attr_msgs.length &gt; 0&gt;&gt;
-            &lt;div style=&quot;margin-top:5px; font-size:0.8em; color:#1e40af; background:#dbeafe; padding:4px 6px; border-radius:4px;&quot;&gt;
-                ⭐ 额外属性成长: &lt;&lt;print _random_attr_msgs.join(&quot; | &quot;)&gt;&gt;
-            &lt;/div&gt;
-        &lt;&lt;/if&gt;&gt;
     &lt;/div&gt;
 &lt;&lt;/nobr&gt;&gt;
 &lt;&lt;/widget&gt;&gt;</tw-passagedata><tw-passagedata pid="37" name="Widget_Month_Logic" tags="widget" position="2450,350" size="100,100">:: Widget_Month_Logic [widget] {&quot;position&quot;:&quot;2450,350&quot;,&quot;size&quot;:&quot;100,100&quot;}
@@ -3825,39 +3749,49 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
         &lt;&lt;set $last_gained_count to _qty&gt;&gt;
         &lt;&lt;set $last_gained_extra to &quot;⚠️ 注意：在情报中心置换只能获得A级资源，如需S级请去商务拓展中心&quot;&gt;&gt;
     &lt;&lt;/if&gt;&gt;
-&lt;&lt;/widget&gt;&gt;</tw-passagedata><tw-passagedata pid="39" name="Widget_Salary_Calc" tags="widget" position="800,325" size="100,100">:: Widget_Salary_Calc [widget] {&quot;position&quot;:&quot;800,325&quot;,&quot;size&quot;:&quot;100,100&quot;}
+&lt;&lt;/widget&gt;&gt;</tw-passagedata><tw-passagedata pid="39" name="Widget_Salary_Calc" tags="widget" position="800,325" size="100,100">:: Widget_Salary_Calc [widget]
 &lt;&lt;widget &quot;Calc_Income_Preview&quot;&gt;&gt;
 &lt;&lt;nobr&gt;&gt;
     &lt;&lt;set _key to $args[0]&gt;&gt;
     &lt;&lt;set _res to $args[1]&gt;&gt;
     &lt;&lt;set _act to $actors[_key]&gt;&gt;
 
-    /* 需要知道是什么类型的工作才能准确预览 */
-    /* 由于Calc_Income_Preview主要在Job_Drama_Select中使用，我们按影视剧计算 */
-    
-    /* 影视剧咖位基础收入 */
+    /* 1. 自动识别类型：如果没有传类型，默认按 drama 算，防止报错 */
+    &lt;&lt;if not def $type&gt;&gt;&lt;&lt;set _calc_type to &quot;drama&quot;&gt;&gt;
+    &lt;&lt;else&gt;&gt;&lt;&lt;set _calc_type to $type&gt;&gt;&lt;&lt;/if&gt;&gt;
+
+    /* 2. 基础底薪表 (必须与 Job_Settle 完全一致) */
     &lt;&lt;set _base_drama_map to {1: 80, 2: 300, 3: 600, 4: 1500, 5: 3000}&gt;&gt;
-    &lt;&lt;set _base_income to _base_drama_map[_act.rank_level]&gt;&gt;
-    
-    /* 资源等级系数 */
+    &lt;&lt;set _base_variety_map to {1: 20, 2: 60, 3: 150, 4: 300, 5: 600}&gt;&gt;
+    &lt;&lt;set _base_fashion_map to {1: 30, 2: 80, 3: 200, 4: 400, 5: 800}&gt;&gt;
+    &lt;&lt;set _base_stage_map to {1: 40, 2: 100, 3: 250, 4: 600, 5: 1000}&gt;&gt;
+
+    &lt;&lt;set _base_income to 0&gt;&gt;
+    &lt;&lt;if _calc_type is &quot;drama&quot;&gt;&gt;&lt;&lt;set _base_income to _base_drama_map[_act.rank_level]&gt;&gt;
+    &lt;&lt;elseif _calc_type is &quot;variety&quot;&gt;&gt;&lt;&lt;set _base_income to _base_variety_map[_act.rank_level]&gt;&gt;
+    &lt;&lt;elseif _calc_type is &quot;fashion&quot;&gt;&gt;&lt;&lt;set _base_income to _base_fashion_map[_act.rank_level]&gt;&gt;
+    &lt;&lt;elseif _calc_type is &quot;stage&quot;&gt;&gt;&lt;&lt;set _base_income to _base_stage_map[_act.rank_level]&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
+
+    /* 3. 资源等级系数 (必须与 Job_Settle 完全一致) */
+    /* 之前的代码这里系数可能写死了，导致综艺/时尚的S级预测偏低或偏高 */
     &lt;&lt;set _res_mult_map to {
-        s: 2.0,
-        a: 1.5,
-        b: 1.0,
-        c: 0.6
+        s: {drama: 2.0, variety: 2.5, fashion: 2.2, stage: 2.0},
+        a: {drama: 1.5, variety: 1.8, fashion: 1.5, stage: 1.5},
+        b: {drama: 1.0, variety: 1.2, fashion: 1.0, stage: 1.0},
+        c: {drama: 0.6, variety: 0.8, fashion: 0.7, stage: 0.6}
     }&gt;&gt;
-    &lt;&lt;set _res_mult to _res_mult_map[_res]&gt;&gt;
     
-    /* 明星效应加成 */
+    &lt;&lt;set _res_mult to _res_mult_map[_res][_calc_type]&gt;&gt;
+
+    /* 4. 明星加成 (必须与 Job_Settle 完全一致) */
     &lt;&lt;set _star_bonus to (_act.rank_level - 1) * 0.2&gt;&gt;
-    
-    /* 话题度加成 */
     &lt;&lt;set _topic_bonus to (_act.topic / 100) * 0.5&gt;&gt;
     
-    /* 计算预估收入 */
+    /* 5. 计算总片酬 (对方支付的钱) */
+    /* 注意：结算时会有 90%~110% 的随机浮动，这里取中间值 1.0，所以实际金额会在预测值上下浮动 */
     &lt;&lt;set _est_income to Math.floor(_base_income * _res_mult * (1 + _star_bonus + _topic_bonus))&gt;&gt;
     
-    /* 输出 */
     &lt;&lt;print _est_income&gt;&gt;
 &lt;&lt;/nobr&gt;&gt;
 &lt;&lt;/widget&gt;&gt;</tw-passagedata><tw-passagedata pid="40" name="Work_Center" tags="" position="800,450" size="100,100">&lt;&lt;nobr&gt;&gt;
@@ -4120,6 +4054,42 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
     &lt;div style=&quot;text-align:center;&quot;&gt;
         &lt;&lt;button &quot;我是韩证飞，我准备好了 (开始游戏)&quot; &quot;Office&quot;&gt;&gt;&lt;&lt;/button&gt;&gt;
     &lt;/div&gt;
+&lt;/div&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="45" name="Rest_Transition" tags="" position="2575,275" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;div class=&quot;tech-card&quot; style=&quot;min-height: 60vh; display:flex; flex-direction:column; justify-content:center; align-items:center;&quot;&gt;
+
+  &lt;div style=&quot;font-size:4em; margin-bottom:20px;&quot;&gt;🏠&lt;/div&gt;
+  &lt;h3 style=&quot;color:#475569; margin-bottom:30px;&quot;&gt;家&lt;/h3&gt;
+
+  /* --- 1. 随机剧情库 (在这里扩充你的文案) --- */
+  &lt;&lt;set _home_events to [
+    &quot;回到家，展鹏正瘫在沙发上打游戏，看见你回来，自然地把脚丫伸到了你的膝盖上求按摩。&quot;,
+    &quot;展鹏今天难得亲自下厨，虽然味道有点一言难尽，但看着他期待的眼神，你还是吃光了。&quot;,
+    &quot;你刚进门就被展鹏抱住了腰，他迷迷糊糊地蹭了蹭你的颈窝：&#39;老公，不想努力了，你养我好不好...&#39;&quot;,
+    &quot;展鹏正在阳台上收衣服，动作敏捷得不像个咸鱼，但看到你后立刻捂着腰装作&#39;闪到了&#39;。&quot;,
+    &quot;今晚没有什么大明星，只有你的专属人妻。他早早关上了灯，把你拉进了温暖的被窝。&quot;,
+    &quot;你在书房处理文件，展鹏端着一杯热牛奶进来，顺便赖在你怀里不肯走了。&quot;,
+    &quot;展鹏洗完澡出来，发梢还在滴水。他懒得吹头发，把吹风机塞到了你手里。&quot;,
+    &quot;半夜醒来，发现展鹏正警惕地看着窗外，发现是你醒了，他立刻变回睡眼惺忪的样子钻进你怀里。&quot;,
+    &quot;周末的早晨，展鹏像只八爪鱼一样缠在你身上，嘟囔着再睡五分钟，结果一睡就是两小时。&quot;
+  ]&gt;&gt;
+  
+  /* --- 2. 抽取剧情 --- */
+  &lt;&lt;set _story to _home_events.random()&gt;&gt;
+
+  /* --- 3. 显示剧情 --- */
+  &lt;div style=&quot;background:#f8fafc; padding:25px; border-radius:10px; border-left:5px solid #f59e0b; 
+              color:#334155; font-size:1.1em; line-height:1.8; max-width:500px; box-shadow:0 4px 6px rgba(0,0,0,0.05);&quot;&gt;
+    &quot;_story&quot;
+  &lt;/div&gt;
+
+  &lt;div style=&quot;margin-top:50px;&quot;&gt;
+    /* 这里点击后才进入月度结算 */
+    &lt;&lt;link &quot;💤 关灯睡觉 (进入月结)&quot;&gt;&gt;
+        &lt;&lt;goto &quot;Next_Month&quot;&gt;&gt;
+    &lt;&lt;/link&gt;&gt;
+  &lt;/div&gt;
+
 &lt;/div&gt;
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata></tw-storydata>
 	<script id="script-sugarcube" type="text/javascript">
