@@ -1946,100 +1946,119 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="20" name="Marketing_Center" tags="" position="1925,1150" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;div class=&quot;tech-card&quot;&gt;
   &lt;div class=&quot;header-banner&quot; style=&quot;background: linear-gradient(to right, #3730a3, #312e81);&quot;&gt;
-    &lt;span&gt;⚔️ 营销与公关&lt;/span&gt;
+    &lt;span&gt;⚔️ 营销与公关部&lt;/span&gt;
     &lt;span style=&quot;font-size:0.8em;&quot;&gt;资金: $money | 流量: $traffic&lt;/span&gt;
   &lt;/div&gt;
 
   &lt;div style=&quot;padding:20px;&quot;&gt;
-    
-    /* --- 1. 危机公关台 (增强版) --- */
-    &lt;div class=&quot;actor-mini-card&quot; style=&quot;border-left:4px solid #ef4444;&quot;&gt;
-      &lt;div style=&quot;display:flex; justify-content:space-between; align-items:center;&quot;&gt;
-        &lt;b&gt;🚑 危机公关台&lt;/b&gt;
-        &lt;span style=&quot;font-size:0.9em;&quot;&gt;
-          危险值: 
-          &lt;&lt;if $danger_level &gt; 50&gt;&gt;&lt;b style=&quot;color:red&quot;&gt;$danger_level&lt;/b&gt;
-          &lt;&lt;else&gt;&gt;&lt;b style=&quot;color:green&quot;&gt;$danger_level&lt;/b&gt;&lt;&lt;/if&gt;&gt;
-        &lt;/span&gt;
-      &lt;/div&gt;
-      
-      /* 显示具体的危机描述 */
-      &lt;div style=&quot;background:#fef2f2; color:#b91c1c; padding:8px; border-radius:4px; margin:10px 0; font-size:0.9em;&quot;&gt;
-        🚨 &lt;b&gt;当前监控：&lt;/b&gt; $current_crisis_desc
-      &lt;/div&gt;
-      
-      &lt;hr&gt;
-      
-      /* --- 新增公关手段 --- */
-      &lt;div style=&quot;display:grid; grid-template-columns: 1fr 1fr; gap:10px;&quot;&gt;
-        
-        /* A. 律师函 (基础) */
-        &lt;div&gt;
-          &lt;&lt;link &quot;⚖️ 发律师函 (5w)&quot; &quot;PR_Execute&quot;&gt;&gt;&lt;&lt;set $type to &quot;lawyer&quot;, $cost to 5&gt;&gt;&lt;&lt;/link&gt;&gt;
-          &lt;div style=&quot;font-size:0.75em; color:#94a3b8;&quot;&gt;效果微弱，形式主义&lt;/div&gt;
-        &lt;/div&gt;
 
-        /* B. 祸水东引 (消耗流量) */
-        &lt;div&gt;
-          &lt;&lt;link &quot;🌪️ 祸水东引 (20w+300流量)&quot; &quot;PR_Execute&quot;&gt;&gt;&lt;&lt;set $type to &quot;divert&quot;, $cost to 20, $cost_t to 300&gt;&gt;&lt;&lt;/link&gt;&gt;
-          &lt;div style=&quot;font-size:0.75em; color:#94a3b8;&quot;&gt;抛出其他瓜转移视线&lt;/div&gt;
-        &lt;/div&gt;
-
-        /* C. 购买水军 (常规) */
-        &lt;div&gt;
-           &lt;&lt;link &quot;🌊 购买水军洗地 (50w)&quot; &quot;PR_Execute&quot;&gt;&gt;&lt;&lt;set $type to &quot;water&quot;, $cost to 50&gt;&gt;&lt;&lt;/link&gt;&gt;
-           &lt;div style=&quot;font-size:0.75em; color:#94a3b8;&quot;&gt;简单粗暴降热度&lt;/div&gt;
-        &lt;/div&gt;
-
-        /* D. 直播澄清 (高风险) */
-        &lt;div&gt;
-           &lt;&lt;link &quot;📹 艺人直播澄清 (0w)&quot; &quot;PR_Execute&quot;&gt;&gt;&lt;&lt;set $type to &quot;live_apology&quot;, $cost to 0&gt;&gt;&lt;&lt;/link&gt;&gt;
-           &lt;div style=&quot;font-size:0.75em; color:#94a3b8;&quot;&gt;效果拔群但可能翻车&lt;/div&gt;
+    /* === 状态锁定判断 === */
+    &lt;&lt;if $charity_done is true&gt;&gt;
+        &lt;div style=&quot;background:#f0fdf4; border:2px solid #22c55e; padding:30px; text-align:center; border-radius:8px;&quot;&gt;
+            &lt;div style=&quot;font-size:4em; margin-bottom:15px;&quot;&gt;💖&lt;/div&gt;
+            &lt;h3 style=&quot;color:#15803d;&quot;&gt;本月公益目标已达成&lt;/h3&gt;
+            &lt;p style=&quot;color:#166534;&quot;&gt;公司本月已进行过大额捐赠，为了保持低调，公关部暂停一切营销活动。&lt;/p&gt;
+            &lt;div style=&quot;font-size:0.9em; color:#86efac; margin-top:10px;&quot;&gt;( 下个月恢复功能 )&lt;/div&gt;
         &lt;/div&gt;
         
-        /* E. 慈善公益 (新增) */
-        &lt;div style=&quot;grid-column: 1 / -1; background:#f0fdf4; border:1px solid #bbf7d0; padding:10px; border-radius:4px; text-align:center;&quot;&gt;
-           &lt;&lt;link &quot;💖 公益慈善 (花费50万)&quot; &quot;PR_Execute&quot;&gt;&gt;&lt;&lt;set $type to &quot;charity&quot;, $cost to 50&gt;&gt;&lt;&lt;/link&gt;&gt;
-           &lt;div style=&quot;font-size:0.75em; color:#15803d;&quot;&gt;稳步提升口碑，降低危险值&lt;/div&gt;
+        &lt;div style=&quot;margin-top:30px; text-align:center;&quot;&gt;
+          [[🔙 返回办公室|Office]]
         &lt;/div&gt;
-      &lt;/div&gt;
-    &lt;/div&gt;
 
-    /* --- 2. 营销战争模块 (保持不变，或微调) --- */
-    &lt;div class=&quot;actor-mini-card&quot; style=&quot;border-left:4px solid #3b82f6; margin-top:20px;&quot;&gt;
-      &lt;b&gt;⚔️ 主动出击&lt;/b&gt;&lt;br&gt;
-      &lt;div style=&quot;margin:5px 0; font-size:0.9em;&quot;&gt;
-        出战: 
-        &lt;&lt;radiobutton &quot;$war_actor&quot; &quot;zp&quot; checked&gt;&gt; 展鹏 
-        &lt;&lt;radiobutton &quot;$war_actor&quot; &quot;qs&quot;&gt;&gt; 秦飒 
-        &lt;&lt;radiobutton &quot;$war_actor&quot; &quot;new&quot;&gt;&gt; 白小纯
-      &lt;/div&gt;
-      &lt;hr&gt;
-      &lt;div style=&quot;display:grid; grid-template-columns: 1fr 1fr; gap:10px;&quot;&gt;
-        &lt;div&gt;
-           &lt;div style=&quot;font-size:0.8em; color:#64748b;&quot;&gt;VS 同性竞品&lt;/div&gt;
-           [[👊 流量硬刚 (50w+200流量)|Marketing_Battle][$battle_type to &quot;traffic&quot;, $cost_t to 200, $cost to 50]]
-           &lt;br&gt;
-           &lt;&lt;if $gossips.length &gt; 0&gt;&gt;
-             [[💣 爆出黑料 (消耗瓜)|Marketing_Battle][$battle_type to &quot;gossip_attack&quot;, $cost to 0]]
-           &lt;&lt;else&gt;&gt;
-             &lt;span style=&quot;color:#ccc; text-decoration:line-through&quot;&gt;暂无黑料&lt;/span&gt;
-           &lt;&lt;/if&gt;&gt;
+    &lt;&lt;else&gt;&gt;
+        /* === 正常功能区 (没做慈善时显示) === */
+        
+        /* 1. 危机公关台 */
+        &lt;div class=&quot;actor-mini-card&quot; style=&quot;border-left:4px solid #ef4444;&quot;&gt;
+          &lt;div style=&quot;display:flex; justify-content:space-between; align-items:center;&quot;&gt;
+            &lt;b&gt;🚑 危机公关台&lt;/b&gt;
+            &lt;span style=&quot;font-size:0.9em;&quot;&gt;
+              危险值: 
+              &lt;&lt;if $danger_level &gt; 50&gt;&gt;&lt;b style=&quot;color:red&quot;&gt;$danger_level&lt;/b&gt;
+              &lt;&lt;else&gt;&gt;&lt;b style=&quot;color:green&quot;&gt;$danger_level&lt;/b&gt;&lt;&lt;/if&gt;&gt;
+            &lt;/span&gt;
+          &lt;/div&gt;
+          
+          &lt;div style=&quot;background:#fef2f2; color:#b91c1c; padding:8px; border-radius:4px; margin:10px 0; font-size:0.9em;&quot;&gt;
+            🚨 &lt;b&gt;当前监控：&lt;/b&gt; $current_crisis_desc
+          &lt;/div&gt;
+          &lt;hr&gt;
+          &lt;div style=&quot;display:grid; grid-template-columns: 1fr 1fr; gap:10px;&quot;&gt;
+            &lt;div&gt;
+              &lt;&lt;link &quot;⚖️ 发律师函 (5w)&quot; &quot;PR_Execute&quot;&gt;&gt;&lt;&lt;set $type to &quot;lawyer&quot;, $cost to 5&gt;&gt;&lt;&lt;/link&gt;&gt;
+              &lt;div style=&quot;font-size:0.75em; color:#94a3b8;&quot;&gt;效果微弱，形式主义&lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div&gt;
+              &lt;&lt;link &quot;🌪️ 祸水东引 (20w+300流量)&quot; &quot;PR_Execute&quot;&gt;&gt;&lt;&lt;set $type to &quot;divert&quot;, $cost to 20, $cost_t to 300&gt;&gt;&lt;&lt;/link&gt;&gt;
+              &lt;div style=&quot;font-size:0.75em; color:#94a3b8;&quot;&gt;抛出其他瓜转移视线&lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div&gt;
+               &lt;&lt;link &quot;🌊 购买水军洗地 (50w)&quot; &quot;PR_Execute&quot;&gt;&gt;&lt;&lt;set $type to &quot;water&quot;, $cost to 50&gt;&gt;&lt;&lt;/link&gt;&gt;
+               &lt;div style=&quot;font-size:0.75em; color:#94a3b8;&quot;&gt;简单粗暴降热度&lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div&gt;
+               &lt;&lt;link &quot;📹 艺人直播澄清 (0w)&quot; &quot;PR_Execute&quot;&gt;&gt;&lt;&lt;set $type to &quot;live_apology&quot;, $cost to 0&gt;&gt;&lt;&lt;/link&gt;&gt;
+               &lt;div style=&quot;font-size:0.75em; color:#94a3b8;&quot;&gt;高风险，效果拔群但可能翻车&lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
         &lt;/div&gt;
-        &lt;div&gt;
-           &lt;div style=&quot;font-size:0.8em; color:#64748b;&quot;&gt;VS 异性/合作&lt;/div&gt;
-           [[💔 独自美丽 (50w)|Marketing_Battle][$battle_type to &quot;solo&quot;, $cost_m to 50, $cost to 50]]
-           &lt;br&gt;
-           [[❤️ 捆绑炒作 (50w)|Marketing_Battle][$battle_type to &quot;cp_bundle&quot;, $cost_m to 50, $cost to 50]]
+
+        /* 2. 营销战争模块 */
+        &lt;div class=&quot;actor-mini-card&quot; style=&quot;border-left:4px solid #3b82f6; margin-top:20px;&quot;&gt;
+          &lt;b&gt;⚔️ 主动出击&lt;/b&gt;
+          &lt;div style=&quot;margin:5px 0; font-size:0.9em;&quot;&gt;
+            出战: 
+            &lt;&lt;radiobutton &quot;$war_actor&quot; &quot;zp&quot; checked&gt;&gt; 展鹏 
+            &lt;&lt;radiobutton &quot;$war_actor&quot; &quot;qs&quot;&gt;&gt; 秦飒 
+            &lt;&lt;radiobutton &quot;$war_actor&quot; &quot;new&quot;&gt;&gt; 白小纯
+          &lt;/div&gt;
+          &lt;hr&gt;
+          &lt;div style=&quot;display:grid; grid-template-columns: 1fr 1fr; gap:10px;&quot;&gt;
+            &lt;div&gt;
+               &lt;div style=&quot;font-size:0.8em; color:#64748b;&quot;&gt;VS 同性竞品&lt;/div&gt;
+               [[👊 流量硬刚 (50w+200流量)|Marketing_Battle][$battle_type to &quot;traffic&quot;, $cost_t to 200, $cost to 50]]
+               &lt;br&gt;
+               &lt;&lt;if $gossips.length &gt; 0&gt;&gt;
+                 [[💣 爆出黑料 (消耗瓜)|Marketing_Battle][$battle_type to &quot;gossip_attack&quot;, $cost to 0]]
+               &lt;&lt;else&gt;&gt;
+                 &lt;span style=&quot;color:#ccc; text-decoration:line-through&quot;&gt;暂无黑料&lt;/span&gt;
+               &lt;&lt;/if&gt;&gt;
+            &lt;/div&gt;
+            &lt;div&gt;
+               &lt;div style=&quot;font-size:0.8em; color:#64748b;&quot;&gt;VS 异性/合作&lt;/div&gt;
+               [[💔 独自美丽 (50w)|Marketing_Battle][$battle_type to &quot;solo&quot;, $cost_m to 50, $cost to 50]]
+               &lt;br&gt;
+               [[❤️ 捆绑炒作 (50w)|Marketing_Battle][$battle_type to &quot;cp_bundle&quot;, $cost_m to 50, $cost to 50]]
+            &lt;/div&gt;
+          &lt;/div&gt;
         &lt;/div&gt;
-      &lt;/div&gt;
-    &lt;/div&gt;
 
-    &lt;hr&gt;
-    &lt;div style=&quot;display:flex; justify-content:space-between; font-size:0.9em;&quot;&gt;
+        /* 3. 💖 公益慈善专区 (新增) */
+        &lt;div class=&quot;actor-mini-card&quot; style=&quot;border-left:4px solid #10b981; margin-top:20px; background:#f0fdf4;&quot;&gt;
+          &lt;b&gt;💖 公益慈善&lt;/b&gt; &lt;span style=&quot;font-size:0.8em; color:#ef4444;&quot;&gt;(⚠️每月限一次，执行后本月无法再公关)&lt;/span&gt;
+          &lt;hr style=&quot;border-color:#bbf7d0;&quot;&gt;
+          &lt;div style=&quot;display:flex; gap:10px; justify-content:space-around;&quot;&gt;
+             &lt;div style=&quot;text-align:center;&quot;&gt;
+                &lt;&lt;link &quot;物资捐赠 (100w)&quot; &quot;PR_Execute&quot;&gt;&gt;&lt;&lt;set $type to &quot;charity&quot;, $cost to 100&gt;&gt;&lt;&lt;/link&gt;&gt;
+                &lt;div style=&quot;font-size:0.75em; color:#15803d;&quot;&gt;全员口碑小幅提升&lt;/div&gt;
+             &lt;/div&gt;
+             &lt;div style=&quot;text-align:center;&quot;&gt;
+                &lt;&lt;link &quot;希望小学 (300w)&quot; &quot;PR_Execute&quot;&gt;&gt;&lt;&lt;set $type to &quot;charity&quot;, $cost to 300&gt;&gt;&lt;&lt;/link&gt;&gt;
+                &lt;div style=&quot;font-size:0.75em; color:#15803d;&quot;&gt;大幅提升口碑+降危险&lt;/div&gt;
+             &lt;/div&gt;
+             &lt;div style=&quot;text-align:center;&quot;&gt;
+                &lt;&lt;link &quot;成立基金会 (500w)&quot; &quot;PR_Execute&quot;&gt;&gt;&lt;&lt;set $type to &quot;charity&quot;, $cost to 500&gt;&gt;&lt;&lt;/link&gt;&gt;
+                &lt;div style=&quot;font-size:0.75em; color:#15803d;&quot;&gt;口碑爆棚+危险清零&lt;/div&gt;
+             &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
 
-      [[🔙 返回办公室|Office]]
-    &lt;/div&gt;
+        &lt;hr&gt;
+        &lt;div style=&quot;text-align:center; margin-top:20px;&quot;&gt;
+          [[🔙 返回办公室|Office]]
+        &lt;/div&gt;
+    &lt;&lt;/if&gt;&gt;
+
   &lt;/div&gt;
 &lt;/div&gt;
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="21" name="Next_Month" tags="" position="2325,350" size="100,100">!! 📅 月度结算
@@ -2233,77 +2252,128 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
   &lt;/div&gt;
 &lt;/div&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="23" name="PR_Execute" tags="" position="1950,1325" size="100,100">&lt;&lt;if $money &lt; $cost&gt;&gt;
-    ❌ 资金不足 ($cost 万)！无法执行公关。
-    &lt;br&gt;[[返回|Marketing_Center]]
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="23" name="PR_Execute" tags="" position="1950,1325" size="100,100">:: PR_Execute
+&lt;&lt;nobr&gt;&gt;
+&lt;div class=&quot;tech-card&quot; style=&quot;padding:20px; text-align:center;&quot;&gt;
+
+/* 1. 检查资金 */
+&lt;&lt;if $money &lt; $cost&gt;&gt;
+    &lt;div style=&quot;font-size:4em;&quot;&gt;💸&lt;/div&gt;
+    &lt;h3 style=&quot;color:#ef4444;&quot;&gt;资金不足&lt;/h3&gt;
+    &lt;p&gt;账户余额不足，需要 &lt;b style=&quot;color:#b45309&quot;&gt;$cost 万&lt;/b&gt;。&lt;/p&gt;
+    &lt;br&gt;[[🔙 返回|Marketing_Center]]
+
+/* 2. 检查流量 (仅针对祸水东引) */
 &lt;&lt;elseif ($type is &quot;divert&quot;) and ($traffic &lt; $cost_t)&gt;&gt;
-    ❌ 流量池不足 ($cost_t)！无法引导舆论。
-    &lt;br&gt;[[返回|Marketing_Center]]
+    &lt;div style=&quot;font-size:4em;&quot;&gt;📉&lt;/div&gt;
+    &lt;h3 style=&quot;color:#1e40af;&quot;&gt;流量不足&lt;/h3&gt;
+    &lt;p&gt;当前流量池不足 &lt;b style=&quot;color:#3b82f6&quot;&gt;$cost_t&lt;/b&gt;，无法引导舆论。&lt;/p&gt;
+    &lt;br&gt;[[🔙 返回|Marketing_Center]]
+
+/* 3. 执行操作 */
 &lt;&lt;else&gt;&gt;
-    /* 扣除费用 */
+    /* 统一扣费 */
     &lt;&lt;set $money -= $cost&gt;&gt;
     &lt;&lt;if def $cost_t&gt;&gt;&lt;&lt;set $traffic -= $cost_t&gt;&gt;&lt;&lt;/if&gt;&gt;
 
-    /* --- 1. 律师函 --- */
-    &lt;&lt;if $type is &quot;lawyer&quot;&gt;&gt;
-        你发布了一张盖着公章的律师函。
+    /* --- 分支逻辑开始 --- */
+    
+    /* A. 慈善公益 (不同档位) */
+    &lt;&lt;if $type is &quot;charity&quot;&gt;&gt;
+        &lt;div style=&quot;font-size:4em;&quot;&gt;💖&lt;/div&gt;
+        &lt;h3 style=&quot;color:#15803d;&quot;&gt;大爱无疆&lt;/h3&gt;
+        
+        &lt;&lt;if $cost == 100&gt;&gt;
+            &lt;p&gt;你以公司名义向受灾地区捐赠了急需物资。&lt;/p&gt;
+            &lt;p&gt;虽然不算很多，但网友们纷纷点赞。&lt;/p&gt;
+            &lt;div style=&quot;background:#dcfce7; color:#166534; padding:10px; border-radius:4px; margin-top:10px;&quot;&gt;
+                全员口碑 +5 | 危险值 -10
+            &lt;/div&gt;
+            &lt;&lt;set $actors.zp.reputation += 5&gt;&gt;
+            &lt;&lt;set $actors.qs.reputation += 5&gt;&gt;
+            &lt;&lt;set $actors.new.reputation += 5&gt;&gt;
+            &lt;&lt;set $danger_level -= 10&gt;&gt;
+            
+        &lt;&lt;elseif $cost == 300&gt;&gt;
+            &lt;p&gt;“无垠希望小学”正式奠基，主流媒体对此进行了报道。&lt;/p&gt;
+            &lt;p&gt;艺人们的正能量形象深入人心！&lt;/p&gt;
+            &lt;div style=&quot;background:#dcfce7; color:#166534; padding:10px; border-radius:4px; margin-top:10px;&quot;&gt;
+                全员口碑 +15 | 危险值 -30
+            &lt;/div&gt;
+            &lt;&lt;set $actors.zp.reputation += 15&gt;&gt;
+            &lt;&lt;set $actors.qs.reputation += 15&gt;&gt;
+            &lt;&lt;set $actors.new.reputation += 15&gt;&gt;
+            &lt;&lt;set $danger_level -= 30&gt;&gt;
+            
+        &lt;&lt;else&gt;&gt; /* 500万 */
+            &lt;p&gt;你宣布成立“无垠专项慈善基金”，并承诺每年持续投入。&lt;/p&gt;
+            &lt;p&gt;这一举动震惊了娱乐圈，官方点名表扬，所有黑料在这一刻都显得微不足道。&lt;/p&gt;
+            &lt;div style=&quot;background:#dcfce7; color:#166534; padding:10px; border-radius:4px; margin-top:10px;&quot;&gt;
+                全员口碑 +30 | 危险值 &lt;b&gt;直接清零&lt;/b&gt;
+            &lt;/div&gt;
+            &lt;&lt;set $actors.zp.reputation += 30&gt;&gt;
+            &lt;&lt;set $actors.qs.reputation += 30&gt;&gt;
+            &lt;&lt;set $actors.new.reputation += 30&gt;&gt;
+            &lt;&lt;set $danger_level to 0&gt;&gt;
+        &lt;&lt;/if&gt;&gt;
+        
+        /* 锁定本月公关 */
+        &lt;&lt;set $charity_done to true&gt;&gt;
+        &lt;p style=&quot;color:#ef4444; font-size:0.9em; margin-top:15px;&quot;&gt;( ⚠️ 本月公关部工作已结束 )&lt;/p&gt;
+
+    /* B. 律师函 */
+    &lt;&lt;elseif $type is &quot;lawyer&quot;&gt;&gt;
+        &lt;h3&gt;已发送律师函&lt;/h3&gt;
+        &lt;p&gt;你发布了一张盖着公章的律师函。&lt;/p&gt;
         &lt;&lt;if random(1,100) &lt; 40&gt;&gt;
-            &lt;br&gt;网友：&quot;又来这套？吓唬谁呢？&quot; &lt;br&gt;@@color:red; 效果甚微。@@
+            &lt;p style=&quot;color:#b91c1c;&quot;&gt;网友：&quot;又来这套？吓唬谁呢？&quot; (效果甚微)&lt;/p&gt;
             &lt;&lt;set $danger_level -= 5&gt;&gt;
         &lt;&lt;else&gt;&gt;
-            &lt;br&gt;稍微震慑了一些造谣者。危险值 -10。
+            &lt;p style=&quot;color:#15803d;&quot;&gt;稍微震慑了一些造谣者。危险值 -10。&lt;/p&gt;
             &lt;&lt;set $danger_level -= 10&gt;&gt;
         &lt;&lt;/if&gt;&gt;
 
-    /* --- 2. 祸水东引 (新) --- */
+    /* C. 祸水东引 */
     &lt;&lt;elseif $type is &quot;divert&quot;&gt;&gt;
-        你利用手中的流量号，把“某顶流隐婚”的旧瓜顶上了热搜。
-        &lt;br&gt;大众的注意力瞬间被转移了！
-        &lt;br&gt;@@color:green; 效果显著！危险值 -30，但消耗了大量公司流量。@@
+        &lt;h3&gt;舆论转移成功&lt;/h3&gt;
+        &lt;p&gt;你利用流量号，把“某顶流隐婚”的旧瓜顶上了热搜。&lt;/p&gt;
+        &lt;p style=&quot;color:#15803d;&quot;&gt;大众注意力被转移！危险值 -30。&lt;/p&gt;
         &lt;&lt;set $danger_level -= 30&gt;&gt;
 
-    /* --- 3. 水军洗地 --- */
+    /* D. 水军洗地 */
     &lt;&lt;elseif $type is &quot;water&quot;&gt;&gt;
-        铺天盖地的水军淹没了黑帖，广场上全是“抱走不约”、“期待作品”。
-        &lt;br&gt;虽然路人观感不好，但黑热搜确实下去了。
+        &lt;h3&gt;水军已部署&lt;/h3&gt;
+        &lt;p&gt;铺天盖地的水军淹没了黑帖，广场上全是“抱走不约”。&lt;/p&gt;
+        &lt;p&gt;黑热搜热度下降。危险值 -25。&lt;/p&gt;
         &lt;&lt;set $danger_level -= 25&gt;&gt;
 
-    /* --- 4. 直播澄清 (新 - 赌博性质) --- */
+    /* E. 直播澄清 */
     &lt;&lt;elseif $type is &quot;live_apology&quot;&gt;&gt;
-        艺人素颜开启了直播，声泪俱下地回应争议。
-        &lt;&lt;if $actors.zp.acting &gt; 60&gt;&gt; &lt;br&gt;精湛的演技（或者真诚）打动了网友！
-            &lt;br&gt;@@color:gold; 舆论瞬间反转！危险值清零！吸粉无数！@@
+        &lt;h3&gt;直播结束&lt;/h3&gt;
+        &lt;&lt;if $actors.zp.acting &gt; 60&gt;&gt;
+            &lt;p&gt;精湛的演技（或者真诚）打动了网友！&lt;/p&gt;
+            &lt;p style=&quot;color:#eab308; font-weight:bold;&quot;&gt;舆论反转！危险值清零！吸粉无数！&lt;/p&gt;
             &lt;&lt;set $danger_level to 0&gt;&gt;
             &lt;&lt;set $actors.zp.fans.mom += 500&gt;&gt;
         &lt;&lt;else&gt;&gt;
-            &lt;br&gt;因为演技太差/表情管理失控，被截成了表情包全网嘲笑...
-            &lt;br&gt;@@color:red; 公关灾难！危险值 +20！@@
+            &lt;p&gt;因为表情管理失控，被截成了表情包全网嘲笑...&lt;/p&gt;
+            &lt;p style=&quot;color:#ef4444; font-weight:bold;&quot;&gt;公关灾难！危险值 +20！&lt;/p&gt;
             &lt;&lt;set $danger_level += 20&gt;&gt;
             &lt;&lt;set $actors.zp.fans.clown += 1000&gt;&gt;
         &lt;&lt;/if&gt;&gt;
     &lt;&lt;/if&gt;&gt;
     
-    /* --- 5. 慈善公益 (新增) --- */
-    &lt;&lt;if $type is &quot;charity&quot;&gt;&gt;
-        你以艺人的名义向山区捐赠了一所希望小学，并低调地流出了捐赠证书。
-        &lt;br&gt;
-        网友：“这才是正能量偶像！”
-        &lt;br&gt;
-        @@color:green; 全员口碑 +5 | 危险值 -15@@
-        &lt;&lt;set $actors.zp.reputation += 5&gt;&gt;
-        &lt;&lt;set $actors.qs.reputation += 5&gt;&gt;
-        &lt;&lt;set $actors.new.reputation += 5&gt;&gt;
-        &lt;&lt;set $danger_level -= 15&gt;&gt;
-        
-    /* 危机解除判断 */
-    &lt;&lt;if $danger_level &lt; 10&gt;&gt;
-        &lt;&lt;set $current_crisis_desc to &quot;暂无异常&quot;&gt;&gt;
-        &lt;&lt;set $crisis_type to &quot;none&quot;&gt;&gt;
-    &lt;&lt;/if&gt;&gt;
+    /* 危险值保底修正 */
+    &lt;&lt;if $danger_level &lt; 0&gt;&gt;&lt;&lt;set $danger_level to 0&gt;&gt;&lt;&lt;/if&gt;&gt;
 
-    &lt;br&gt;&lt;hr&gt;
-    [[确定|Marketing_Center]]
-&lt;&lt;/if&gt;&gt;</tw-passagedata><tw-passagedata pid="24" name="Resource_Get" tags="" position="2825,650" size="100,100">&lt;&lt;nobr&gt;&gt;
+    &lt;br&gt;&lt;hr&gt;&lt;br&gt;
+    &lt;div style=&quot;text-align:center;&quot;&gt;
+        [[✅ 确定|Marketing_Center]]
+    &lt;/div&gt;
+
+&lt;&lt;/if&gt;&gt;
+&lt;/div&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="24" name="Resource_Get" tags="" position="2825,650" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;style&gt;
     .result-page {
         min-height: 500px;
@@ -2720,6 +2790,7 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
 &lt;&lt;set $resources to { s: 0, a: 0, b: 2, c: 5 }&gt;&gt;
 &lt;&lt;set $company_res to 7&gt;&gt;
 &lt;&lt;set $bankruptcy_count to 0&gt;&gt;
+&lt;&lt;set $charity_done to false&gt;&gt;
 
 /* 危机与情报 */
 &lt;&lt;set $current_crisis_desc to &quot;暂无异常&quot;&gt;&gt;
@@ -3655,6 +3726,7 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
     &lt;&lt;if $danger_level &gt; 0&gt;&gt;&lt;&lt;set $danger_level -= 5&gt;&gt;&lt;&lt;/if&gt;&gt;
     &lt;&lt;set $stamina to 100&gt;&gt;  
     &lt;&lt;set $action_points to 4&gt;&gt; /* 恢复行动点 */
+    &lt;&lt;set $charity_done to false&gt;&gt; /* &lt;--- 新增这行：每月重置慈善状态 */
     &lt;&lt;set $month += 1&gt;&gt;
     
     &lt;&lt;set _hot_events to [&quot;某顶流隐婚生子&quot;, &quot;秦飒素颜丑照&quot;, &quot;展鹏片场耍大牌&quot;, &quot;白小纯商演被砸&quot;, &quot;娱乐圈大地震&quot;]&gt;&gt;
