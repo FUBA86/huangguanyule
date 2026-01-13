@@ -2078,10 +2078,13 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
                     🎉 &lt;&lt;print _a.name&gt;&gt; 的 &lt;&lt;print _a.project_name&gt;&gt; 杀青了！
                 &lt;/div&gt;
                 
-                &lt;&lt;if def _a.job_type&gt;&gt;
-                     &lt;&lt;Job_Settle _a.job_type&gt;&gt;
-                &lt;&lt;else&gt;&gt;
-                    &lt;&lt;Job_Settle &quot;drama&quot;&gt;&gt;
+                /* 🔴【修复点】双重保险：确保不是培训项目 */
+                &lt;&lt;if def _a.job_type and _a.job_type neq &quot;training&quot;&gt;&gt;
+                    &lt;&lt;if def _a.job_type&gt;&gt;
+                         &lt;&lt;Job_Settle _a.job_type&gt;&gt;
+                    &lt;&lt;else&gt;&gt;
+                        &lt;&lt;Job_Settle &quot;drama&quot;&gt;&gt;
+                    &lt;&lt;/if&gt;&gt;
                 &lt;&lt;/if&gt;&gt;
 
                 &lt;&lt;set _a.project_name to &quot;&quot;&gt;&gt;&lt;&lt;set _a.job_type to &quot;&quot;&gt;&gt;
@@ -2824,7 +2827,7 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
             &lt;&lt;if _current_val &gt;= _limit&gt;&gt;
                 &lt;div style=&quot;font-size:3em; margin-bottom:10px;&quot;&gt;🤔&lt;/div&gt;
                 &lt;h3&gt;天赋已达上限&lt;/h3&gt;
-                &lt;p&gt;老师无奈地摇摇头：“&lt;&lt;print _a.name&gt;&gt; 在这方面真的没天分了，再学也是浪费钱。”&lt;/p&gt;
+                &lt;p&gt;老师无奈地摇摇头：&quot;&lt;&lt;print _a.name&gt;&gt; 在这方面真的没天分了，再学也是浪费钱。&quot;&lt;/p&gt;
                 &lt;p style=&quot;color:#94a3b8; font-size:0.9em;&quot;&gt;( 学费已退还 )&lt;/p&gt;
                 &lt;&lt;set $money += $train_cost&gt;&gt; /* 退钱 */
             
@@ -2836,11 +2839,14 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
                 /* 锁定回合：设置 busy_months 为 1，意味着这个月不能干别的了，下个月结算时会减为0 */
                 &lt;&lt;set _a.busy_months to 1&gt;&gt;
                 &lt;&lt;set _a.project_name to &quot;封闭式培训&quot;&gt;&gt; 
+                
+                /* 🔴【修复点】添加培训标记，防止被误认为拍戏 */
+                &lt;&lt;set _a.job_type to &quot;training&quot;&gt;&gt;
 
                 &lt;div style=&quot;font-size:3em; margin-bottom:10px;&quot;&gt;📈&lt;/div&gt;
-                &lt;h3 style=&quot;color:#059669;&quot;&gt;培训完成！&lt;/h3&gt;
+                &lt;h3 style=&quot;color:#059669;&quot;&gt;来上课吧！&lt;/h3&gt;
                 
-                &lt;p&gt;&lt;&lt;print _a.name&gt;&gt; 完成了封闭式训练。&lt;/p&gt;
+                &lt;p&gt;&lt;&lt;print _a.name&gt;&gt; 开始了封闭式训练。&lt;/p&gt;
                 
                 &lt;div style=&quot;background:#ecfdf5; border:1px solid #10b981; padding:15px; border-radius:8px; display:inline-block; margin-top:10px;&quot;&gt;
                     &lt;span style=&quot;font-size:1.2em; font-weight:bold; color:#065f46;&quot;&gt;
@@ -2867,8 +2873,21 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
         &lt;&lt;/if&gt;&gt;
     &lt;/div&gt;
 &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="31" name="Use_Gossip" tags="" position="2325,1000" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="31" name="Use_Gossip" tags="" position="2325,1000" size="100,100">:: Use_Gossip {&quot;position&quot;:&quot;2200,1250&quot;,&quot;size&quot;:&quot;100,100&quot;}
+&lt;&lt;nobr&gt;&gt;
 &lt;&lt;set _g to $gossips[$gid]&gt;&gt;
+&lt;&lt;if not _g&gt;&gt;
+    &lt;div class=&quot;tech-card&quot;&gt;
+        &lt;div class=&quot;header-banner&quot; style=&quot;background:#ef4444;&quot;&gt;&lt;span&gt;❌ 操作失败&lt;/span&gt;&lt;/div&gt;
+        &lt;div style=&quot;padding:30px; text-align:center;&quot;&gt;
+            &lt;div style=&quot;font-size:4em; margin-bottom:20px;&quot;&gt;⚠️&lt;/div&gt;
+            &lt;h3&gt;情报不存在或已被使用&lt;/h3&gt;
+            &lt;p&gt;该情报可能已经被使用或不存在了。&lt;/p&gt;
+            &lt;br&gt;&lt;br&gt;
+            [[🔙 返回情报局|Gossip_Center]]
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;&lt;else&gt;&gt;
 &lt;div class=&quot;tech-card&quot;&gt;
     &lt;div class=&quot;header-banner&quot;&gt;&lt;span&gt;📠 操作执行中...&lt;/span&gt;&lt;/div&gt;
     &lt;div style=&quot;padding:30px; text-align:center;&quot;&gt;
@@ -2888,6 +2907,12 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
                  &lt;span style=&quot;font-size:0.8em; color:#94a3b8;&quot;&gt;(这种小料没什么人看，流量微涨)&lt;/span&gt;
                 &lt;&lt;set $traffic += 50&gt;&gt;
             &lt;&lt;/if&gt;&gt;
+
+            /* 删除这个瓜 */
+            &lt;&lt;set $gossips.deleteAt($gid)&gt;&gt;
+
+            &lt;br&gt;&lt;br&gt;
+            [[✅ 确定并返回|Gossip_Center]]
 
         /* === 攻击对家 (换流量 + 削弱对手) === */
         &lt;&lt;elseif $action is &quot;attack&quot;&gt;&gt;
@@ -2909,6 +2934,12 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
                 &lt;li&gt;我方流量: +&lt;&lt;print Math.floor(_dmg * 0.5)&gt;&gt;&lt;/li&gt;
             &lt;/ul&gt;
 
+            /* 删除这个瓜 */
+            &lt;&lt;set $gossips.deleteAt($gid)&gt;&gt;
+
+            &lt;br&gt;&lt;br&gt;
+            [[✅ 确定并返回|Gossip_Center]]
+
         /* === 商业机密置换 (在情报中心只能换A级资源) === */
         &lt;&lt;elseif $action is &quot;exchange_a&quot;&gt;&gt;
             &lt;div style=&quot;font-size:3em; margin-bottom:10px;&quot;&gt;🤝&lt;/div&gt;
@@ -2916,71 +2947,56 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
             &lt;p&gt;你利用这条商业机密，与资方达成了合作。&lt;/p&gt;
             
             /* 执行A级资源置换 */
-            &lt;&lt;set _target_index to $gid&gt;&gt;
-            &lt;&lt;if _g.type is &quot;gold&quot;&gt;&gt;
-                /* 删除这个瓜 */
-                &lt;&lt;run $gossips.deleteAt(_target_index)&gt;&gt;
-                &lt;&lt;set _qty to random(1, 2)&gt;&gt;
-                &lt;&lt;set $resources.a += _qty&gt;&gt;
-                &lt;&lt;set $last_gained_res to &quot;a&quot;&gt;&gt;
-                &lt;&lt;set $last_gained_count to _qty&gt;&gt;
-                &lt;&lt;set $last_gained_extra to &quot;⚠️ 注意：在情报中心置换只能获得A级资源，如需S级请去商务拓展中心&quot;&gt;&gt;
-                
-                &lt;div style=&quot;background:#fdf4ff; border:1px solid #d8b4fe; padding:15px; border-radius:8px; margin:15px 0;&quot;&gt;
-                    &lt;div style=&quot;color:#9333ea; font-size:1.1em; font-weight:bold; margin-bottom:10px;&quot;&gt;
-                        🟡 商业机密置换结果：
-                    &lt;/div&gt;
-                    &lt;p&gt;获得 &lt;b style=&quot;color:#9333ea; font-size:1.3em;&quot;&gt;A级 资源 x&lt;&lt;print _qty&gt;&gt;&lt;/b&gt;&lt;/p&gt;
-                    &lt;div style=&quot;background:#f3e8ff; padding:10px; border-radius:4px; margin-top:10px; font-size:0.9em; color:#6b21a8;&quot;&gt;
-                        ⚠️ &lt;b&gt;提示：&lt;/b&gt;在情报中心置换只能获得A级资源&lt;br&gt;
-                        如需S级资源，请去&lt;b&gt;商务拓展中心&lt;/b&gt;使用&quot;资源置换&quot;功能（需额外支付500万）
-                    &lt;/div&gt;
-                &lt;/div&gt;
-                
-                /* 跳转到资源获取页面显示结果 */
-                &lt;&lt;goto &quot;Resource_Get&quot;&gt;&gt;
-            &lt;&lt;else&gt;&gt;
-                &lt;p&gt;错误：这不是商业机密情报！&lt;/p&gt;
-            &lt;&lt;/if&gt;&gt;
+            &lt;&lt;set _qty to random(1, 2)&gt;&gt;
+            &lt;&lt;set $resources.a += _qty&gt;&gt;
             
+            /* 删除这个瓜 */
+            &lt;&lt;set $gossips.deleteAt($gid)&gt;&gt;
+            
+            &lt;div style=&quot;background:#fdf4ff; border:1px solid #d8b4fe; padding:15px; border-radius:8px; margin:15px 0;&quot;&gt;
+                &lt;div style=&quot;color:#9333ea; font-size:1.1em; font-weight:bold; margin-bottom:10px;&quot;&gt;
+                    🟡 商业机密置换结果：
+                &lt;/div&gt;
+                &lt;p&gt;获得 &lt;b style=&quot;color:#9333ea; font-size:1.3em;&quot;&gt;A级 资源 x&lt;&lt;print _qty&gt;&gt;&lt;/b&gt;&lt;/p&gt;
+                &lt;div style=&quot;background:#f3e8ff; padding:10px; border-radius:4px; margin-top:10px; font-size:0.9em; color:#6b21a8;&quot;&gt;
+                    ⚠️ &lt;b&gt;提示：&lt;/b&gt;在情报中心置换只能获得A级资源&lt;br&gt;
+                    如需S级资源，请去&lt;b&gt;商务拓展中心&lt;/b&gt;使用&quot;资源置换&quot;功能（需额外支付500万）
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;br&gt;&lt;br&gt;
+            [[✅ 确定并返回|Gossip_Center]]
+
         /* === 商务拓展中心的S级置换 === */
         &lt;&lt;elseif $action is &quot;exchange&quot;&gt;&gt;
             &lt;div style=&quot;font-size:3em; margin-bottom:10px;&quot;&gt;🤝&lt;/div&gt;
             &lt;h3&gt;资源置换！&lt;/h3&gt;
             &lt;p&gt;你利用这条商业机密，与顶级资方达成了合作。&lt;/p&gt;
             
-            /* 注意：这个分支现在应该在商务拓展中心使用，并且需要500万 */
-            &lt;&lt;set _target_index to $gid&gt;&gt;
-            &lt;&lt;if _g.type is &quot;gold&quot;&gt;&gt;
-                /* 删除这个瓜 */
-                &lt;&lt;run $gossips.deleteAt(_target_index)&gt;&gt;
-                &lt;&lt;set _qty to random(1, 2)&gt;&gt;
-                &lt;&lt;set $resources.s += _qty&gt;&gt;
-                &lt;&lt;set $money -= 500&gt;&gt; /* 支付500万 */
-                &lt;&lt;set $stamina -= 20&gt;&gt;
-                &lt;&lt;set $last_gained_res to &quot;s&quot;&gt;&gt;
-                &lt;&lt;set $last_gained_count to _qty&gt;&gt;
-                &lt;&lt;set $last_gained_extra to &quot;🤝 对方为了封口，非常痛快！&quot;&gt;&gt;
-                
-                &lt;div style=&quot;background:#fffbeb; border:1px solid #fbbf24; padding:15px; border-radius:8px; margin:15px 0;&quot;&gt;
-                    &lt;div style=&quot;color:#d97706; font-size:1.1em; font-weight:bold; margin-bottom:10px;&quot;&gt;
-                        🏆 S级资源置换结果：
-                    &lt;/div&gt;
-                    &lt;p&gt;获得 &lt;b style=&quot;color:#d97706; font-size:1.3em;&quot;&gt;S级 顶级资源 x&lt;&lt;print _qty&gt;&gt;&lt;/b&gt;&lt;/p&gt;
-                    &lt;p style=&quot;color:#b45309;&quot;&gt;支付了 &lt;b&gt;500万&lt;/b&gt; 作为封口费&lt;/p&gt;
+            /* 注意：这个分支应该在商务拓展中心使用，并且需要500万 */
+            &lt;&lt;set _qty to random(1, 2)&gt;&gt;
+            &lt;&lt;set $resources.s += _qty&gt;&gt;
+            &lt;&lt;set $money -= 500&gt;&gt; /* 支付500万 */
+            &lt;&lt;set $stamina -= 20&gt;&gt;
+            
+            /* 删除这个瓜 */
+            &lt;&lt;set $gossips.deleteAt($gid)&gt;&gt;
+            
+            &lt;div style=&quot;background:#fffbeb; border:1px solid #fbbf24; padding:15px; border-radius:8px; margin:15px 0;&quot;&gt;
+                &lt;div style=&quot;color:#d97706; font-size:1.1em; font-weight:bold; margin-bottom:10px;&quot;&gt;
+                    🏆 S级资源置换结果：
                 &lt;/div&gt;
-                
-                /* 跳转到资源获取页面显示结果 */
-                &lt;&lt;goto &quot;Resource_Get&quot;&gt;&gt;
-            &lt;&lt;else&gt;&gt;
-                &lt;p&gt;错误：这不是商业机密情报！&lt;/p&gt;
-            &lt;&lt;/if&gt;&gt;
-        &lt;&lt;/if&gt;&gt;
+                &lt;p&gt;获得 &lt;b style=&quot;color:#d97706; font-size:1.3em;&quot;&gt;S级 顶级资源 x&lt;&lt;print _qty&gt;&gt;&lt;/b&gt;&lt;/p&gt;
+                &lt;p style=&quot;color:#b45309;&quot;&gt;支付了 &lt;b&gt;500万&lt;/b&gt; 作为封口费&lt;/p&gt;
+            &lt;/div&gt;
 
-        &lt;br&gt;&lt;br&gt;
-        [[🔙 返回情报局|Gossip_Center]]
+            /* 跳转到资源获取页面显示结果 */
+            &lt;br&gt;&lt;br&gt;
+            [[✅ 确定并返回|Gossip_Center]]
+        &lt;&lt;/if&gt;&gt;
     &lt;/div&gt;
 &lt;/div&gt;
+&lt;&lt;/if&gt;&gt;
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="32" name="Visit_Set" tags="" position="900,200" size="100,100">&lt;&lt;nobr&gt;&gt;
 !! 🚗 剧组探班
 &lt;&lt;set _a to $actors[$current_actor]&gt;&gt;
@@ -3581,7 +3597,8 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
         &lt;&lt;/if&gt;&gt;
     &lt;/div&gt;
 &lt;&lt;/nobr&gt;&gt;
-&lt;&lt;/widget&gt;&gt;</tw-passagedata><tw-passagedata pid="37" name="Widget_Month_Logic" tags="widget" position="2450,350" size="100,100">&lt;&lt;widget &quot;Process_Month_Logic&quot;&gt;&gt;
+&lt;&lt;/widget&gt;&gt;</tw-passagedata><tw-passagedata pid="37" name="Widget_Month_Logic" tags="widget" position="2450,350" size="100,100">:: Widget_Month_Logic [widget] {&quot;position&quot;:&quot;2450,350&quot;,&quot;size&quot;:&quot;100,100&quot;}
+&lt;&lt;widget &quot;Process_Month_Logic&quot;&gt;&gt;
     &lt;&lt;silently&gt;&gt;
     
     /* ==============================
@@ -3614,7 +3631,17 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
         &lt;&lt;if _a.busy_months &gt; 0&gt;&gt;
             &lt;&lt;set _a.busy_months -= 1&gt;&gt;
             &lt;&lt;if _a.busy_months == 0&gt;&gt;
-                &lt;&lt;set _finished_actors.push(_key)&gt;&gt;
+                /* 🔴【修复点】区分培训和正常工作：培训不进入杀青结算 */
+                &lt;&lt;if def _a.job_type and _a.job_type is &quot;training&quot;&gt;&gt;
+                    /* 培训结束，清理状态 */
+                    &lt;&lt;set _a.project_name to &quot;&quot;&gt;&gt;
+                    &lt;&lt;unset _a.job_type&gt;&gt;
+                    /* 可以在这里添加培训完成的特殊提示 */
+                    &lt;&lt;set _training_complete_msg to &quot;🎓 &quot; + _a.name + &quot; 完成了封闭培训！&quot;&gt;&gt;
+                &lt;&lt;else&gt;&gt;
+                    /* 正常工作杀青 */
+                    &lt;&lt;set _finished_actors.push(_key)&gt;&gt;
+                &lt;&lt;/if&gt;&gt;
             &lt;&lt;/if&gt;&gt;
         &lt;&lt;/if&gt;&gt;
 
