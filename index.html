@@ -3086,113 +3086,421 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
     &lt;/div&gt;
 &lt;/div&gt;
 &lt;&lt;/if&gt;&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="32" name="Visit_Set" tags="" position="900,200" size="100,100">&lt;&lt;nobr&gt;&gt;
-!! 🚗 剧组探班
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="32" name="Visit_Set" tags="" position="875,200" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;style&gt;
+/* 探班页面专用样式 */
+.visit-container {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 500px;
+    border-radius: 16px;
+    padding: 30px;
+    color: white;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
 
-/* 1. 体力检查 */
-&lt;&lt;if $stamina &lt; 10&gt;&gt;
-    &lt;div style=&quot;padding:20px; border:1px solid red; background:#fff1f2; text-align:center;&quot;&gt;
-        ❌ &lt;b&gt;你的体力不足！&lt;/b&gt;&lt;br&gt;
-        作为经纪人，你需要休息了。&lt;br&gt;
-        ( 需要 10 体力 )
-        &lt;br&gt;&lt;br&gt;
-        [[🔙 返回|Work_Center]]
-    &lt;/div&gt;
-&lt;&lt;else&gt;&gt;
-    /* 2. 扣除你的体力 */
-    &lt;&lt;set $stamina -= 10&gt;&gt;
-    
-    &lt;&lt;set _a to $actors[$current_actor]&gt;&gt;
-    
-    /* 3. 恢复艺人体力 (逻辑优化：艺人不扣体力，反而回血) */
-    /* 原逻辑有 _a.current_energy -= 10，这里建议去掉，探班应该是给艺人送温暖 */
+.visit-header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid rgba(255,255,255,0.2);
+}
 
-/* --- 🎲 随机生成数值 --- */
-&lt;&lt;set _add_fans to random(100, 300)&gt;&gt;
-&lt;&lt;set _add_rep to random(1, 3)&gt;&gt;
-&lt;&lt;set _add_acting to random(1, 4)&gt;&gt;
+.visit-icon {
+    font-size: 4em;
+    margin-bottom: 15px;
+    display: block;
+}
 
-/* --- 🎭 剧情判定逻辑 --- */
+.visit-title {
+    font-size: 2.2em;
+    font-weight: 900;
+    color: #fff;
+    margin-bottom: 5px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
 
-&lt;&lt;if $current_actor is &quot;zp&quot;&gt;&gt;
-    /* 展鹏剧情 */
-    &lt;&lt;set _roll to random(1, 3)&gt;&gt;
-    
-    &lt;&lt;if _roll is 1&gt;&gt;
-        展鹏正躲在保姆车里打游戏，看到你来立刻把手机藏到屁股底下。
-        &quot;老公，剧组盒饭太难吃了，我想吃火锅……&quot;他可怜兮兮地看着你。
-        &lt;br&gt;💖 &lt;span style=&quot;color: hotpink&quot;&gt;路透照流出，CP粉磕到了你们的眼神拉丝。&lt;/span&gt;
-        &lt;&lt;set _a.fans.cp += _add_fans&gt;&gt;
-    
-    &lt;&lt;elseif _roll is 2&gt;&gt;
-        导演正在讲戏，展鹏听得昏昏欲睡，脑袋一点一点的。
-        你赶紧上去递了一瓶冰水，他清醒后委屈地蹭了蹭你的手背。
-        &lt;br&gt;🔋 &lt;span style=&quot;color: green&quot;&gt;展鹏心情变好了，精力恢复。&lt;/span&gt;
-        &lt;&lt;set _a.current_energy += 20&gt;&gt;
-        
+.visit-subtitle {
+    color: rgba(255,255,255,0.8);
+    font-size: 1.1em;
+}
+
+.visit-content {
+    background: rgba(255,255,255,0.95);
+    border-radius: 12px;
+    padding: 25px;
+    margin: 25px auto;
+    max-width: 700px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    color: #333;
+}
+
+.story-card {
+    background: #f8fafc;
+    border-radius: 10px;
+    padding: 20px;
+    border-left: 5px solid #3b82f6;
+    margin-bottom: 20px;
+    font-size: 1.1em;
+    line-height: 1.7;
+    color: #475569;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.effects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.effect-card {
+    background: white;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.effect-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+.effect-icon {
+    font-size: 2em;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.effect-label {
+    font-size: 0.9em;
+    color: #64748b;
+    margin-bottom: 5px;
+}
+
+.effect-value {
+    font-size: 1.4em;
+    font-weight: bold;
+}
+
+.positive-value {
+    color: #10b981;
+}
+
+.negative-value {
+    color: #ef4444;
+}
+
+.neutral-value {
+    color: #f59e0b;
+}
+
+.actor-badge {
+    display: inline-block;
+    background: linear-gradient(45deg, #8b5cf6, #d946ef);
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    font-size: 1.1em;
+}
+
+.action-btn {
+    display: inline-block;
+    background: linear-gradient(to right, #06d6a0, #118ab2);
+    color: white;
+    padding: 15px 40px;
+    border-radius: 50px;
+    font-size: 1.2em;
+    font-weight: bold;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(6,214,160,0.4);
+    transition: all 0.3s ease;
+    margin-top: 20px;
+}
+
+.action-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(6,214,160,0.6);
+}
+
+.error-card {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    padding: 40px;
+    border-radius: 16px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 20px 60px rgba(239,68,68,0.3);
+}
+
+.error-icon {
+    font-size: 5em;
+    margin-bottom: 20px;
+}
+
+.error-title {
+    font-size: 2em;
+    font-weight: 900;
+    margin-bottom: 15px;
+}
+
+.error-desc {
+    font-size: 1.1em;
+    opacity: 0.9;
+    margin-bottom: 25px;
+}
+
+.back-btn {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    color: white;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-weight: bold;
+    text-decoration: none;
+    border: 2px solid rgba(255,255,255,0.3);
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+    background: rgba(255,255,255,0.3);
+    transform: translateY(-2px);
+}
+&lt;/style&gt;
+
+&lt;div class=&quot;visit-container&quot;&gt;
+    /* 1. 体力检查 */
+    &lt;&lt;if $stamina &lt; 10&gt;&gt;
+        &lt;div class=&quot;error-card&quot;&gt;
+            &lt;div class=&quot;error-icon&quot;&gt;💸&lt;/div&gt;
+            &lt;div class=&quot;error-title&quot;&gt;体力不足！&lt;/div&gt;
+            &lt;div class=&quot;error-desc&quot;&gt;
+                作为经纪人，你需要休息了。&lt;br&gt;
+                (需要 10 体力才能探班)
+            &lt;/div&gt;
+            &lt;div style=&quot;margin-top: 30px;&quot;&gt;
+                &lt;a data-passage=&quot;Work_Center&quot; class=&quot;back-btn&quot;&gt;
+                    🔙 返回通告中心
+                &lt;/a&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
     &lt;&lt;else&gt;&gt;
-        展鹏认真地在拍一场哭戏，眼眶红红的样子让片场所有人都屏住了呼吸。
-        &lt;br&gt;✨ &lt;span style=&quot;color: gold&quot;&gt;美貌杀人！颜值粉狂欢，口碑小幅度提升。&lt;/span&gt;
-        &lt;&lt;set _a.fans.career += _add_fans&gt;&gt;
-        &lt;&lt;set _a.reputation += 1&gt;&gt;
+        /* 2. 扣除体力 */
+        &lt;&lt;set $stamina -= 10&gt;&gt;
+        &lt;&lt;set _a to $actors[$current_actor]&gt;&gt;
+        &lt;&lt;set _a.current_energy = Math.min(_a.energy, _a.current_energy + 20)&gt;&gt;
+
+        &lt;div class=&quot;visit-header&quot;&gt;
+            &lt;span class=&quot;visit-icon&quot;&gt;🚗&lt;/span&gt;
+            &lt;h1 class=&quot;visit-title&quot;&gt;剧组探班&lt;/h1&gt;
+            &lt;div class=&quot;visit-subtitle&quot;&gt;消耗了 10 点体力，为艺人加油打气&lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;visit-content&quot;&gt;
+            &lt;!-- 艺人徽章 --&gt;
+            &lt;div class=&quot;actor-badge&quot;&gt;
+                &lt;&lt;if $current_actor is &quot;zp&quot;&gt;&gt;👑 展鹏（妻子）
+                &lt;&lt;elseif $current_actor is &quot;qs&quot;&gt;&gt;👠 秦飒（恶女）
+                &lt;&lt;else&gt;&gt;✨ 白小纯（新人）
+                &lt;&lt;/if&gt;&gt;
+            &lt;/div&gt;
+
+            /* --- 🎲 随机生成数值 --- */
+            &lt;&lt;set _add_fans to random(100, 300)&gt;&gt;
+            &lt;&lt;set _add_rep to random(1, 3)&gt;&gt;
+            &lt;&lt;set _add_acting to random(1, 4)&gt;&gt;
+
+            /* --- 🎭 剧情判定逻辑 --- */
+            &lt;&lt;if $current_actor is &quot;zp&quot;&gt;&gt;
+                /* 展鹏剧情 */
+                &lt;&lt;set _roll to random(1, 3)&gt;&gt;
+                
+                &lt;&lt;if _roll is 1&gt;&gt;
+                    &lt;div class=&quot;story-card&quot;&gt;
+                        展鹏正躲在保姆车里打游戏，看到你来立刻把手机藏到屁股底下。&lt;br&gt;&lt;br&gt;
+                        &quot;老公，剧组盒饭太难吃了，我想吃火锅……&quot;他可怜兮兮地看着你。
+                    &lt;/div&gt;
+                    &lt;&lt;set _effect_fans_cp = _add_fans&gt;&gt;
+                    &lt;&lt;set _effect_icon_cp = &quot;💖&quot;&gt;&gt;
+                    &lt;&lt;set _effect_desc_cp = &quot;路透照流出，CP粉磕到了你们的眼神拉丝&quot;&gt;&gt;
+                    
+                &lt;&lt;elseif _roll is 2&gt;&gt;
+                    &lt;div class=&quot;story-card&quot;&gt;
+                        导演正在讲戏，展鹏听得昏昏欲睡，脑袋一点一点的。&lt;br&gt;&lt;br&gt;
+                        你赶紧上去递了一瓶冰水，他清醒后委屈地蹭了蹭你的手背。
+                    &lt;/div&gt;
+                    &lt;&lt;set _effect_energy = 20&gt;&gt;
+                    &lt;&lt;set _effect_icon_energy = &quot;🔋&quot;&gt;&gt;
+                    &lt;&lt;set _effect_desc_energy = &quot;展鹏心情变好了，精力恢复&quot;&gt;&gt;
+                    
+                &lt;&lt;else&gt;&gt;
+                    &lt;div class=&quot;story-card&quot;&gt;
+                        展鹏认真地在拍一场哭戏，眼眶红红的样子让片场所有人都屏住了呼吸。&lt;br&gt;&lt;br&gt;
+                        导演都忍不住夸他：&quot;这次终于没睡着了！&quot;
+                    &lt;/div&gt;
+                    &lt;&lt;set _effect_fans_career = _add_fans&gt;&gt;
+                    &lt;&lt;set _effect_rep = 1&gt;&gt;
+                    &lt;&lt;set _effect_icon_career = &quot;✨&quot;&gt;&gt;
+                    &lt;&lt;set _effect_desc_career = &quot;美貌杀人！颜值粉狂欢&quot;&gt;&gt;
+                    &lt;&lt;set _effect_icon_rep = &quot;📈&quot;&gt;&gt;
+                    &lt;&lt;set _effect_desc_rep = &quot;认真工作的样子被剧组称赞&quot;&gt;&gt;
+                &lt;&lt;/if&gt;&gt;
+
+            &lt;&lt;elseif $current_actor is &quot;qs&quot;&gt;&gt;
+                /* 秦飒剧情 */
+                &lt;&lt;set _roll to random(1, 3)&gt;&gt;
+                
+                &lt;&lt;if _roll is 1&gt;&gt;
+                    &lt;div class=&quot;story-card&quot;&gt;
+                        秦飒正在发脾气：&quot;这衣服版型有问题，不符合人物身份！&quot;&lt;br&gt;&lt;br&gt;
+                        你早已准备好了一套高定私服救场，她满意地哼了一声。
+                    &lt;/div&gt;
+                    &lt;&lt;set _effect_rep = _add_rep&gt;&gt;
+                    &lt;&lt;set _effect_icon_rep = &quot;👠&quot;&gt;&gt;
+                    &lt;&lt;set _effect_desc_rep = &quot;危机解除，剧组感叹你的救场能力&quot;&gt;&gt;
+                    
+                &lt;&lt;elseif _roll is 2&gt;&gt;
+                    &lt;div class=&quot;story-card&quot;&gt;
+                        秦飒不小心给了对手戏演员一巴掌，导演喊卡后她立刻让人送上了冰袋。&lt;br&gt;&lt;br&gt;
+                        &quot;对不起对不起，我手滑。&quot;她点头哈腰连连道歉，现场笑倒一片。
+                    &lt;/div&gt;
+                    &lt;&lt;set _effect_acting = _add_acting&gt;&gt;
+                    &lt;&lt;set _effect_icon_acting = &quot;🎬&quot;&gt;&gt;
+                    &lt;&lt;set _effect_desc_acting = &quot;演技炸裂，气场全开&quot;&gt;&gt;
+                    
+                &lt;&lt;else&gt;&gt;
+                    &lt;div class=&quot;story-card&quot;&gt;
+                        秦飒在化妆间累得睡着了，手里还紧紧攥着剧本。&lt;br&gt;&lt;br&gt;
+                        你轻手轻脚地给她披上外套，她迷迷糊糊地说了句：&quot;谢谢经纪人...&quot;
+                    &lt;/div&gt;
+                    &lt;&lt;set _effect_energy = 10&gt;&gt;
+                    &lt;&lt;set _effect_icon_energy = &quot;💤&quot;&gt;&gt;
+                    &lt;&lt;set _effect_desc_energy = &quot;虽然脾气坏，但她真的很拼&quot;&gt;&gt;
+                &lt;&lt;/if&gt;&gt;
+
+            &lt;&lt;else&gt;&gt;
+                /* 白小纯剧情 */
+                &lt;&lt;set _roll to random(1, 3)&gt;&gt;
+                
+                &lt;&lt;if _roll is 1&gt;&gt;
+                    &lt;div class=&quot;story-card&quot;&gt;
+                        白小纯正在角落里帮场务搬很重的道具箱子，满头大汗。&lt;br&gt;&lt;br&gt;
+                        你走过去制止了他：&quot;你是演员，不是苦力。&quot;
+                    &lt;/div&gt;
+                    &lt;&lt;set _effect_rep = _add_rep&gt;&gt;
+                    &lt;&lt;set _effect_icon_rep = &quot;🥺&quot;&gt;&gt;
+                    &lt;&lt;set _effect_desc_rep = &quot;剧组人员觉得这孩子太懂事了&quot;&gt;&gt;
+                    
+                &lt;&lt;elseif _roll is 2&gt;&gt;
+                    &lt;div class=&quot;story-card&quot;&gt;
+                        白小纯被导演骂得狗血淋头，眼泪在眼眶里打转却不敢掉下来。&lt;br&gt;&lt;br&gt;
+                        看到你来，他吸了吸鼻子，强颜欢笑：&quot;老板，我没事，我刚才学到了很多东西。&quot;
+                    &lt;/div&gt;
+                    &lt;&lt;set _effect_fans_mom = _add_fans&gt;&gt;
+                    &lt;&lt;set _effect_icon_mom = &quot;🤱&quot;&gt;&gt;
+                    &lt;&lt;set _effect_desc_mom = &quot;激起了探班粉丝的保护欲&quot;&gt;&gt;
+                    
+                &lt;&lt;else&gt;&gt;
+                    &lt;div class=&quot;story-card&quot;&gt;
+                        白小纯正在对着空气一遍遍练习那个只有三句台词的镜头。&lt;br&gt;&lt;br&gt;
+                        他的剧本上密密麻麻写满了笔记，连导演都感慨他的认真。
+                    &lt;/div&gt;
+                    &lt;&lt;set _effect_acting = _add_acting&gt;&gt;
+                    &lt;&lt;set _effect_icon_acting = &quot;📈&quot;&gt;&gt;
+                    &lt;&lt;set _effect_desc_acting = &quot;天道酬勤，演技肉眼可见地进步&quot;&gt;&gt;
+                &lt;&lt;/if&gt;&gt;
+            &lt;&lt;/if&gt;&gt;
+
+            /* --- 效果展示 --- */
+            &lt;div style=&quot;margin-top: 30px;&quot;&gt;
+                &lt;h3 style=&quot;text-align: center; color: #334155; margin-bottom: 20px;&quot;&gt;📊 探班效果&lt;/h3&gt;
+                &lt;div class=&quot;effects-grid&quot;&gt;
+                    &lt;&lt;if def _effect_fans_cp&gt;&gt;
+                        &lt;div class=&quot;effect-card&quot; style=&quot;border-color: #f472b6;&quot;&gt;
+                            &lt;span class=&quot;effect-icon&quot;&gt;&lt;&lt;print _effect_icon_cp&gt;&gt;&lt;/span&gt;
+                            &lt;div class=&quot;effect-label&quot;&gt;CP粉增加&lt;/div&gt;
+                            &lt;div class=&quot;effect-value positive-value&quot;&gt;+&lt;&lt;print _effect_fans_cp&gt;&gt;&lt;/div&gt;
+                            &lt;div class=&quot;effect-desc&quot; style=&quot;font-size: 0.8em; color: #64748b; margin-top: 5px;&quot;&gt;
+                                &lt;&lt;print _effect_desc_cp&gt;&gt;
+                            &lt;/div&gt;
+                            &lt;&lt;set _a.fans.cp += _effect_fans_cp&gt;&gt;
+                        &lt;/div&gt;
+                    &lt;&lt;/if&gt;&gt;
+                    
+                    &lt;&lt;if def _effect_fans_career&gt;&gt;
+                        &lt;div class=&quot;effect-card&quot; style=&quot;border-color: #3b82f6;&quot;&gt;
+                            &lt;span class=&quot;effect-icon&quot;&gt;&lt;&lt;print _effect_icon_career&gt;&gt;&lt;/span&gt;
+                            &lt;div class=&quot;effect-label&quot;&gt;事业粉增加&lt;/div&gt;
+                            &lt;div class=&quot;effect-value positive-value&quot;&gt;+&lt;&lt;print _effect_fans_career&gt;&gt;&lt;/div&gt;
+                            &lt;div class=&quot;effect-desc&quot; style=&quot;font-size: 0.8em; color: #64748b; margin-top: 5px;&quot;&gt;
+                                &lt;&lt;print _effect_desc_career&gt;&gt;
+                            &lt;/div&gt;
+                            &lt;&lt;set _a.fans.career += _effect_fans_career&gt;&gt;
+                        &lt;/div&gt;
+                    &lt;&lt;/if&gt;&gt;
+                    
+                    &lt;&lt;if def _effect_fans_mom&gt;&gt;
+                        &lt;div class=&quot;effect-card&quot; style=&quot;border-color: #f59e0b;&quot;&gt;
+                            &lt;span class=&quot;effect-icon&quot;&gt;&lt;&lt;print _effect_icon_mom&gt;&gt;&lt;/span&gt;
+                            &lt;div class=&quot;effect-label&quot;&gt;妈粉增加&lt;/div&gt;
+                            &lt;div class=&quot;effect-value positive-value&quot;&gt;+&lt;&lt;print _effect_fans_mom&gt;&gt;&lt;/div&gt;
+                            &lt;div class=&quot;effect-desc&quot; style=&quot;font-size: 0.8em; color: #64748b; margin-top: 5px;&quot;&gt;
+                                &lt;&lt;print _effect_desc_mom&gt;&gt;
+                            &lt;/div&gt;
+                            &lt;&lt;set _a.fans.mom += _effect_fans_mom&gt;&gt;
+                        &lt;/div&gt;
+                    &lt;&lt;/if&gt;&gt;
+                    
+                    &lt;&lt;if def _effect_rep&gt;&gt;
+                        &lt;div class=&quot;effect-card&quot; style=&quot;border-color: #10b981;&quot;&gt;
+                            &lt;span class=&quot;effect-icon&quot;&gt;&lt;&lt;print _effect_icon_rep&gt;&gt;&lt;/span&gt;
+                            &lt;div class=&quot;effect-label&quot;&gt;口碑提升&lt;/div&gt;
+                            &lt;div class=&quot;effect-value positive-value&quot;&gt;+&lt;&lt;print _effect_rep&gt;&gt;&lt;/div&gt;
+                            &lt;div class=&quot;effect-desc&quot; style=&quot;font-size: 0.8em; color: #64748b; margin-top: 5px;&quot;&gt;
+                                &lt;&lt;print _effect_desc_rep&gt;&gt;
+                            &lt;/div&gt;
+                            &lt;&lt;set _a.reputation += _effect_rep&gt;&gt;
+                        &lt;/div&gt;
+                    &lt;&lt;/if&gt;&gt;
+                    
+                    &lt;&lt;if def _effect_acting&gt;&gt;
+                        &lt;div class=&quot;effect-card&quot; style=&quot;border-color: #8b5cf6;&quot;&gt;
+                            &lt;span class=&quot;effect-icon&quot;&gt;&lt;&lt;print _effect_icon_acting&gt;&gt;&lt;/span&gt;
+                            &lt;div class=&quot;effect-label&quot;&gt;演技提升&lt;/div&gt;
+                            &lt;div class=&quot;effect-value positive-value&quot;&gt;+&lt;&lt;print _effect_acting&gt;&gt;&lt;/div&gt;
+                            &lt;div class=&quot;effect-desc&quot; style=&quot;font-size: 0.8em; color: #64748b; margin-top: 5px;&quot;&gt;
+                                &lt;&lt;print _effect_desc_acting&gt;&gt;
+                            &lt;/div&gt;
+                            &lt;&lt;set _a.acting += _effect_acting&gt;&gt;
+                        &lt;/div&gt;
+                    &lt;&lt;/if&gt;&gt;
+                    
+                    &lt;&lt;if def _effect_energy&gt;&gt;
+                        &lt;div class=&quot;effect-card&quot; style=&quot;border-color: #0ea5e9;&quot;&gt;
+                            &lt;span class=&quot;effect-icon&quot;&gt;&lt;&lt;print _effect_icon_energy&gt;&gt;&lt;/span&gt;
+                            &lt;div class=&quot;effect-label&quot;&gt;精力恢复&lt;/div&gt;
+                            &lt;div class=&quot;effect-value positive-value&quot;&gt;+&lt;&lt;print _effect_energy&gt;&gt;&lt;/div&gt;
+                            &lt;div class=&quot;effect-desc&quot; style=&quot;font-size: 0.8em; color: #64748b; margin-top: 5px;&quot;&gt;
+                                &lt;&lt;print _effect_desc_energy&gt;&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                    &lt;&lt;/if&gt;&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;div style=&quot;text-align: center; margin-top: 40px;&quot;&gt;
+                &lt;a data-passage=&quot;Work_Center&quot; class=&quot;action-btn&quot;&gt;
+                    ✅ 确认并返回
+                &lt;/a&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
     &lt;&lt;/if&gt;&gt;
-
-&lt;&lt;elseif $current_actor is &quot;qs&quot;&gt;&gt;
-    /* 秦飒剧情 */
-    &lt;&lt;set _roll to random(1, 3)&gt;&gt;
-    
-    &lt;&lt;if _roll is 1&gt;&gt;
-        秦飒正在发脾气：&quot;这衣服版型有问题，不符合人物身份！&quot;
-        你早已准备好了一套高定私服救场，她满意地哼了一声。
-        &lt;br&gt;👠 &lt;span style=&quot;color: purple&quot;&gt;危机解除，剧组感叹你的救场能力。口碑 +_add_rep。&lt;/span&gt;
-        &lt;&lt;set _a.reputation += _add_rep&gt;&gt;
-        
-    &lt;&lt;elseif _roll is 2&gt;&gt;
-        秦飒不小心给了对手戏演员一巴掌，导演喊卡后她立刻让人送上了冰袋。
-        &quot;对不起对不起，我手滑。&quot;她点头哈腰连连道歉，抓着对手戏演员求打回来，现场笑倒一片。
-        &lt;br&gt;🎬 &lt;span style=&quot;color: blue&quot;&gt;演技炸裂，气场全开。演技 +_add_acting。&lt;/span&gt;
-        &lt;&lt;set _a.acting += _add_acting&gt;&gt;
-        
-    &lt;&lt;else&gt;&gt;
-        秦飒在化妆间累得睡着了，手里还紧紧攥着剧本。
-        你轻手轻脚地给她披上外套。
-        &lt;br&gt;💤 &lt;span style=&quot;color: gray&quot;&gt;虽然脾气坏，但她真的很拼。精力恢复。&lt;/span&gt;
-        &lt;&lt;set _a.current_energy += 10&gt;&gt;
-    &lt;&lt;/if&gt;&gt;
-
-&lt;&lt;else&gt;&gt;
-    /* 白小纯剧情 */
-    &lt;&lt;set _roll to random(1, 3)&gt;&gt;
-    
-    &lt;&lt;if _roll is 1&gt;&gt;
-        白小纯正在角落里帮场务搬很重的道具箱子，满头大汗。
-        你走过去制止了他：&quot;你是演员，不是苦力。&quot;
-        &lt;br&gt;🥺 &lt;span style=&quot;color: orange&quot;&gt;剧组人员觉得这孩子太懂事了。口碑 +_add_rep。&lt;/span&gt;
-        &lt;&lt;set _a.reputation += _add_rep&gt;&gt;
-        
-    &lt;&lt;elseif _roll is 2&gt;&gt;
-        白小纯被导演骂得狗血淋头，眼泪在眼眶里打转却不敢掉下来。
-        看到你来，他吸了吸鼻子，强颜欢笑：&quot;老板，我没事，我刚才学到了很多东西。&quot;
-        &lt;br&gt;🤱 &lt;span style=&quot;color: pink&quot;&gt;这幅样子激起了探班粉丝的保护欲。妈粉 +_add_fans。&lt;/span&gt;
-        &lt;&lt;set _a.fans.mom += _add_fans&gt;&gt;
-        
-    &lt;&lt;else&gt;&gt;
-        白小纯正在对着空气一遍遍练习那个只有三句台词的镜头。
-        他的剧本上密密麻麻写满了笔记。
-        &lt;br&gt;📈 &lt;span style=&quot;color: blue&quot;&gt;天道酬勤，他的演技肉眼可见地进步了。演技 +_add_acting。&lt;/span&gt;
-        &lt;&lt;set _a.acting += _add_acting&gt;&gt;
-    &lt;&lt;/if&gt;&gt;
-
-&lt;&lt;/if&gt;&gt;
-
-/* --- ⚡ 防止数值溢出 --- */
-&lt;&lt;set _a.current_energy to Math.min(_a.energy, _a.current_energy)&gt;&gt;
-
-&lt;br&gt;&lt;br&gt;
-&lt;&lt;link &quot;🆗 确定并返回&quot;&gt;&gt;
-    &lt;&lt;goto &quot;Work_Center&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
+&lt;/div&gt;
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="33" name="Widget_Fan_War" tags="widget" position="625,1200" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;&lt;widget &quot;Generate_Fan_War&quot;&gt;&gt;
     &lt;&lt;set $fan_war_report to &quot;&quot;&gt;&gt; /* 清空上月战报 */
@@ -3592,7 +3900,7 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
         &lt;/div&gt;
     &lt;/div&gt;
 &lt;&lt;/nobr&gt;&gt;
-&lt;&lt;/widget&gt;&gt;</tw-passagedata><tw-passagedata pid="37" name="Widget_Month_Logic" tags="widget" position="2450,350" size="100,100">:: Widget_Month_Logic [widget] {&quot;position&quot;:&quot;2450,350&quot;,&quot;size&quot;:&quot;100,100&quot;}
+&lt;&lt;/widget&gt;&gt;</tw-passagedata><tw-passagedata pid="37" name="Widget_Month_Logic" tags="widget" position="2450,350" size="100,100">:: Widget_Month_Logic [widget]
 &lt;&lt;widget &quot;Process_Month_Logic&quot;&gt;&gt;
     &lt;&lt;silently&gt;&gt;
     
@@ -3626,7 +3934,7 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
         &lt;&lt;if _a.busy_months &gt; 0&gt;&gt;
             &lt;&lt;set _a.busy_months -= 1&gt;&gt;
             &lt;&lt;if _a.busy_months == 0&gt;&gt;
-                /* 🔴【修复点】区分培训和正常工作：培训不进入杀青结算 */
+                /* 区分培训和正常工作：培训不进入杀青结算 */
                 &lt;&lt;if def _a.job_type and _a.job_type is &quot;training&quot;&gt;&gt;
                     /* 培训结束，清理状态 */
                     &lt;&lt;set _a.project_name to &quot;&quot;&gt;&gt;
@@ -3662,12 +3970,10 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
             &lt;&lt;set _a.rank_label to &quot;糊咖&quot;&gt;&gt;&lt;&lt;set _a.rank_level to 1&gt;&gt;
         &lt;&lt;/if&gt;&gt;
 
-        /* 记录升降级事件 */
+        /* 记录升降级事件 (保留这个，月结界面会有黄色条提示) */
         &lt;&lt;if _a.rank_label neq _old_rank&gt;&gt;
             &lt;&lt;set _rank_up_events.push({name: _a.name, rank: _a.rank_label})&gt;&gt;
-            &lt;&lt;if _a.rank_level &gt; 1&gt;&gt; 
-                &lt;&lt;set $gossips.push({desc: &quot;重磅！&quot; + _a.name + &quot; 的咖位变更为 [&quot; + _a.rank_label + &quot;]！&quot;, type: &quot;green&quot;})&gt;&gt;
-            &lt;&lt;/if&gt;&gt;
+            /* 删除了这里生成 gossip 的代码，修复金钱消失Bug */
         &lt;&lt;/if&gt;&gt;
     &lt;&lt;/for&gt;&gt;
 
@@ -3726,7 +4032,7 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
     &lt;&lt;if $danger_level &gt; 0&gt;&gt;&lt;&lt;set $danger_level -= 5&gt;&gt;&lt;&lt;/if&gt;&gt;
     &lt;&lt;set $stamina to 100&gt;&gt;  
     &lt;&lt;set $action_points to 4&gt;&gt; /* 恢复行动点 */
-    &lt;&lt;set $charity_done to false&gt;&gt; /* &lt;--- 新增这行：每月重置慈善状态 */
+    &lt;&lt;set $charity_done to false&gt;&gt; /* 每月重置慈善状态 */
     &lt;&lt;set $month += 1&gt;&gt;
     
     &lt;&lt;set _hot_events to [&quot;某顶流隐婚生子&quot;, &quot;秦飒素颜丑照&quot;, &quot;展鹏片场耍大牌&quot;, &quot;白小纯商演被砸&quot;, &quot;娱乐圈大地震&quot;]&gt;&gt;
