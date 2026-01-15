@@ -1252,23 +1252,29 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
             &lt;&lt;set $zp_lazy_streak to 0&gt;&gt;
         &lt;&lt;/if&gt;&gt;
 
+        /* 3. 判定是否私吞片酬 (展鹏专属，非摸鱼状态下 20% 概率触发) */
+        &lt;&lt;set _is_secret_money to false&gt;&gt;
+        &lt;&lt;if $current_actor is &quot;zp&quot; and not _is_lazy and random(1,100) &lt;= 20&gt;&gt;
+            &lt;&lt;set _is_secret_money to true&gt;&gt;
+        &lt;&lt;/if&gt;&gt;
+
         /* === 分支 A: 触发咸鱼 (根据连续次数判定惩罚) === */
         &lt;&lt;if _is_lazy&gt;&gt;
             
-            /* 🔴【核心修复】统一底薪表，确保与预测一致 */
+            /* 统一底薪表 */
             &lt;&lt;set _base_map to {1: 80, 2: 300, 3: 600, 4: 1500, 5: 3000}&gt;&gt;
             &lt;&lt;set _base to _base_map[_a.rank_level]&gt;&gt;
             
             /* 统一系数算法 */
             &lt;&lt;set _traffic_bonus to (_a.topic / 100) * 0.5&gt;&gt; 
             &lt;&lt;set _star_bonus to (_a.rank_level - 1) * 0.2&gt;&gt;
-            
+           
             /* 资源系数 */
             &lt;&lt;set _res_mult_map to {s: 2.0, a: 1.5, b: 1.0, c: 0.6}&gt;&gt;
             &lt;&lt;if not def $req_res&gt;&gt;&lt;&lt;set $req_res to &quot;c&quot;&gt;&gt;&lt;&lt;/if&gt;&gt;
             &lt;&lt;set _res_mult to _res_mult_map[$req_res]&gt;&gt;
             
-            /* 计算原始总包 (和 Job_Settle 保持完全一致) */
+            /* 计算原始总包 */
             &lt;&lt;set _gross_income_raw to Math.floor(_base * _res_mult * (1 + _star_bonus + _traffic_bonus))&gt;&gt;
 
             /* --- 情况 1: 偶尔摸鱼 (连击 &lt; 3) --- */
@@ -1318,7 +1324,33 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
                 公司实收: &lt;b style=&quot;color:#ef4444;&quot;&gt;+ $&lt;&lt;print _company_income_net&gt;&gt; 万&lt;/b&gt;
             &lt;/div&gt;
 
-        /* === 分支 B: 正常拍摄 (调用通用 Widget) === */
+        /* === 分支 B: 私房钱事件 (💖 小夫妻情趣) === */
+        &lt;&lt;elseif _is_secret_money&gt;&gt;
+             &lt;div style=&quot;background:#fdf4ff; border:2px solid #d8b4fe; padding:15px; border-radius:8px; margin-bottom:15px;&quot;&gt;
+                &lt;h3 style=&quot;color:#9333ea; margin:0;&quot;&gt;🤫 剧组没给钱？&lt;/h3&gt;
+                &lt;hr style=&quot;opacity:0.2; margin:10px 0;&quot;&gt;
+                
+                &lt;p&gt;展鹏回来的时候一脸无辜地看着你：&lt;/p&gt;
+                &lt;p style=&quot;color:#9333ea; font-weight:bold;&quot;&gt;“那个...导演说剧组资金链断了，这次是义演，没给钱。”&lt;/p&gt;
+                
+                &lt;p&gt;你瞥了一眼他口袋里露出的银行回执角，又看了看他努力装作正直实际却忍不住上扬的嘴角，忍不住笑出了声。&lt;/p&gt;
+                &lt;p style=&quot;color:#64748b; font-size:0.9em;&quot;&gt;( 心里话：老婆赚零花钱的样子真可爱。 )&lt;/p&gt;
+            &lt;/div&gt;
+            
+            /* 结算：公司没钱，但加CP粉和好感 */
+            &lt;&lt;set _a.fans.cp += 500&gt;&gt;
+            &lt;&lt;set _a.reputation += 5&gt;&gt;
+            &lt;&lt;set _a.acting += 2&gt;&gt; /* 戏还是要演的 */
+            
+            &lt;div style=&quot;font-family:monospace; background:#fff; padding:10px; border-radius:4px; border:1px dashed #d8b4fe;&quot;&gt;
+                公司实收: &lt;b style=&quot;color:#94a3b8;&quot;&gt;$0 (已入老婆私账)&lt;/b&gt;
+                &lt;br&gt;
+                &lt;span style=&quot;color:#d946ef;&quot;&gt;📈 演技 +2 | CP粉 +500 | 口碑 +5&lt;/span&gt;
+                &lt;br&gt;
+                &lt;span style=&quot;color:#9333ea; font-size:0.8em;&quot;&gt;“这点小情趣，也是生活的一部分嘛。”&lt;/span&gt;
+            &lt;/div&gt;
+
+        /* === 分支 C: 正常拍摄 (调用通用 Widget) === */
         &lt;&lt;else&gt;&gt;
             &lt;p&gt;
                 &lt;&lt;print _a.name&gt;&gt; 顺利杀青！
@@ -4666,7 +4698,7 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
         &lt;/div&gt;
     &lt;&lt;/if&gt;&gt;
 &lt;/div&gt;</tw-passagedata><tw-passagedata pid="49" name="NM_Filming" tags="" position="2700,575" size="100,100">&lt;&lt;if _finished_actors.length &gt; 0&gt;&gt;
-    &lt;&lt;for _i to 0; _i &lt; :: NM_Filming_finished_actors.length; _i++&gt;&gt;
+    &lt;&lt;for _i to 0; _i &lt; _finished_actors.length; _i++&gt;&gt;
         &lt;&lt;set _key to _finished_actors[_i]&gt;&gt;
         &lt;&lt;set $current_actor to _key&gt;&gt;
         &lt;&lt;set _a to $actors[_key]&gt;&gt;
@@ -4679,7 +4711,7 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
             /* 确保不是培训项目才结算 */
             &lt;&lt;if def _a.job_type and _a.job_type neq &quot;training&quot;&gt;&gt;
                 &lt;&lt;if def _a.job_type&gt;&gt;
-                        &lt;&lt;Job_Settle _a.job_type&gt;&gt;
+                     &lt;&lt;Job_Settle _a.job_type&gt;&gt;
                 &lt;&lt;else&gt;&gt;
                     &lt;&lt;Job_Settle &quot;drama&quot;&gt;&gt;
                 &lt;&lt;/if&gt;&gt;
