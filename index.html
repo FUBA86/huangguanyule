@@ -1520,14 +1520,19 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
 
 &lt;div style=&quot;border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; background: #fff;&quot;&gt;
     
-    /* 头部信息 */
+/* 头部信息 */
     &lt;div style=&quot;display:flex; justify-content:space-between; margin-bottom:20px; border-bottom:1px dashed #e2e8f0; padding-bottom:10px;&quot;&gt;
         &lt;div style=&quot;font-size:1.2em; font-weight:bold;&quot;&gt;
             👤 _a.name &lt;span style=&quot;font-size:0.7em; color:#64748b; font-weight:normal;&quot;&gt;[_a.rank_label]&lt;/span&gt;
         &lt;/div&gt;
         &lt;div&gt;
             &lt;&lt;if _a.busy_months &gt; 0&gt;&gt;
-                &lt;span style=&quot;background:#fef3c7; color:#b45309; padding:4px 8px; border-radius:4px; font-size:0.9em;&quot;&gt;🔒 忙碌中&lt;/span&gt;
+                /* 🔴 如果是被封杀，显示特殊标签 */
+                &lt;&lt;if _a.job_type is &quot;banned&quot;&gt;&gt;
+                    &lt;span style=&quot;background:#fef2f2; color:#ef4444; padding:4px 8px; border-radius:4px; font-size:0.9em; border:1px solid #fecaca;&quot;&gt;❄️ 被抵制&lt;/span&gt;
+                &lt;&lt;else&gt;&gt;
+                    &lt;span style=&quot;background:#fef3c7; color:#b45309; padding:4px 8px; border-radius:4px; font-size:0.9em;&quot;&gt;🔒 忙碌中&lt;/span&gt;
+                &lt;&lt;/if&gt;&gt;
             &lt;&lt;else&gt;&gt;
                 &lt;span style=&quot;background:#dcfce7; color:#15803d; padding:4px 8px; border-radius:4px; font-size:0.9em;&quot;&gt;🟢 空闲&lt;/span&gt;
             &lt;&lt;/if&gt;&gt;
@@ -1568,23 +1573,33 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
         &lt;/div&gt;
     &lt;/div&gt;
 
-    /* 培训课程选择 */
+  /* 培训课程选择 */
     &lt;div style=&quot;background:#f8fafc; padding:15px; border-radius:8px; border:1px solid #e2e8f0;&quot;&gt;
         &lt;h4 style=&quot;margin:0 0 15px 0; color:#475569;&quot;&gt;🎓 安排进修课程&lt;/h4&gt;
         
-        &lt;&lt;if _a.busy_months &gt; 0&gt;&gt;
+        /* 🔴 核心修改：允许封杀状态下培训 */
+        /* 如果忙碌 且 不是封杀状态，才显示禁止 */
+        &lt;&lt;if _a.busy_months &gt; 0 and _a.job_type neq &quot;banned&quot;&gt;&gt;
             &lt;div style=&quot;text-align:center; padding:20px; color:#94a3b8;&quot;&gt;
                 🚫 艺人当前正在工作中，无法安排课程。&lt;br&gt;
                 (请等待工作结束)
             &lt;/div&gt;
         &lt;&lt;else&gt;&gt;
+        
+            /* 🔴 如果是封杀状态，显示一句鼓励的话 */
+            &lt;&lt;if _a.job_type is &quot;banned&quot;&gt;&gt;
+                &lt;div style=&quot;background:#fff7ed; color:#c2410c; padding:10px; margin-bottom:15px; border-radius:4px; font-size:0.9em; text-align:center;&quot;&gt;
+                    💪 虽然被外界抵制，但正是沉下心来磨练技艺的好时机！
+                &lt;/div&gt;
+            &lt;&lt;/if&gt;&gt;
+
             &lt;div style=&quot;font-size:0.9em; margin-bottom:10px; color:#64748b;&quot;&gt;
                 请选择培训方向：
                 &lt;label&gt;&lt;&lt;radiobutton &quot;$train_attr&quot; &quot;acting&quot; checked&gt;&gt; 🎬演技&lt;/label&gt; 
                 &lt;label&gt;&lt;&lt;radiobutton &quot;$train_attr&quot; &quot;fashion&quot;&gt;&gt; 👠时尚&lt;/label&gt; 
                 &lt;label&gt;&lt;&lt;radiobutton &quot;$train_attr&quot; &quot;stage&quot;&gt;&gt; 💃唱跳&lt;/label&gt;
             &lt;/div&gt;
-            
+           
             &lt;div style=&quot;display:grid; grid-template-columns: 1fr 1fr; gap:10px;&quot;&gt;
                 /* 初级 */
                 &lt;div style=&quot;background:#fff; border:1px solid #cbd5e1; padding:10px; border-radius:6px; text-align:center;&quot;&gt;
@@ -1604,7 +1619,7 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
                     &lt;&lt;/button&gt;&gt;
                 &lt;/div&gt;
 
-                /* 高级 */
+                 /* 高级 */
                 &lt;div style=&quot;background:#fff; border:1px solid #fcd34d; padding:10px; border-radius:6px; text-align:center;&quot;&gt;
                     &lt;div style=&quot;font-weight:bold; color:#b45309;&quot;&gt;高级班&lt;/div&gt;
                     &lt;div style=&quot;font-size:0.8em; color:#64748b;&quot;&gt;效果: +3 | 费用: 300万&lt;/div&gt;
@@ -1613,7 +1628,7 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
                     &lt;&lt;/button&gt;&gt;
                 &lt;/div&gt;
 
-                /* 大师 */
+                 /* 大师 */
                 &lt;div style=&quot;background:#fff; border:1px solid #f87171; padding:10px; border-radius:6px; text-align:center;&quot;&gt;
                     &lt;div style=&quot;font-weight:bold; color:#991b1b;&quot;&gt;大师班&lt;/div&gt;
                     &lt;div style=&quot;font-size:0.8em; color:#64748b;&quot;&gt;效果: +4 | 费用: 500万&lt;/div&gt;
@@ -1670,8 +1685,11 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
                 🎉 &lt;b&gt;蹭热度成功！&lt;/b&gt;&lt;br&gt;
                 不仅没花流量，反而吸了一波血！&lt;br&gt;
                 &lt;b&gt;流量 +1000 | 危险值 -10&lt;/b&gt;
+                
+                /* 🔴 修复：增加流量，减少危险值（防止负数） */
                 &lt;&lt;set $traffic += 1000&gt;&gt;
-                &lt;&lt;set $danger_level -= 10&gt;&gt;
+                &lt;&lt;set $danger_level to Math.max(0, $danger_level - 10)&gt;&gt;
+                
                 /* 清除热搜状态，防止无限刷 */
                 &lt;&lt;set $current_hot_topic.type to &quot;normal&quot;&gt;&gt;
             &lt;/div&gt;
@@ -1680,12 +1698,12 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
         &lt;&lt;elseif $battle_type is &quot;traffic&quot;&gt;&gt;
             &lt;p&gt;你投入了大量真金白银和水军流量，在热搜榜上与竞品展开了拉锯战。&lt;/p&gt;
             &lt;&lt;if random(1,100) &lt; 60 + _act.rank_level * 10&gt;&gt;
-                 &lt;div style=&quot;background:#ecfdf5; color:#065f46; padding:10px; border-radius:4px; margin-top:10px;&quot;&gt;
+                &lt;div style=&quot;background:#ecfdf5; color:#065f46; padding:10px; border-radius:4px; margin-top:10px;&quot;&gt;
                     🎉 &lt;b&gt;大获全胜！&lt;/b&gt;&lt;br&gt;
                     对方的营销号被我们压得哑口无言。&lt;br&gt;
                     &lt;b&gt;流量回流 +500 | 口碑 +5&lt;/b&gt;
                     &lt;&lt;set $traffic += 500&gt;&gt;&lt;&lt;set _act.reputation += 5&gt;&gt;
-                 &lt;/div&gt;
+                &lt;/div&gt;
             &lt;&lt;else&gt;&gt;
                  &lt;div style=&quot;background:#fef2f2; color:#b91c1c; padding:10px; border-radius:4px; margin-top:10px;&quot;&gt;
                     💨 &lt;b&gt;势均力敌...&lt;/b&gt;&lt;br&gt;
@@ -1703,7 +1721,10 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
                 💣 &lt;b&gt;精准爆破！&lt;/b&gt;&lt;br&gt;
                 对家艺人形象受损，不得不退出了资源竞争。&lt;br&gt;
                 &lt;b&gt;公司危险值 -10 | 获得资源 A级 x1&lt;/b&gt;
-                &lt;&lt;set $danger_level -= 10&gt;&gt;
+                
+                /* 🔴 修复：减少危险值（防止负数） */
+                &lt;&lt;set $danger_level to Math.max(0, $danger_level - 10)&gt;&gt;
+                
                 &lt;&lt;set $resources.a += 1&gt;&gt;
             &lt;/div&gt;
 
@@ -1716,7 +1737,9 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
                 &lt;b&gt;事业粉 +300 | 毒唯 +100 | 口碑 -5&lt;/b&gt;
                 &lt;&lt;set _act.fans.career += 300&gt;&gt;
                 &lt;&lt;set _act.fans.toxic += 100&gt;&gt;
-                &lt;&lt;set _act.reputation -= 5&gt;&gt;
+                
+                /* 🔴 修复：扣除口碑（防止负数） */
+                &lt;&lt;set _act.reputation to Math.max(0, _act.reputation - 5)&gt;&gt;
             &lt;/div&gt;
 
         /* === D. 捆绑炒作 === */
@@ -1727,7 +1750,10 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
                 超话人数激增，虽然唯粉在骂街，但热度实打实地涨了。&lt;br&gt;
                 &lt;b&gt;CP粉 +800 | 毒唯 -200 | 危险值 +10&lt;/b&gt;
                 &lt;&lt;set _act.fans.cp += 800&gt;&gt;
-                &lt;&lt;set _act.fans.toxic -= 200&gt;&gt;
+                
+                /* 🔴 修复：扣除毒唯（防止负数） */
+                &lt;&lt;set _act.fans.toxic to Math.max(0, _act.fans.toxic - 200)&gt;&gt;
+                
                 &lt;&lt;set $danger_level += 10&gt;&gt;
             &lt;/div&gt;
         &lt;&lt;/if&gt;&gt;
@@ -1923,6 +1949,9 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
 
 &lt;div style=&quot;display:flex; flex-direction:column; gap:10px; color:#334155;&quot;&gt;
 
+/* 🔴【修改点】直接引用独立的惩罚显示模块 */
+    &lt;&lt;include &quot;NM_Punishment&quot;&gt;&gt;
+    
     /* --- 模块1：财务报表 --- */
     &lt;&lt;include &quot;NM_Finance&quot;&gt;&gt;
     
@@ -1946,6 +1975,7 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
     /* 确保侧边栏热搜每月刷新 */
 &lt;&lt;Logic_Events&gt;&gt;
 
+        
     /* --- 模块6：下月预告与按钮 --- */
     &lt;div style=&quot;font-size:0.95em;&quot;&gt;
         &lt;span style=&quot;font-weight:bold; color:#be185d;&quot;&gt;🔥 预热：&lt;/span&gt;
@@ -2048,6 +2078,53 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
 
   &lt;/div&gt;
 
+&lt;br&gt;&lt;br&gt;
+/* =========================================
+   🛠️ 开发者测试工具箱 (V2.0 无冲突版)
+   ========================================= */
+&lt;div style=&quot;border: 2px dashed #ef4444; background-color: #fef2f2; padding: 15px; border-radius: 8px; margin-top: 20px;&quot;&gt;
+    &lt;div style=&quot;color: #b91c1c; font-weight: bold; margin-bottom: 10px;&quot;&gt;
+        🔧 剧情触发调试器
+    &lt;/div&gt;
+
+    &lt;div style=&quot;display:flex; gap:10px; flex-wrap:wrap;&quot;&gt;
+        
+        /* 1. 专门测试：丈夫的抚慰 (展鹏透支) */
+        &lt;&lt;button &quot;⚡ 测试【丈夫的抚慰】(展鹏累瘫)&quot;&gt;&gt;
+            /* 制造展鹏透支条件 */
+            &lt;&lt;set $actors.zp.energy to 0&gt;&gt;
+            &lt;&lt;set $zp_exhaustion_streak to 2&gt;&gt; /* 设为2，进屋判定+1后正好是3 */
+            
+            /* 清除玩家透支，防止冲突 */
+            &lt;&lt;set $player_energy to 100&gt;&gt;
+            &lt;&lt;set $player_exhaustion_streak to 0&gt;&gt;
+            
+            &lt;&lt;run alert(&quot;✅ 已设置环境：\n展鹏透支计数 -&gt; 准备触发\n韩证飞状态 -&gt; 正常\n\n请直接点击【回家】查看剧情！&quot;)&gt;&gt;
+        &lt;&lt;/button&gt;&gt;
+
+        /* 2. 专门测试：妻子的抚慰 (韩证飞透支) */
+        &lt;&lt;button &quot;⚡ 测试【妻子的抚慰】(玩家累瘫)&quot;&gt;&gt;
+            /* 清除展鹏透支，防止冲突 */
+            &lt;&lt;set $actors.zp.energy to 100&gt;&gt;
+            &lt;&lt;set $zp_exhaustion_streak to 0&gt;&gt;
+
+            /* 制造玩家透支条件 */
+            &lt;&lt;set $player_energy to 0&gt;&gt;
+            &lt;&lt;set $player_exhaustion_streak to 2&gt;&gt; /* 设为2，进屋判定+1后正好是3 */
+            
+            &lt;&lt;run alert(&quot;✅ 已设置环境：\n展鹏状态 -&gt; 正常\n韩证飞透支计数 -&gt; 准备触发\n\n请直接点击【回家】查看剧情！&quot;)&gt;&gt;
+        &lt;&lt;/button&gt;&gt;
+
+        /* 3. 恢复正常 */
+        &lt;&lt;button &quot;💊 重置所有状态&quot;&gt;&gt;
+            &lt;&lt;set $actors.zp.energy to 100&gt;&gt;
+            &lt;&lt;set $player_energy to 100&gt;&gt;
+            &lt;&lt;set $zp_exhaustion_streak to 0&gt;&gt;
+            &lt;&lt;set $player_exhaustion_streak to 0&gt;&gt;
+            &lt;&lt;run alert(&quot;已重置所有体力和计数器！&quot;)&gt;&gt;
+        &lt;&lt;/button&gt;&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="22" name="PR_Execute" tags="" position="1150,1250" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;div class=&quot;tech-card&quot; style=&quot;min-height:400px; display:flex; flex-direction:column; justify-content:center; align-items:center;&quot;&gt;
 
@@ -2674,15 +2751,34 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
     &quot;biased_cp&quot;: [&quot;虽然展鹏很懒，但还好姐姐宠他，姐姐真是大善人。&quot;, &quot;感谢姐姐扶贫，展鹏这资源全是靠我们cp粉吧？&quot;, &quot;虽然很甜，但感觉展鹏配不上姐姐。&quot;, &quot;展鹏好爱，姐姐的专属小狗。&quot;, &quot;姐姐到底看上展鹏什么了。&quot;, &quot;也就是姐姐脾气好，换别人早受不了展鹏了。&quot;, &quot;纯路人，这对CP里展鹏是不是有点太吸血了？&quot;]
 }&gt;&gt;
 
-/* 展鹏特殊剧情*/
-&lt;&lt;ZP_Init&gt;&gt;
-
 /* 初始化热搜对象 (防止首月报错) */
 &lt;&lt;set $current_hot_topic to {
     text: &quot;娱乐圈风平浪静&quot;,
     type: &quot;normal&quot;,
     target: &quot;none&quot;
-}&gt;&gt;</tw-passagedata><tw-passagedata pid="29" name="Train_Execute" tags="" position="1600,1475" size="100,100">&lt;&lt;nobr&gt;&gt;
+}&gt;&gt;
+
+/* ==============================
+   5. 修复：展鹏怀孕系统初始化
+   (必须写在这里，防止月结时变量丢失)
+   ============================== */
+&lt;&lt;set $zp_preg to {
+    state: 0,         /* 0:未怀, 1:孕期, 2:恢复期, 3:完成 */
+    month: 0, 
+    event_flag: &quot;&quot;
+}&gt;&gt;
+
+/* 永久死锁开关：确保这辈子只怀一次 */
+&lt;&lt;set $zp_pregnancy_happened to false&gt;&gt;
+
+/* ==============================
+   7. 新增：双向体力透支计数器
+   ============================== */
+/* 展鹏虚了几个月 */
+&lt;&lt;set $zp_exhaustion_streak to 0&gt;&gt;
+
+/* 韩证飞(玩家)虚了几个月 */
+&lt;&lt;set $player_exhaustion_streak to 0&gt;&gt;</tw-passagedata><tw-passagedata pid="29" name="Train_Execute" tags="" position="1600,1475" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 /* 插入开始 */
 &lt;&lt;ZP_Check_Lock &quot;training&quot;&gt;&gt;
@@ -3091,14 +3187,9 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
         &lt;div class=&quot;error-card&quot;&gt;
             &lt;div class=&quot;error-icon&quot;&gt;💸&lt;/div&gt;
             &lt;div class=&quot;error-title&quot;&gt;体力不足！&lt;/div&gt;
-            &lt;div class=&quot;error-desc&quot;&gt;
-                作为经纪人，你需要休息了。&lt;br&gt;
-                (需要 10 体力才能探班)
-            &lt;/div&gt;
+            &lt;div class=&quot;error-desc&quot;&gt;需要 10 体力才能探班。&lt;/div&gt;
             &lt;div style=&quot;margin-top: 30px;&quot;&gt;
-                &lt;a data-passage=&quot;Work_Center&quot; class=&quot;back-btn&quot;&gt;
-                    🔙 返回通告中心
-                &lt;/a&gt;
+                &lt;a data-passage=&quot;Work_Center&quot; class=&quot;back-btn&quot;&gt;🔙 返回通告中心&lt;/a&gt;
             &lt;/div&gt;
         &lt;/div&gt;
     &lt;&lt;else&gt;&gt;
@@ -3114,12 +3205,10 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
         &lt;/div&gt;
 
         &lt;div class=&quot;visit-content&quot;&gt;
-            &lt;!-- 艺人徽章 --&gt;
             &lt;div class=&quot;actor-badge&quot;&gt;
                 &lt;&lt;if $current_actor is &quot;zp&quot;&gt;&gt;👑 展鹏（妻子）
                 &lt;&lt;elseif $current_actor is &quot;qs&quot;&gt;&gt;👠 秦飒（恶女）
-                &lt;&lt;else&gt;&gt;✨ 白小纯（新人）
-                &lt;&lt;/if&gt;&gt;
+                &lt;&lt;else&gt;&gt;✨ 白小纯（新人）&lt;&lt;/if&gt;&gt;
             &lt;/div&gt;
 
             /* --- 🎲 随机生成数值 --- */
@@ -3128,103 +3217,63 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
             &lt;&lt;set _add_acting to random(1, 4)&gt;&gt;
 
             /* --- 🎭 剧情判定逻辑 --- */
+            /* 🔴 修复点：确保属性加成不超过上限 */
+            
             &lt;&lt;if $current_actor is &quot;zp&quot;&gt;&gt;
-                /* 展鹏剧情 */
+                /* 展鹏 */
                 &lt;&lt;set _roll to random(1, 3)&gt;&gt;
-                
                 &lt;&lt;if _roll is 1&gt;&gt;
-                    &lt;div class=&quot;story-card&quot;&gt;
-                        展鹏正躲在保姆车里打游戏，看到你来立刻把手机藏到屁股底下。&lt;br&gt;&lt;br&gt;
-                        &quot;老公，剧组盒饭太难吃了，我想吃火锅……&quot;他可怜兮兮地看着你。
-                    &lt;/div&gt;
-                    &lt;&lt;set _effect_fans_cp = _add_fans&gt;&gt;
-                    &lt;&lt;set _effect_icon_cp = &quot;💖&quot;&gt;&gt;
-                    &lt;&lt;set _effect_desc_cp = &quot;路透照流出，CP粉磕到了你们的眼神拉丝&quot;&gt;&gt;
-                    
+                   &lt;div class=&quot;story-card&quot;&gt;展鹏正躲在保姆车里打游戏...&lt;/div&gt;
+                   &lt;&lt;set _effect_fans_cp = _add_fans&gt;&gt;
+                   &lt;&lt;set _effect_icon_cp = &quot;💖&quot;&gt;&gt;&lt;&lt;set _effect_desc_cp = &quot;CP粉磕到了&quot;&gt;&gt;
                 &lt;&lt;elseif _roll is 2&gt;&gt;
-                    &lt;div class=&quot;story-card&quot;&gt;
-                        导演正在讲戏，展鹏听得昏昏欲睡，脑袋一点一点的。&lt;br&gt;&lt;br&gt;
-                        你赶紧上去递了一瓶冰水，他清醒后委屈地蹭了蹭你的手背。
-                    &lt;/div&gt;
-                    &lt;&lt;set _effect_energy = 20&gt;&gt;
-                    &lt;&lt;set _effect_icon_energy = &quot;🔋&quot;&gt;&gt;
-                    &lt;&lt;set _effect_desc_energy = &quot;展鹏心情变好了，精力恢复&quot;&gt;&gt;
-                    
+                   &lt;div class=&quot;story-card&quot;&gt;导演正在讲戏，展鹏昏昏欲睡...&lt;/div&gt;
+                   &lt;&lt;set _effect_energy = 20&gt;&gt;
+                   &lt;&lt;set _effect_icon_energy = &quot;🔋&quot;&gt;&gt;&lt;&lt;set _effect_desc_energy = &quot;精力恢复&quot;&gt;&gt;
                 &lt;&lt;else&gt;&gt;
-                    &lt;div class=&quot;story-card&quot;&gt;
-                        展鹏认真地在拍一场哭戏，眼眶红红的样子让片场所有人都屏住了呼吸。&lt;br&gt;&lt;br&gt;
-                        导演都忍不住夸他：&quot;这次终于没睡着了！&quot;
-                    &lt;/div&gt;
-                    &lt;&lt;set _effect_fans_career = _add_fans&gt;&gt;
-                    &lt;&lt;set _effect_rep = 1&gt;&gt;
-                    &lt;&lt;set _effect_icon_career = &quot;✨&quot;&gt;&gt;
-                    &lt;&lt;set _effect_desc_career = &quot;美貌杀人！颜值粉狂欢&quot;&gt;&gt;
-                    &lt;&lt;set _effect_icon_rep = &quot;📈&quot;&gt;&gt;
-                    &lt;&lt;set _effect_desc_rep = &quot;认真工作的样子被剧组称赞&quot;&gt;&gt;
+                   &lt;div class=&quot;story-card&quot;&gt;展鹏认真地在拍一场哭戏...&lt;/div&gt;
+                   &lt;&lt;set _effect_fans_career = _add_fans&gt;&gt;
+                   &lt;&lt;set _effect_rep = 1&gt;&gt;
+                   &lt;&lt;set _effect_icon_career = &quot;✨&quot;&gt;&gt;&lt;&lt;set _effect_desc_career = &quot;颜粉狂欢&quot;&gt;&gt;
+                   &lt;&lt;set _effect_icon_rep = &quot;📈&quot;&gt;&gt;&lt;&lt;set _effect_desc_rep = &quot;剧组称赞&quot;&gt;&gt;
                 &lt;&lt;/if&gt;&gt;
 
             &lt;&lt;elseif $current_actor is &quot;qs&quot;&gt;&gt;
-                /* 秦飒剧情 */
+                /* 秦飒 */
                 &lt;&lt;set _roll to random(1, 3)&gt;&gt;
-                
                 &lt;&lt;if _roll is 1&gt;&gt;
-                    &lt;div class=&quot;story-card&quot;&gt;
-                        秦飒正在发脾气：&quot;这衣服版型有问题，不符合人物身份！&quot;&lt;br&gt;&lt;br&gt;
-                        你早已准备好了一套高定私服救场，她满意地哼了一声。
-                    &lt;/div&gt;
+                    &lt;div class=&quot;story-card&quot;&gt;秦飒嫌弃衣服版型有问题...&lt;/div&gt;
                     &lt;&lt;set _effect_rep = _add_rep&gt;&gt;
-                    &lt;&lt;set _effect_icon_rep = &quot;👠&quot;&gt;&gt;
-                    &lt;&lt;set _effect_desc_rep = &quot;危机解除，剧组感叹你的救场能力&quot;&gt;&gt;
-                    
+                    &lt;&lt;set _effect_icon_rep = &quot;👠&quot;&gt;&gt;&lt;&lt;set _effect_desc_rep = &quot;危机解除&quot;&gt;&gt;
                 &lt;&lt;elseif _roll is 2&gt;&gt;
-                    &lt;div class=&quot;story-card&quot;&gt;
-                        秦飒不小心给了对手戏演员一巴掌，导演喊卡后她立刻让人送上了冰袋。&lt;br&gt;&lt;br&gt;
-                        &quot;对不起对不起，我手滑。&quot;她点头哈腰连连道歉，现场笑倒一片。
-                    &lt;/div&gt;
+                    &lt;div class=&quot;story-card&quot;&gt;秦飒手滑打了对手演员...&lt;/div&gt;
+                    /* 🔴 修复：限制演技 */
+                    &lt;&lt;set _add_acting to Math.min(_add_acting, _a.limit_acting - _a.acting)&gt;&gt;
                     &lt;&lt;set _effect_acting = _add_acting&gt;&gt;
-                    &lt;&lt;set _effect_icon_acting = &quot;🎬&quot;&gt;&gt;
-                    &lt;&lt;set _effect_desc_acting = &quot;演技炸裂，气场全开&quot;&gt;&gt;
-                    
+                    &lt;&lt;set _effect_icon_acting = &quot;🎬&quot;&gt;&gt;&lt;&lt;set _effect_desc_acting = &quot;演技炸裂&quot;&gt;&gt;
                 &lt;&lt;else&gt;&gt;
-                    &lt;div class=&quot;story-card&quot;&gt;
-                        秦飒在化妆间累得睡着了，手里还紧紧攥着剧本。&lt;br&gt;&lt;br&gt;
-                        你轻手轻脚地给她披上外套，她迷迷糊糊地说了句：&quot;谢谢经纪人...&quot;
-                    &lt;/div&gt;
+                    &lt;div class=&quot;story-card&quot;&gt;秦飒累得睡着了...&lt;/div&gt;
                     &lt;&lt;set _effect_energy = 10&gt;&gt;
-                    &lt;&lt;set _effect_icon_energy = &quot;💤&quot;&gt;&gt;
-                    &lt;&lt;set _effect_desc_energy = &quot;虽然脾气坏，但她真的很拼&quot;&gt;&gt;
+                    &lt;&lt;set _effect_icon_energy = &quot;💤&quot;&gt;&gt;&lt;&lt;set _effect_desc_energy = &quot;她真的很拼&quot;&gt;&gt;
                 &lt;&lt;/if&gt;&gt;
 
             &lt;&lt;else&gt;&gt;
-                /* 白小纯剧情 */
+                /* 白小纯 */
                 &lt;&lt;set _roll to random(1, 3)&gt;&gt;
-                
                 &lt;&lt;if _roll is 1&gt;&gt;
-                    &lt;div class=&quot;story-card&quot;&gt;
-                        白小纯正在角落里帮场务搬很重的道具箱子，满头大汗。&lt;br&gt;&lt;br&gt;
-                        你走过去制止了他：&quot;你是演员，不是苦力。&quot;
-                    &lt;/div&gt;
+                    &lt;div class=&quot;story-card&quot;&gt;白小纯在搬道具...&lt;/div&gt;
                     &lt;&lt;set _effect_rep = _add_rep&gt;&gt;
-                    &lt;&lt;set _effect_icon_rep = &quot;🥺&quot;&gt;&gt;
-                    &lt;&lt;set _effect_desc_rep = &quot;剧组人员觉得这孩子太懂事了&quot;&gt;&gt;
-                    
+                    &lt;&lt;set _effect_icon_rep = &quot;🥺&quot;&gt;&gt;&lt;&lt;set _effect_desc_rep = &quot;太懂事了&quot;&gt;&gt;
                 &lt;&lt;elseif _roll is 2&gt;&gt;
-                    &lt;div class=&quot;story-card&quot;&gt;
-                        白小纯被导演骂得狗血淋头，眼泪在眼眶里打转却不敢掉下来。&lt;br&gt;&lt;br&gt;
-                        看到你来，他吸了吸鼻子，强颜欢笑：&quot;老板，我没事，我刚才学到了很多东西。&quot;
-                    &lt;/div&gt;
+                    &lt;div class=&quot;story-card&quot;&gt;白小纯被导演骂哭...&lt;/div&gt;
                     &lt;&lt;set _effect_fans_mom = _add_fans&gt;&gt;
-                    &lt;&lt;set _effect_icon_mom = &quot;🤱&quot;&gt;&gt;
-                    &lt;&lt;set _effect_desc_mom = &quot;激起了探班粉丝的保护欲&quot;&gt;&gt;
-                    
+                    &lt;&lt;set _effect_icon_mom = &quot;🤱&quot;&gt;&gt;&lt;&lt;set _effect_desc_mom = &quot;激起保护欲&quot;&gt;&gt;
                 &lt;&lt;else&gt;&gt;
-                    &lt;div class=&quot;story-card&quot;&gt;
-                        白小纯正在对着空气一遍遍练习那个只有三句台词的镜头。&lt;br&gt;&lt;br&gt;
-                        他的剧本上密密麻麻写满了笔记，连导演都感慨他的认真。
-                    &lt;/div&gt;
+                    &lt;div class=&quot;story-card&quot;&gt;白小纯对着空气练台词...&lt;/div&gt;
+                    /* 🔴 修复：限制演技 */
+                    &lt;&lt;set _add_acting to Math.min(_add_acting, _a.limit_acting - _a.acting)&gt;&gt;
                     &lt;&lt;set _effect_acting = _add_acting&gt;&gt;
-                    &lt;&lt;set _effect_icon_acting = &quot;📈&quot;&gt;&gt;
-                    &lt;&lt;set _effect_desc_acting = &quot;天道酬勤，演技肉眼可见地进步&quot;&gt;&gt;
+                    &lt;&lt;set _effect_icon_acting = &quot;📈&quot;&gt;&gt;&lt;&lt;set _effect_desc_acting = &quot;演技进步&quot;&gt;&gt;
                 &lt;&lt;/if&gt;&gt;
             &lt;&lt;/if&gt;&gt;
 
@@ -3730,18 +3779,18 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
     
     &lt;&lt;if not _a.split&gt;&gt;&lt;&lt;set _a.split = 0.5&gt;&gt;&lt;&lt;/if&gt;&gt;
 
-    /* 标签定义 (双语) */
+    /* 标签定义 */
     &lt;&lt;if _job_type is &quot;drama&quot;&gt;&gt;
         &lt;&lt;set _income_label to &quot;片酬结算 (Film Salary)&quot;&gt;&gt;
     &lt;&lt;else&gt;&gt;
         &lt;&lt;set _income_label to &quot;通告费结算 (Performance Fee)&quot;&gt;&gt;
     &lt;&lt;/if&gt;&gt;
 
-    /* --- 2. 收入计算标准 (保持高薪版) --- */
+    /* --- 2. 收入计算 --- */
     &lt;&lt;set _base_drama_map to   {1: 80, 2: 300, 3: 600, 4: 1500, 5: 3000}&gt;&gt;
-    &lt;&lt;set _base_variety_map to {1: 40, 2: 100, 3: 250, 4: 500,  5: 1000}&gt;&gt; 
-    &lt;&lt;set _base_fashion_map to {1: 40, 2: 100, 3: 250, 4: 500,  5: 1000}&gt;&gt; 
-    &lt;&lt;set _base_stage_map to   {1: 60, 2: 400, 3: 800, 4: 1600, 5: 3200}&gt;&gt; 
+    &lt;&lt;set _base_variety_map to {1: 40, 2: 100, 3: 250, 4: 500,  5: 1000}&gt;&gt;
+    &lt;&lt;set _base_fashion_map to {1: 40, 2: 100, 3: 250, 4: 500,  5: 1000}&gt;&gt;
+    &lt;&lt;set _base_stage_map to   {1: 60, 2: 400, 3: 800, 4: 1600, 5: 3200}&gt;&gt;
 
     &lt;&lt;set _res_mult_map to {
         s: {drama: 2.0, variety: 2.5, fashion: 2.2, stage: 2.0},
@@ -3772,167 +3821,82 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
     &lt;&lt;set _tax to Math.floor(_company_share_pretax * 0.25)&gt;&gt;
     &lt;&lt;set _company_income_net to _company_share_pretax - _tax&gt;&gt;
     
-    /* --- 4. 属性与口碑增长 --- */
+    /* --- 4. 属性增长 (🔴 修复点：增加 Math.min 限制上限) --- */
     &lt;&lt;set _base_fan_growth to {1: 30, 2: 60, 3: 100, 4: 200, 5: 400}&gt;&gt;
     &lt;&lt;set _main_fan_growth to Math.floor(_base_fan_growth[_a.rank_level] * 1.5)&gt;&gt;
     &lt;&lt;set _rep_gain to random(2, 4)&gt;&gt;
     &lt;&lt;set _msg to &quot;&quot;&gt;&gt;
     
     &lt;&lt;if _job_type is &quot;drama&quot;&gt;&gt;
-        &lt;&lt;set _a.acting += 3&gt;&gt;
+        /* 限制演技不超过上限 */
+        &lt;&lt;set _a.acting to Math.min(_a.acting + 3, _a.limit_acting)&gt;&gt;
         &lt;&lt;set _a.fans.career += _main_fan_growth&gt;&gt;
         &lt;&lt;set _a.reputation += _rep_gain&gt;&gt; 
-        &lt;&lt;set _msg to &quot;演技(Acting) +3 | 事业粉 +&quot;+_main_fan_growth+&quot; | 口碑(Rep) +&quot;+_rep_gain&gt;&gt;
+        &lt;&lt;set _msg to &quot;演技 +3 | 事业粉 +&quot;+_main_fan_growth+&quot; | 口碑 +&quot;+_rep_gain&gt;&gt;
+        
     &lt;&lt;elseif _job_type is &quot;variety&quot;&gt;&gt;
         &lt;&lt;set _a.topic += 10&gt;&gt;
         &lt;&lt;set _a.fans.clown += _main_fan_growth&gt;&gt;
         &lt;&lt;set $traffic += Math.floor(_gross_income / 10)&gt;&gt;
         &lt;&lt;set _a.reputation += 1&gt;&gt;
-        &lt;&lt;set _msg to &quot;话题(Topic) +10 | 乐子人 +&quot;+_main_fan_growth+&quot; | 口碑(Rep) +1&quot;&gt;&gt;
+        &lt;&lt;set _msg to &quot;话题 +10 | 乐子人 +&quot;+_main_fan_growth+&quot; | 口碑 +1&quot;&gt;&gt;
+        
     &lt;&lt;elseif _job_type is &quot;fashion&quot;&gt;&gt;
-        &lt;&lt;set _a.fashion += 3&gt;&gt;
+        /* 限制时尚不超过上限 */
+        &lt;&lt;set _a.fashion to Math.min(_a.fashion + 3, _a.limit_fashion)&gt;&gt;
         &lt;&lt;set _a.fans.face += _main_fan_growth&gt;&gt;
         &lt;&lt;set _a.reputation += _rep_gain&gt;&gt;
-        &lt;&lt;set _msg to &quot;时尚(Fashion) +3 | 颜粉 +&quot;+_main_fan_growth+&quot; | 口碑(Rep) +&quot;+_rep_gain&gt;&gt;
+        &lt;&lt;set _msg to &quot;时尚 +3 | 颜粉 +&quot;+_main_fan_growth+&quot; | 口碑 +&quot;+_rep_gain&gt;&gt;
+        
     &lt;&lt;elseif _job_type is &quot;stage&quot;&gt;&gt;
-        &lt;&lt;set _a.stage += 3&gt;&gt;
+        /* 限制唱跳不超过上限 */
+        &lt;&lt;set _a.stage to Math.min(_a.stage + 3, _a.limit_stage)&gt;&gt;
         &lt;&lt;set _a.fans.mom += _main_fan_growth&gt;&gt;
         &lt;&lt;set _a.reputation += _rep_gain&gt;&gt;
-        &lt;&lt;set _msg to &quot;唱跳(Stage) +3 | 妈粉 +&quot;+_main_fan_growth+&quot; | 口碑(Rep) +&quot;+_rep_gain&gt;&gt;
+        &lt;&lt;set _msg to &quot;唱跳 +3 | 妈粉 +&quot;+_main_fan_growth+&quot; | 口碑 +&quot;+_rep_gain&gt;&gt;
     &lt;&lt;/if&gt;&gt;
 
     &lt;&lt;set _penalty_msg to &quot;&quot;&gt;&gt;
     &lt;&lt;if _job_type is &quot;drama&quot; and def $is_bad_project and $is_bad_project&gt;&gt;
         &lt;&lt;set _a.reputation -= 10&gt;&gt; 
-        &lt;&lt;set _penalty_msg to &quot;⚠️ 烂尾风险 (Project Risk): 口碑大幅下降!&quot;&gt;&gt;
+        &lt;&lt;set _penalty_msg to &quot;⚠️ 烂尾风险: 口碑大幅下降!&quot;&gt;&gt;
         &lt;&lt;unset $is_bad_project&gt;&gt;
     &lt;&lt;/if&gt;&gt;
 
     &lt;&lt;set $money += _company_income_net&gt;&gt;
     
-    /* =========================================================
-       CSS 样式定义 (科技感灰蓝网格)
-       ========================================================= */
-    /* 1. 外框容器：浅灰蓝色背景 + 网格纹理 */
-    &lt;div style=&quot;
-        border: 2px solid #cbd5e1; 
-        border-radius: 8px; 
-        margin-top: 15px; 
-        overflow: hidden; 
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        background-color: #f8fafc;
-        background-image: linear-gradient(#e2e8f0 1px, transparent 1px), linear-gradient(90deg, #e2e8f0 1px, transparent 1px);
-        background-size: 20px 20px;
-        font-family: &#39;Consolas&#39;, &#39;Monaco&#39;, &#39;Courier New&#39;, monospace;
-    &quot;&gt;
-        
-        /* 2. 标题头：深色背景条 */
-        &lt;div style=&quot;
-            background: #e2e8f0; 
-            padding: 12px 20px; 
-            border-bottom: 2px solid #cbd5e1; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
-        &quot;&gt;
-            &lt;div style=&quot;font-weight: bold; color: #334155; font-size: 1.1em;&quot;&gt;
-                🧾 &lt;&lt;print _income_label&gt;&gt;
-            &lt;/div&gt;
-            &lt;div style=&quot;
-                font-size: 0.8em; 
-                color: #475569; 
-                background: #fff; 
-                padding: 4px 8px; 
-                border-radius: 4px; 
-                border: 1px solid #cbd5e1;
-                font-weight: bold;
-            &quot;&gt;
+    /* 界面显示 */
+    &lt;div style=&quot;border: 2px solid #cbd5e1; border-radius: 8px; margin-top: 15px; overflow: hidden; background-color: #f8fafc;&quot;&gt;
+        &lt;div style=&quot;background: #e2e8f0; padding: 12px 20px; border-bottom: 2px solid #cbd5e1; display: flex; justify-content: space-between; align-items: center;&quot;&gt;
+            &lt;div style=&quot;font-weight: bold; color: #334155;&quot;&gt;🧾 &lt;&lt;print _income_label&gt;&gt;&lt;/div&gt;
+            &lt;div style=&quot;font-size: 0.8em; color: #475569; background: #fff; padding: 4px 8px; border-radius: 4px; border: 1px solid #cbd5e1; font-weight: bold;&quot;&gt;
                 LEVEL: &lt;&lt;print $req_res.toUpperCase()&gt;&gt;
             &lt;/div&gt;
         &lt;/div&gt;
-
-        /* 3. 报表内容区 */
         &lt;div style=&quot;padding: 20px 25px; color: #1e293b; line-height: 1.8;&quot;&gt;
-            
-            /* A. 营收总额 (Total Revenue) - 加大加粗 */
-            &lt;div style=&quot;
-                display: flex; 
-                justify-content: space-between; 
-                align-items: center;
-                border-bottom: 2px solid #cbd5e1; 
-                padding-bottom: 10px; 
-                margin-bottom: 10px;
-            &quot;&gt;
-                &lt;span style=&quot;font-weight: bold; font-size: 1.1em;&quot;&gt;营收总额 (Total Revenue):&lt;/span&gt;
-                &lt;span style=&quot;font-size: 1.5em; font-weight: 900; color: #0f172a;&quot;&gt;
-                    $ &lt;&lt;print _gross_income&gt;&gt; 万
-                &lt;/span&gt;
+            &lt;div style=&quot;display: flex; justify-content: space-between; border-bottom: 2px solid #cbd5e1; padding-bottom: 10px; margin-bottom: 10px;&quot;&gt;
+                &lt;span style=&quot;font-weight: bold;&quot;&gt;营收总额:&lt;/span&gt;
+                &lt;span style=&quot;font-size: 1.5em; font-weight: 900; color: #0f172a;&quot;&gt;$ &lt;&lt;print _gross_income&gt;&gt; 万&lt;/span&gt;
             &lt;/div&gt;
-
-            /* B. 扣减项 (灰色字体) */
             &lt;div style=&quot;display: flex; justify-content: space-between; color: #64748b; font-size: 0.95em;&quot;&gt;
-                &lt;span&gt;- 艺人分成 (Artist Share &lt;&lt;print Math.round(_artist_ratio * 100)&gt;&gt;%):&lt;/span&gt;
+                &lt;span&gt;- 艺人分成 (&lt;&lt;print Math.round(_artist_ratio * 100)&gt;&gt;%):&lt;/span&gt;
                 &lt;span&gt;$ &lt;&lt;print _artist_income&gt;&gt;&lt;/span&gt;
             &lt;/div&gt;
-
-            &lt;div style=&quot;display: flex; justify-content: space-between; color: #64748b; font-size: 0.95em;&quot;&gt;
-                &lt;span&gt;= 税前毛利 (Pre-tax Income):&lt;/span&gt;
-                &lt;span&gt;$ &lt;&lt;print _company_share_pretax&gt;&gt;&lt;/span&gt;
-            &lt;/div&gt;
-
-            &lt;div style=&quot;
-                display: flex; 
-                justify-content: space-between; 
-                color: #ef4444; 
-                font-size: 0.95em; 
-                padding-bottom: 15px; 
-                margin-bottom: 5px;
-            &quot;&gt;
-                &lt;span&gt;- 企业税负 (Tax 25%):&lt;/span&gt;
+            &lt;div style=&quot;display: flex; justify-content: space-between; color: #ef4444; font-size: 0.95em; padding-bottom: 15px;&quot;&gt;
+                &lt;span&gt;- 企业税负 (25%):&lt;/span&gt;
                 &lt;span&gt;$ &lt;&lt;print _tax&gt;&gt;&lt;/span&gt;
             &lt;/div&gt;
-
-            /* C. 净利润 (Net Income) - 超大号，边框强调 */
-            &lt;div style=&quot;
-                display: flex; 
-                justify-content: space-between; 
-                align-items: center; 
-                margin-top: 5px;
-                padding-top: 15px;
-                border-top: 2px dashed #94a3b8;
-            &quot;&gt;
-                &lt;span style=&quot;font-weight: bold; color: #334155; font-size: 1.2em;&quot;&gt;
-                    公司实收 (Net Income):
-                &lt;/span&gt;
-                /* 颜色使用深森林绿，非荧光 */
-                &lt;span style=&quot;font-size: 2.2em; font-weight: 900; color: #15803d; text-shadow: 1px 1px 0px rgba(255,255,255,0.5);&quot;&gt;
-                    + $&lt;&lt;print _company_income_net&gt;&gt; 万
-                &lt;/span&gt;
+            &lt;div style=&quot;display: flex; justify-content: space-between; align-items: center; margin-top: 5px; padding-top: 15px; border-top: 2px dashed #94a3b8;&quot;&gt;
+                &lt;span style=&quot;font-weight: bold; color: #334155; font-size: 1.2em;&quot;&gt;公司实收:&lt;/span&gt;
+                &lt;span style=&quot;font-size: 2.2em; font-weight: 900; color: #15803d;&quot;&gt;+ $&lt;&lt;print _company_income_net&gt;&gt; 万&lt;/span&gt;
             &lt;/div&gt;
         &lt;/div&gt;
-        
-        /* D. 警告区 */
-        &lt;&lt;if _res_warning&gt;&gt;
-             &lt;div style=&quot;background: #fef2f2; color: #991b1b; padding: 10px; text-align: center; font-weight: bold;&quot;&gt;
-                 ⚠️ SYSTEM ERROR: Resource Level Missing (Defaulted to C)
-             &lt;/div&gt;
-        &lt;&lt;/if&gt;&gt;
-        
         &lt;&lt;if _penalty_msg neq &quot;&quot;&gt;&gt;
-            &lt;div style=&quot;background: #fff1f2; color: #be123c; padding: 10px 20px; border-top: 1px solid #fecdd3;&quot;&gt;
+            &lt;div style=&quot;background: #fff1f2; color: #be123c; padding: 10px 20px;&quot;&gt;
                 &lt;&lt;print _penalty_msg&gt;&gt;
             &lt;/div&gt;
         &lt;&lt;/if&gt;&gt;
-        
-        /* E. 属性增长条 (底部深色条) */
-        &lt;div style=&quot;
-            background: #e2e8f0; 
-            padding: 10px 20px; 
-            font-size: 0.9em; 
-            color: #475569; 
-            border-top: 1px solid #cbd5e1;
-            font-weight: bold;
-        &quot;&gt;
+        &lt;div style=&quot;background: #e2e8f0; padding: 10px 20px; font-size: 0.9em; color: #475569; border-top: 1px solid #cbd5e1; font-weight: bold;&quot;&gt;
             📈 &lt;&lt;print _msg&gt;&gt;
         &lt;/div&gt;
     &lt;/div&gt;
@@ -3940,8 +3904,8 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
 &lt;&lt;/widget&gt;&gt;</tw-passagedata><tw-passagedata pid="36" name="Widget_Month_Logic" tags="widget" position="2450,700" size="100,100">&lt;&lt;widget &quot;Process_Month_Logic&quot;&gt;&gt;
     &lt;&lt;silently&gt;&gt;
     
-       /* 展鹏怀孕判定*/
-   &lt;&lt;ZP_Monthly_Process&gt;&gt;
+        /* 展鹏怀孕判定*/
+        &lt;&lt;ZP_Monthly_Process&gt;&gt;
 
         /* 1. 财务与流量消耗计算 */
         &lt;&lt;Logic_Finance&gt;&gt;
@@ -3952,8 +3916,12 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
         /* 3. 随机事件生成 (商战、资源、情报) */
         &lt;&lt;Logic_Events&gt;&gt;
         
-        /* 4. 月份递增与重置 */
+        /* 🔴【新增】4. 检查危险值惩罚 (必须放在事件生成之后) */
+        &lt;&lt;Logic_Check_Punishment&gt;&gt;
+        
+        /* 5. 月份递增与重置 */
         &lt;&lt;Logic_Cleanup&gt;&gt;
+        
     &lt;&lt;/silently&gt;&gt;
 &lt;&lt;/widget&gt;&gt;</tw-passagedata><tw-passagedata pid="37" name="Widget_Resource_System" tags="widget" position="2525,1325" size="100,100">&lt;&lt;widget &quot;Social_Gacha&quot;&gt;&gt;
     &lt;&lt;set _cost to $args[0]&gt;&gt;
@@ -4082,14 +4050,13 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
 &lt;&lt;/nobr&gt;&gt;
 &lt;&lt;/widget&gt;&gt;</tw-passagedata><tw-passagedata pid="39" name="Work_Center" tags="" position="800,450" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;div class=&quot;tech-card&quot;&gt;
-  /* 1. 顶部标题栏 */
   &lt;div class=&quot;header-banner&quot; style=&quot;padding: 10px 20px;&quot;&gt;
     &lt;span&gt;📋 通告中心&lt;/span&gt;
   &lt;/div&gt;
 
   &lt;div style=&quot;padding: 20px;&quot;&gt;
     
-    /* 2. 资源库存条 */
+    /* 资源库存条 */
     &lt;&lt;silently&gt;&gt;
       &lt;&lt;set _res_s = $resources.s&gt;&gt;
       &lt;&lt;set _res_a = $resources.a&gt;&gt;
@@ -4107,15 +4074,16 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
       &lt;/div&gt;
     &lt;/div&gt;
 
-    /* 3. 艺人卡片循环 */
+    /* 艺人卡片循环 */
     &lt;&lt;set _actor_keys to [&quot;zp&quot;, &quot;qs&quot;, &quot;new&quot;]&gt;&gt;
     
     &lt;&lt;for _key range _actor_keys&gt;&gt;
       &lt;&lt;capture _key&gt;&gt; 
       &lt;&lt;set _act to $actors[_key]&gt;&gt;
-       
+        
       &lt;div class=&quot;actor-mini-card&quot; style=&quot;margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px dashed #cbd5e1;&quot;&gt;
-        /* 艺人信息头 */
+        
+        /* 1. 艺人头部信息 */
         &lt;div style=&quot;display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;&quot;&gt;
           &lt;div style=&quot;font-size:1.1em;&quot;&gt;
              &lt;span style=&quot;font-size:1.3em;&quot;&gt;👤&lt;/span&gt; &lt;b&gt;_act.name&lt;/b&gt; 
@@ -4126,111 +4094,145 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
           &lt;/div&gt;
         &lt;/div&gt;
 
-        /* 2x2 网格布局容器 */
-        &lt;div style=&quot;display:grid; grid-template-columns: 1fr 1fr; gap: 20px 30px;&quot;&gt;
+        /* =========================================================
+           核心修改：状态判断逻辑外提
+           如果忙碌（封杀/拍戏/培训），显示大卡片。
+           如果不忙，显示 4格 选资源。
+           ========================================================= */
         
-            /* [格1] 影视剧本 (左上) - 状态显示区 */
-            &lt;div&gt;
-                &lt;div style=&quot;font-size:0.85em; color:#64748b; margin-bottom:5px; font-weight:bold;&quot;&gt;🎬 影视剧本&lt;/div&gt;
-                
-                /* --- 核心修改：区分拍戏和培训状态 --- */
-                &lt;&lt;if _act.busy_months &gt; 0&gt;&gt;
+        &lt;&lt;if _act.busy_months &gt; 0&gt;&gt;
+            
+            /* --- 场景 A: 被封杀 (显示大红框 + 进修按钮) --- */
+            &lt;&lt;if _act.job_type is &quot;banned&quot;&gt;&gt;
+                &lt;div style=&quot;background:#fef2f2; border:2px solid #ef4444; padding:20px; border-radius:8px; text-align:center; color:#b91c1c;&quot;&gt;
+                    &lt;div style=&quot;font-size:2em; margin-bottom:10px;&quot;&gt;❄️ 无事可做&lt;/div&gt;
+                    &lt;div style=&quot;font-size:1em; opacity:0.8; margin-bottom:15px;&quot;&gt;( 口碑崩盘，遭到全网抵制 )&lt;/div&gt;
                     
-                    /* 如果项目名称包含&quot;培训&quot;，显示培训状态 */
-                    &lt;&lt;if _act.project_name.indexOf(&quot;培训&quot;) &gt; -1&gt;&gt;
-                        &lt;div style=&quot;background:#eff6ff; border:1px solid #60a5fa; padding:6px; border-radius:6px; text-align:center; font-size:0.8em; color:#1e40af;&quot;&gt;
-                            🎓 &lt;b&gt;封闭培训中&lt;/b&gt;
-                            &lt;br&gt;
-                            &lt;span style=&quot;color:#94a3b8; font-size:0.9em; cursor:default;&quot;&gt;( 正在闭关修炼 )&lt;/span&gt;
-                        &lt;/div&gt;
-                    
-                    /* 否则默认为拍戏状态 */
-                    &lt;&lt;else&gt;&gt;
-                        &lt;div style=&quot;background:#fff7ed; border:1px solid #fdba74; padding:6px; border-radius:6px; text-align:center; font-size:0.8em; color:#c2410c;&quot;&gt;
-                            🔒 &lt;b&gt;拍摄中&lt;/b&gt; (剩_act.busy_months月)
-                            &lt;br&gt;
-                            &lt;&lt;link &quot;👀去探班&quot;&gt;&gt;&lt;&lt;set $current_actor = _key&gt;&gt;&lt;&lt;goto &quot;Visit_Set&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-                        &lt;/div&gt;
-                    &lt;&lt;/if&gt;&gt;
+                    &lt;div style=&quot;font-weight:bold; font-size:1.1em; margin-bottom:15px;&quot;&gt;
+                        剩余刑期: _act.busy_months 个月
+                    &lt;/div&gt;
 
-                &lt;&lt;else&gt;&gt;
-                    /* 正常可接单状态 */
+                    /* 新增：进修按钮 */
+                    &lt;div style=&quot;background:rgba(255,255,255,0.6); padding:10px; border-radius:6px; display:inline-block;&quot;&gt;
+                        &lt;span style=&quot;font-size:0.9em; color:#7f1d1d;&quot;&gt;虽然无法接通告，但可以磨练技艺：&lt;/span&gt;&lt;br&gt;
+                        &lt;&lt;link &quot;🎓 安排进修 (跳转)&quot;&gt;&gt;
+                            &lt;&lt;set $current_actor to _key&gt;&gt;
+                            &lt;&lt;goto &quot;Artist_Management&quot;&gt;&gt;
+                        &lt;&lt;/link&gt;&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+            /* --- 场景 B: 培训中 (显示大蓝框) --- */
+            &lt;&lt;elseif _act.job_type is &quot;training&quot;&gt;&gt;
+                &lt;div style=&quot;background:#eff6ff; border:2px solid #60a5fa; padding:20px; border-radius:8px; text-align:center; color:#1e40af;&quot;&gt;
+                    &lt;div style=&quot;font-size:2em; margin-bottom:10px;&quot;&gt;🎓 封闭培训中&lt;/div&gt;
+                    &lt;div style=&quot;font-size:1em; opacity:0.8;&quot;&gt;( 正在闭关修炼，谢绝打扰 )&lt;/div&gt;
+                &lt;/div&gt;
+
+            /* --- 场景 C: 拍戏中 (显示大橙框 + 探班) --- */
+            &lt;&lt;else&gt;&gt;
+                 &lt;div style=&quot;background:#fff7ed; border:2px solid #fdba74; padding:20px; border-radius:8px; text-align:center; color:#c2410c;&quot;&gt;
+                    &lt;div style=&quot;font-size:2em; margin-bottom:10px;&quot;&gt;🎥 剧组拍摄中&lt;/div&gt;
+                    &lt;div style=&quot;font-weight:bold; font-size:1.2em; margin-bottom:15px;&quot;&gt;
+                        剩余工期: _act.busy_months 个月
+                    &lt;/div&gt;
+                    
+                    /* 探班按钮 */
+                    &lt;&lt;link &quot;🚗 前往探班 (消耗10体力)&quot;&gt;&gt;
+                        &lt;&lt;set $current_actor = _key&gt;&gt;
+                        &lt;&lt;goto &quot;Visit_Set&quot;&gt;&gt;
+                    &lt;&lt;/link&gt;&gt;
+                 &lt;/div&gt;
+            &lt;&lt;/if&gt;&gt;
+
+/* 🔴【新增】场景 D: 产假中 (显示粉色大框) */
+            &lt;&lt;elseif _act.job_type is &quot;maternity_leave&quot;&gt;&gt;
+                &lt;div style=&quot;background:#fff0f5; border:2px solid #f472b6; padding:20px; border-radius:8px; text-align:center; color:#db2777;&quot;&gt;
+                    &lt;div style=&quot;font-size:2em; margin-bottom:10px;&quot;&gt;🤰 产假/月子中&lt;/div&gt;
+                    &lt;div style=&quot;font-size:1em; opacity:0.8; margin-bottom:15px;&quot;&gt;( 专心带娃，暂停营业 )&lt;/div&gt;
+                    
+                    &lt;div style=&quot;font-weight:bold; font-size:1.1em;&quot;&gt;
+                        状态: &lt;&lt;print _act.project_name&gt;&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+        &lt;&lt;else&gt;&gt;
+            /* =========================================================
+               场景 D: 空闲状态 (显示 2x2 资源选择网格)
+               只有不忙的时候，才渲染这堆复杂的格子
+               ========================================================= */
+            
+            &lt;div style=&quot;display:grid; grid-template-columns: 1fr 1fr; gap: 20px 30px;&quot;&gt;
+                /* [格1] 影视 */
+                &lt;div&gt;
+                    &lt;div style=&quot;font-size:0.85em; color:#64748b; margin-bottom:5px; font-weight:bold;&quot;&gt;🎬 影视剧本&lt;/div&gt;
                     &lt;div class=&quot;res-btn-group&quot;&gt;
                       &lt;&lt;for _res range [&quot;s&quot;, &quot;a&quot;, &quot;b&quot;, &quot;c&quot;]&gt;&gt;
                          &lt;&lt;capture _res&gt;&gt;
                           &lt;&lt;if $resources[_res] &gt; 0&gt;&gt;
-                            &lt;&lt;link _res.toUpperCase()&gt;&gt;&lt;&lt;set $target = _key&gt;&gt;&lt;&lt;set $req_res = _res&gt;&gt;&lt;&lt;goto &quot;Job_Drama_Select&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+                             &lt;&lt;link _res.toUpperCase()&gt;&gt;&lt;&lt;set $target = _key&gt;&gt;&lt;&lt;set $req_res = _res&gt;&gt;&lt;&lt;goto &quot;Job_Drama_Select&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
                           &lt;&lt;else&gt;&gt;
                             &lt;span&gt;&lt;&lt;print _res.toUpperCase()&gt;&gt;&lt;/span&gt;
+                          &lt;&lt;/if&gt;&gt;
+                         &lt;&lt;/capture&gt;&gt;
+                      &lt;&lt;/for&gt;&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                /* [格2] 综艺 */
+                &lt;div&gt;
+                    &lt;div style=&quot;font-size:0.85em; color:#64748b; margin-bottom:5px; font-weight:bold;&quot;&gt;🎤 综艺通告&lt;/div&gt;
+                    &lt;div class=&quot;res-btn-group&quot;&gt;
+                      &lt;&lt;for _res range [&quot;s&quot;, &quot;a&quot;, &quot;b&quot;, &quot;c&quot;]&gt;&gt;
+                        &lt;&lt;capture _res&gt;&gt;
+                          &lt;&lt;if $resources[_res] &gt; 0 and _act.current_energy &gt;= 15&gt;&gt;
+                              &lt;&lt;link _res.toUpperCase()&gt;&gt;&lt;&lt;set $target = _key, $type = &quot;variety&quot;, $req_res = _res&gt;&gt;&lt;&lt;goto &quot;Job_Precheck_Quick&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+                          &lt;&lt;else&gt;&gt;
+                              &lt;span&gt;&lt;&lt;print _res.toUpperCase()&gt;&gt;&lt;/span&gt;
                           &lt;&lt;/if&gt;&gt;
                         &lt;&lt;/capture&gt;&gt;
                       &lt;&lt;/for&gt;&gt;
                     &lt;/div&gt;
-                &lt;&lt;/if&gt;&gt;
-            &lt;/div&gt;
+                &lt;/div&gt;
 
-            /* [格2] 综艺通告 (右上) */
-            &lt;div&gt;
-                &lt;div style=&quot;font-size:0.85em; color:#64748b; margin-bottom:5px; font-weight:bold;&quot;&gt;🎤 综艺通告&lt;/div&gt;
-                &lt;div class=&quot;res-btn-group&quot;&gt;
-                  &lt;&lt;for _res range [&quot;s&quot;, &quot;a&quot;, &quot;b&quot;, &quot;c&quot;]&gt;&gt;
-                    &lt;&lt;capture _res&gt;&gt;
-                      /* 增加判定：如果忙碌，不显示链接，只显示灰色块 */
-                      &lt;&lt;if _act.busy_months &gt; 0&gt;&gt;
-                          &lt;span&gt;&lt;&lt;print _res.toUpperCase()&gt;&gt;&lt;/span&gt;
-                      &lt;&lt;elseif $resources[_res] &gt; 0 and _act.current_energy &gt;= 15&gt;&gt;
-                          &lt;&lt;link _res.toUpperCase()&gt;&gt;&lt;&lt;set $target = _key, $type = &quot;variety&quot;, $req_res = _res&gt;&gt;&lt;&lt;goto &quot;Job_Precheck_Quick&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-                      &lt;&lt;else&gt;&gt;
-                          &lt;span&gt;&lt;&lt;print _res.toUpperCase()&gt;&gt;&lt;/span&gt;
-                      &lt;&lt;/if&gt;&gt;
-                    &lt;&lt;/capture&gt;&gt;
-                  &lt;&lt;/for&gt;&gt;
+                /* [格3] 时尚 */
+                &lt;div&gt;
+                     &lt;div style=&quot;font-size:0.85em; color:#64748b; margin-bottom:5px; font-weight:bold;&quot;&gt;👠 时尚资源&lt;/div&gt;
+                    &lt;div class=&quot;res-btn-group&quot;&gt;
+                      &lt;&lt;for _res range [&quot;s&quot;, &quot;a&quot;, &quot;b&quot;, &quot;c&quot;]&gt;&gt;
+                        &lt;&lt;capture _res&gt;&gt;
+                          &lt;&lt;if $resources[_res] &gt; 0 and _act.current_energy &gt;= 15&gt;&gt;
+                              &lt;&lt;link _res.toUpperCase()&gt;&gt;&lt;&lt;set $target = _key, $type = &quot;fashion&quot;, $req_res = _res&gt;&gt;&lt;&lt;goto &quot;Job_Precheck_Quick&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+                          &lt;&lt;else&gt;&gt;
+                              &lt;span&gt;&lt;&lt;print _res.toUpperCase()&gt;&gt;&lt;/span&gt;
+                          &lt;&lt;/if&gt;&gt;
+                        &lt;&lt;/capture&gt;&gt;
+                      &lt;&lt;/for&gt;&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                /* [格4] 舞台 */
+                &lt;div&gt;
+                    &lt;div style=&quot;font-size:0.85em; color:#64748b; margin-bottom:5px; font-weight:bold;&quot;&gt;💃 商演舞台&lt;/div&gt;
+                    &lt;div class=&quot;res-btn-group&quot;&gt;
+                      &lt;&lt;for _res range [&quot;s&quot;, &quot;a&quot;, &quot;b&quot;, &quot;c&quot;]&gt;&gt;
+                        &lt;&lt;capture _res&gt;&gt;
+                          &lt;&lt;if $resources[_res] &gt; 0 and _act.current_energy &gt;= 30&gt;&gt;
+                              &lt;&lt;link _res.toUpperCase()&gt;&gt;&lt;&lt;set $target = _key, $type = &quot;stage&quot;, $req_res = _res&gt;&gt;&lt;&lt;goto &quot;Job_Precheck_Quick&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+                          &lt;&lt;else&gt;&gt;
+                              &lt;span&gt;&lt;&lt;print _res.toUpperCase()&gt;&gt;&lt;/span&gt;
+                          &lt;&lt;/if&gt;&gt;
+                        &lt;&lt;/capture&gt;&gt;
+                      &lt;&lt;/for&gt;&gt;
+                    &lt;/div&gt;
                 &lt;/div&gt;
             &lt;/div&gt;
+        &lt;&lt;/if&gt;&gt;
 
-            /* [格3] 时尚资源 (左下) */
-            &lt;div&gt;
-                 &lt;div style=&quot;font-size:0.85em; color:#64748b; margin-bottom:5px; font-weight:bold;&quot;&gt;👠 时尚资源&lt;/div&gt;
-                &lt;div class=&quot;res-btn-group&quot;&gt;
-                  &lt;&lt;for _res range [&quot;s&quot;, &quot;a&quot;, &quot;b&quot;, &quot;c&quot;]&gt;&gt;
-                    &lt;&lt;capture _res&gt;&gt;
-                      &lt;&lt;if _act.busy_months &gt; 0&gt;&gt;
-                          &lt;span&gt;&lt;&lt;print _res.toUpperCase()&gt;&gt;&lt;/span&gt;
-                      &lt;&lt;elseif $resources[_res] &gt; 0 and _act.current_energy &gt;= 15&gt;&gt;
-                          &lt;&lt;link _res.toUpperCase()&gt;&gt;&lt;&lt;set $target = _key, $type = &quot;fashion&quot;, $req_res = _res&gt;&gt;&lt;&lt;goto &quot;Job_Precheck_Quick&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-                      &lt;&lt;else&gt;&gt;
-                          &lt;span&gt;&lt;&lt;print _res.toUpperCase()&gt;&gt;&lt;/span&gt;
-                      &lt;&lt;/if&gt;&gt;
-                    &lt;&lt;/capture&gt;&gt;
-                  &lt;&lt;/for&gt;&gt;
-                &lt;/div&gt;
-            &lt;/div&gt;
-
-            /* [格4] 商演舞台 (右下) */
-            &lt;div&gt;
-                &lt;div style=&quot;font-size:0.85em; color:#64748b; margin-bottom:5px; font-weight:bold;&quot;&gt;💃 商演舞台&lt;/div&gt;
-                &lt;div class=&quot;res-btn-group&quot;&gt;
-                  &lt;&lt;for _res range [&quot;s&quot;, &quot;a&quot;, &quot;b&quot;, &quot;c&quot;]&gt;&gt;
-                    &lt;&lt;capture _res&gt;&gt;
-                      &lt;&lt;if _act.busy_months &gt; 0&gt;&gt;
-                          &lt;span&gt;&lt;&lt;print _res.toUpperCase()&gt;&gt;&lt;/span&gt;
-                      &lt;&lt;elseif $resources[_res] &gt; 0 and _act.current_energy &gt;= 30&gt;&gt;
-                          &lt;&lt;link _res.toUpperCase()&gt;&gt;&lt;&lt;set $target = _key, $type = &quot;stage&quot;, $req_res = _res&gt;&gt;&lt;&lt;goto &quot;Job_Precheck_Quick&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-                      &lt;&lt;else&gt;&gt;
-                          &lt;span&gt;&lt;&lt;print _res.toUpperCase()&gt;&gt;&lt;/span&gt;
-                      &lt;&lt;/if&gt;&gt;
-                    &lt;&lt;/capture&gt;&gt;
-                  &lt;&lt;/for&gt;&gt;
-                &lt;/div&gt;
-            &lt;/div&gt;
-            
-        &lt;/div&gt; /* grid 结束 */
-        
-      &lt;/div&gt; /* end actor-mini-card */
+      &lt;/div&gt;
       &lt;&lt;/capture&gt;&gt;
     &lt;&lt;/for&gt;&gt;
 
-    /* 底部返回按钮 */
     &lt;div style=&quot;text-align:center; margin-top: 30px;&quot;&gt;
       &lt;&lt;link &quot;🔙 返回办公室&quot;&gt;&gt;
         &lt;&lt;goto &quot;Office&quot;&gt;&gt;
@@ -4346,33 +4348,184 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="44" name="Rest_Transition" tags="" position="2525,450" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;div class=&quot;tech-card&quot; style=&quot;min-height: 60vh; display:flex; flex-direction:column; justify-content:center; align-items:center;&quot;&gt;
 
-  &lt;div style=&quot;font-size:4em; margin-bottom:20px;&quot;&gt;🏠&lt;/div&gt;
-  &lt;h3 style=&quot;color:#475569; margin-bottom:30px;&quot;&gt;家&lt;/h3&gt;
-
-  /* --- 1. 随机剧情库 (在这里扩充你的文案) --- */
-  &lt;&lt;set _home_events to [
-    &quot;回到家，展鹏正瘫在沙发上打游戏，看见你回来，自然地把脚丫伸到了你的膝盖上求按摩。&quot;,
-    &quot;展鹏今天难得亲自下厨，虽然味道有点一言难尽，但看着他期待的眼神，你还是吃光了。&quot;,
-    &quot;你刚进门就被展鹏抱住了腰，他迷迷糊糊地蹭了蹭你的颈窝：&#39;老公，不想努力了，你养我好不好...&#39;&quot;,
-    &quot;展鹏正在阳台上收衣服，动作敏捷得不像个咸鱼，但看到你后立刻捂着腰装作&#39;闪到了&#39;。&quot;,
-    &quot;今晚没有什么大明星，只有你的专属人妻。他早早关上了灯，把你拉进了温暖的被窝。&quot;,
-    &quot;你在书房处理文件，展鹏端着一杯热牛奶进来，顺便赖在你怀里不肯走了。&quot;,
-    &quot;展鹏洗完澡出来，发梢还在滴水。他懒得吹头发，把吹风机塞到了你手里。&quot;,
-    &quot;半夜醒来，发现展鹏正警惕地看着窗外，发现是你醒了，他立刻变回睡眼惺忪的样子钻进你怀里。&quot;,
-    &quot;周末的早晨，展鹏像只八爪鱼一样缠在你身上，嘟囔着再睡五分钟，结果一睡就是两小时。&quot;
-  ]&gt;&gt;
+  &lt;div style=&quot;font-size:4em; margin-bottom:20px;&quot;&gt;🏩&lt;/div&gt;
   
-  /* --- 2. 抽取剧情 --- */
-  &lt;&lt;set _story to _home_events.random()&gt;&gt;
+  /* =========================================
+     0. 坏档修复与变量初始化
+     ========================================= */
+  &lt;&lt;if not def $zp_exhaustion_streak&gt;&gt;&lt;&lt;set $zp_exhaustion_streak to 0&gt;&gt;&lt;&lt;/if&gt;&gt;
+  &lt;&lt;if not def $player_exhaustion_streak&gt;&gt;&lt;&lt;set $player_exhaustion_streak to 0&gt;&gt;&lt;&lt;/if&gt;&gt;
+  &lt;&lt;if not def $player_energy&gt;&gt;&lt;&lt;set $player_energy to 100&gt;&gt;&lt;&lt;/if&gt;&gt;
 
-  /* --- 3. 显示剧情 --- */
-  &lt;div style=&quot;background:#f8fafc; padding:25px; border-radius:10px; border-left:5px solid #f59e0b; 
-              color:#334155; font-size:1.1em; line-height:1.8; max-width:500px; box-shadow:0 4px 6px rgba(0,0,0,0.05);&quot;&gt;
-    &quot;_story&quot;
+  /* =========================================
+     1. 体力透支计算逻辑 (进屋瞬间结算)
+     ========================================= */
+  
+  /* --- A. 展鹏计数器 --- */
+  &lt;&lt;if $actors.zp.energy &lt;= 0&gt;&gt;
+      &lt;&lt;set $zp_exhaustion_streak += 1&gt;&gt;
+  &lt;&lt;else&gt;&gt;
+      /* 只有当体力恢复正数时才中断计数。如果是0继续累积 */
+      &lt;&lt;set $zp_exhaustion_streak to 0&gt;&gt;
+  &lt;&lt;/if&gt;&gt;
+
+  /* --- B. 韩证飞(玩家)计数器 --- */
+  &lt;&lt;if $player_energy &lt;= 0&gt;&gt;
+      &lt;&lt;set $player_exhaustion_streak += 1&gt;&gt;
+  &lt;&lt;else&gt;&gt;
+      &lt;&lt;set $player_exhaustion_streak to 0&gt;&gt;
+  &lt;&lt;/if&gt;&gt;
+
+  /* =========================================
+     🔧 可视化 DEBUG 面板 (测试专用)
+     ========================================= */
+  &lt;div style=&quot;width:100%; background:#f1f5f9; border:1px dashed #94a3b8; padding:10px; margin-bottom:20px; font-family:monospace; font-size:0.85em; color:#475569; text-align:left;&quot;&gt;
+    &lt;strong&gt;[🛠️ 系统判定数据]&lt;/strong&gt;&lt;br&gt;
+    展鹏体力: $actors.zp.energy | 连续透支月数: &lt;b&gt;$zp_exhaustion_streak&lt;/b&gt; / 3&lt;br&gt;
+    玩家体力: $player_energy | 连续透支月数: &lt;b&gt;$player_exhaustion_streak&lt;/b&gt; / 3&lt;br&gt;
+    ----------------&lt;br&gt;
+    判定结果: 
+    &lt;&lt;if $zp_exhaustion_streak &gt;= 3&gt;&gt;
+        &lt;span style=&quot;color:#be185d; font-weight:bold;&quot;&gt;👉 触发 [丈夫的抚慰]&lt;/span&gt;
+    &lt;&lt;elseif $player_exhaustion_streak &gt;= 3&gt;&gt;
+        &lt;span style=&quot;color:#be185d; font-weight:bold;&quot;&gt;👉 触发 [妻子的抚慰]&lt;/span&gt;
+    &lt;&lt;else&gt;&gt;
+        &lt;span style=&quot;color:#059669;&quot;&gt;👉 触发 [日常剧情]&lt;/span&gt;
+    &lt;&lt;/if&gt;&gt;
   &lt;/div&gt;
 
+
+  /* =========================================
+     2. 剧情分流判定
+     ========================================= */
+
+  /* 🔥 场景一：丈夫的抚慰 (展鹏透支，韩证飞主导) */
+  /* 优先级：高 */
+  &lt;&lt;if $zp_exhaustion_streak &gt;= 3&gt;&gt;
+      
+      &lt;h3 style=&quot;color:#be185d; margin-bottom:20px;&quot;&gt;丈夫的抚慰&lt;/h3&gt;
+      &lt;div style=&quot;background:#fff0f5; padding:25px; border-radius:10px; border-left:5px solid #be185d; color:#831843; font-size:1.1em; line-height:1.8; max-width:500px;&quot;&gt;
+        
+        /* A. 普通状态 / 完全恢复 */
+        &lt;&lt;if $zp_preg.state is 0 or $zp_preg.state is 3&gt;&gt;
+            &lt;p&gt;连续三个月的高强度压榨，展鹏已经累得像条真正的咸鱼，躺在床上一动不动：“周扒皮，不是人，哪有这么对老婆的……”&lt;/p&gt;
+            &lt;p&gt;“是吗？”你跳上床，看着他脸上奸计得逞一般的微笑，“那我来帮你‘充电’。”&lt;/p&gt;
+            &lt;p&gt;那一晚展鹏在床上尖叫着痉挛。次日清晨，他虽然扶着腰，但精神竟然出奇的好。&lt;/p&gt;
+        
+        /* B. 孕期中 */
+        &lt;&lt;elseif $zp_preg.state is 1&gt;&gt;
+            &lt;p&gt;孕期的不适加上体力的透支，展鹏的情绪格外敏感。他红着眼眶缩在被子里：“身上好难受，哪里都疼...”&lt;/p&gt;
+            &lt;p&gt;你钻进被窝，温热的手掌抚上他紧绷的身体，在他耳边轻声说：“医生说，适当的运动有利于身心健康……”&lt;/p&gt;
+            &lt;p&gt;“孕期还要，不是人啊！”展鹏幸福地夸赞你，“完全就是个变态啊韩证飞……”&lt;/p&gt;
+            &lt;p&gt;这是一个极尽温柔的夜晚，所有的疲惫都在你的安抚中化成了一滩春水。&lt;/p&gt;
+
+        /* C. 产后/坐月子 */
+        &lt;&lt;elseif $zp_preg.state is 2&gt;&gt;
+            &lt;p&gt;带娃和恢复身体的双重压力让展鹏憔悴了不少。看到你进来，他下意识想去抱孩子，却被你按住了手腕。&lt;/p&gt;
+            &lt;p&gt;“孩子睡了。”你吻上他有些干燥的嘴唇，手指轻轻划过他柔软的小腹，“让我亲亲好不好……”&lt;/p&gt;
+            &lt;p&gt;久违的亲密不仅治愈了身体的疲倦，更填补了新手爸爸内心的空虚。&lt;/p&gt;
+        &lt;&lt;/if&gt;&gt;
+
+        &lt;div style=&quot;margin-top:15px; font-weight:bold; color:#be185d;&quot;&gt;
+             ⚡ 展鹏体力已完全恢复！(200/200)
+        &lt;/div&gt;
+      &lt;/div&gt;
+      
+      /* 结算效果 */
+      &lt;&lt;set $actors.zp.energy to 200&gt;&gt;
+      &lt;&lt;set $zp_exhaustion_streak to 0&gt;&gt;
+
+
+ /* 🔥 场景二：妻子的抚慰 (韩证飞透支，展鹏主导) */
+  /* 这里是展鹏反攻宠溺韩总的剧情 */
+  &lt;&lt;elseif $player_exhaustion_streak &gt;= 3&gt;&gt;
+  
+      &lt;h3 style=&quot;color:#be185d; margin-bottom:20px;&quot;&gt;妻子的抚慰&lt;/h3&gt;
+      &lt;div style=&quot;background:#fff0f5; padding:25px; border-radius:10px; border-left:5px solid #be185d; color:#831843; font-size:1.1em; line-height:1.8; max-width:500px;&quot;&gt;
+        
+        /* A. 普通状态 / 完全恢复 */
+        &lt;&lt;if $zp_preg.state is 0 or $zp_preg.state is 3&gt;&gt;
+            &lt;p&gt;通告、公关、营销……连续的高压工作让你回到家连手指都不想动。你瘫在沙发上闭目养神。&lt;/p&gt;
+            &lt;p&gt;“韩总，这就不行了？”一双修长的手搭上你的肩膀，力度适中地按揉着。展鹏贴在你耳边，朝着你的耳廓轻轻吹气，“去床上躺好，我来帮你‘恢复’一下。”&lt;/p&gt;
+            &lt;p&gt;平时懒散的妻子今晚十分勤劳，你终于可以好好歇歇了……不，好像比平时更累了！&lt;/p&gt;
+        
+        /* B. 孕期中 */
+        &lt;&lt;elseif $zp_preg.state is 1&gt;&gt;
+            &lt;p&gt;为了给未出世的孩子赚奶粉钱，你最近拼得太狠了。回到家时你差点靠在玄关睡着。&lt;/p&gt;
+            &lt;p&gt;挺着肚子的展鹏费力地把你扶到床上，心疼地摸着你的黑眼圈，嘴里还不依不饶：“韩总太没用了吧，怎么这就被榨干了？”&lt;/p&gt;
+            &lt;p&gt;他的行动已经有些笨拙了，慢慢解开你的衬衫扣子，跨坐在你腰上，小心避开肚子，低下头吻你：“今晚不准动，也不准拒绝我。”&lt;/p&gt;
+
+        /* C. 产后/坐月子 */
+        &lt;&lt;elseif $zp_preg.state is 2&gt;&gt;
+            &lt;p&gt;看着你为了照顾家里累得脸色苍白，正在哄孩子的展鹏突然把奶瓶一扔。&lt;/p&gt;
+            &lt;p&gt;“宝宝你自己玩会儿，妈妈要去救你爸爸了。”&lt;/p&gt;
+            &lt;p&gt;他把你拉进卧室，锁上门。虽然身体还没完全恢复，但他眼神里的欲望却丝毫未减：“韩证飞，你现在的样子太招人了……”&lt;/p&gt;
+        &lt;&lt;/if&gt;&gt;
+
+        &lt;div style=&quot;margin-top:15px; font-weight:bold; color:#be185d;&quot;&gt;
+             ⚡ 韩证飞体力已完全恢复！(200/200)
+        &lt;/div&gt;
+      &lt;/div&gt;
+      
+      /* 结算效果 */
+      &lt;&lt;set $player_energy to 200&gt;&gt;
+      &lt;&lt;set $player_exhaustion_streak to 0&gt;&gt;
+
+
+  /* 🏡 场景三：如果你俩都没虚，播放正常温馨剧情 */
+  &lt;&lt;else&gt;&gt;
+  
+      &lt;h3 style=&quot;color:#475569; margin-bottom:30px;&quot;&gt;家&lt;/h3&gt;
+      
+      &lt;&lt;set _home_events to []&gt;&gt;
+      &lt;&lt;set _scene_title to &quot;温馨时刻&quot;&gt;&gt;
+
+      /* 根据孕期状态加载不同的随机库 */
+      &lt;&lt;if $zp_preg.state is 1&gt;&gt;
+          &lt;&lt;set _scene_title to &quot;🤰 孕期日常&quot;&gt;&gt;
+          &lt;&lt;set _home_events to [
+            &quot;展鹏半夜突然摇醒你，红着眼睛说想吃城西那家倒闭了三年的酸辣粉，你哄了半天才把他哄睡着。&quot;,
+            &quot;你正在看剧本，展鹏抓着你的手放在他微微隆起的小腹上，一脸惊恐：&#39;它刚才是不是踢我了？我是不是要变异了？&#39;&quot;,
+            &quot;展鹏站在镜子前比划了半天，郁闷地捏了捏自己的腰：&#39;完了，腹肌九九归一了，以后还能接到打戏吗？&#39;&quot;,
+            &quot;虽然平时很懒，但最近展鹏格外嗜睡。你回家时，发现他在沙发上睡得人事不省，嘴角还挂着一点晶莹的口水。&quot;,
+            &quot;展鹏因为腿抽筋疼醒了，你迷迷糊糊爬起来给他按摩，他哼哼唧唧地把头埋在你怀里撒娇。&quot;,
+            &quot;“你说孩子出来以后叫什么？”展鹏一边啃苹果一边问，“如果是男孩就叫展大鹏，女孩就叫展小鹏吧。”你果断驳回了这个取名方案。&quot;
+          ]&gt;&gt;
+      &lt;&lt;elseif $zp_preg.state &gt;= 2&gt;&gt;
+          &lt;&lt;set _scene_title to &quot;👨‍👩‍👧 甜蜜之家&quot;&gt;&gt;
+          &lt;&lt;set _home_events to [
+            &quot;半夜孩子哇哇大哭，你和展鹏在被窝里装死。最后猜拳输了的他顶着鸡窝头爬起来：&#39;祖宗，这就来伺候您...&#39;&quot;,
+            &quot;你回家看到温馨的一幕：展鹏在沙发上睡着了，宝宝趴在他胸口也睡着了，一大一小两张脸简直是一个模子里刻出来的。&quot;,
+            &quot;展鹏试图教宝宝叫“爸爸”，结果宝宝张口就是“妈妈”，气得展鹏捏了捏宝宝的脸：&#39;小白眼狼，奶粉谁给你冲的？&#39;&quot;,
+            &quot;家里到处都是婴儿用品，曾经的高冷影帝现在熟练地单手换尿布，另一只手还能腾出来接你的电话。&quot;,
+            &quot;终于把小祖宗哄睡着了。展鹏长出一口气，把你拉到阳台上，从身后轻轻环住你的腰，声音有点哑：&#39;终于轮到我了。&#39;&quot;,
+            &quot;展鹏看着熟睡的宝宝，突然吃醋地戳了戳你的脸：&#39;以前你回家第一件事是亲我，现在全是看她。&#39;你笑着亲了他一口安抚这只大醋坛子。&quot;,
+            &quot;“妈今天把孩子接走了。”展鹏把门一关，眼神瞬间变得亮晶晶的，像只看到猎物的狼，&#39;老婆，今晚没人打扰我们了。&#39;&quot;,
+            &quot;你正在给孩子洗衣服，展鹏突然从背后抱过来，下巴搁在你肩膀上蹭来蹭去，手也不安分地伸进衣摆：&#39;别洗了，陪我躺会儿嘛...&#39;&quot;,
+            &quot;半夜醒来，发现孩子睡得很沉。展鹏悄悄在被窝里握住你的手，十指相扣，温热的呼吸洒在你耳边：&#39;爱你。&#39;&quot;
+          ]&gt;&gt;
+      &lt;&lt;else&gt;&gt;
+          &lt;&lt;set _home_events to [
+            &quot;回到家，展鹏正瘫在沙发上打游戏，看见你回来，自然地把脚丫伸到了你的膝盖上求按摩。&quot;,
+            &quot;展鹏今天难得亲自下厨，虽然味道有点一言难尽，但看着他期待的眼神，你还是吃光了。&quot;,
+            &quot;你刚进门就被展鹏抱住了腰，他迷迷糊糊地蹭了蹭你的颈窝：&#39;老公，不想努力了，你养我好不好...&#39;&quot;,
+            &quot;展鹏正在阳台上收衣服，动作敏捷得不像个咸鱼，但看到你后立刻捂着腰装作&#39;闪到了&#39;。&quot;,
+            &quot;今晚没有什么大明星，只有你的专属人妻。他早早关上了灯，把你拉进了温暖的被窝。&quot;,
+            &quot;你在书房处理文件，展鹏端着一杯热牛奶进来，顺便赖在你怀里不肯走了。&quot;,
+            &quot;展鹏洗完澡出来，发梢还在滴水。他懒得吹头发，把吹风机塞到了你手里。&quot;
+          ]&gt;&gt;
+      &lt;&lt;/if&gt;&gt;
+      
+      &lt;&lt;set _story to _home_events.random()&gt;&gt;
+      
+      &lt;h4 style=&quot;color:#d97706; margin-top:0;&quot;&gt;_scene_title&lt;/h4&gt;
+      &lt;div style=&quot;background:#f8fafc; padding:25px; border-radius:10px; border-left:5px solid #f59e0b; 
+                  color:#334155; font-size:1.1em; line-height:1.8; max-width:500px; box-shadow:0 4px 6px rgba(0,0,0,0.05);&quot;&gt;
+        &quot;_story&quot;
+      &lt;/div&gt;
+  &lt;&lt;/if&gt;&gt;
+
   &lt;div style=&quot;margin-top:50px;&quot;&gt;
-    /* 这里点击后才进入月度结算 */
     &lt;&lt;link &quot;💤 关灯睡觉 (进入月结)&quot;&gt;&gt;
         &lt;&lt;goto &quot;Next_Month&quot;&gt;&gt;
     &lt;&lt;/link&gt;&gt;
@@ -4483,26 +4636,61 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
         &lt;&lt;set $current_actor to _key&gt;&gt;
         &lt;&lt;set _a to $actors[_key]&gt;&gt;
 
-        &lt;div style=&quot;background:#f0fdf4; border:1px solid #bbf7d0; padding:10px; border-radius:6px;&quot;&gt;
-            &lt;div style=&quot;font-weight:bold; color:#166534; margin-bottom:5px;&quot;&gt;
-                🎉 &lt;&lt;print _a.name&gt;&gt; 的 &lt;&lt;print _a.project_name&gt;&gt; 杀青了！
-            &lt;/div&gt;
+        &lt;div style=&quot;background:#fff; border:1px solid #e2e8f0; padding:15px; border-radius:8px; margin-bottom:15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);&quot;&gt;
             
-            /* 确保不是培训项目才结算 */
-            &lt;&lt;if def _a.job_type and _a.job_type neq &quot;training&quot;&gt;&gt;
-                &lt;&lt;if def _a.job_type&gt;&gt;
-                     &lt;&lt;Job_Settle _a.job_type&gt;&gt;
-                &lt;&lt;else&gt;&gt;
-                    &lt;&lt;Job_Settle &quot;drama&quot;&gt;&gt;
-                &lt;&lt;/if&gt;&gt;
-            &lt;&lt;/if&gt;&gt;
-            
-            /* 培训项目特殊提示 */
-            &lt;&lt;if def _training_complete_msg&gt;&gt;
-                 &lt;div style=&quot;color:#059669; font-weight:bold; padding:5px;&quot;&gt;_training_complete_msg&lt;/div&gt;
-            &lt;&lt;/if&gt;&gt;
+            /* --- 1. 正常工作的结算 --- */
+            /* 必须是这几种赚钱的工作，才显示结算界面 */
+            &lt;&lt;if _a.job_type is &quot;drama&quot; or _a.job_type is &quot;variety&quot; or _a.job_type is &quot;fashion&quot; or _a.job_type is &quot;stage&quot;&gt;&gt;
+                &lt;div style=&quot;font-weight:bold; color:#15803d; margin-bottom:10px; font-size:1.1em;&quot;&gt;
+                    🎉 &lt;&lt;print _a.name&gt;&gt; 的 &lt;&lt;print _a.project_name&gt;&gt; 杀青了！
+                &lt;/div&gt;
+                &lt;&lt;Job_Settle _a.job_type&gt;&gt;
 
-            &lt;&lt;set _a.project_name to &quot;&quot;&gt;&gt;&lt;&lt;set _a.job_type to &quot;&quot;&gt;&gt;
+            /* --- 2. 封杀/抵制结束 --- */
+            /* 🔴 修复：只有当工期真的归零时，才显示“解封”，否则不显示 */
+            &lt;&lt;elseif _a.job_type is &quot;banned&quot; and _a.busy_months == 0&gt;&gt;
+                &lt;div style=&quot;border-left: 4px solid #ef4444; padding-left: 10px;&quot;&gt;
+                    &lt;div style=&quot;font-weight:bold; color:#b91c1c; font-size:1.1em;&quot;&gt;
+                        🔓 解封通知
+                    &lt;/div&gt;
+                    &lt;p style=&quot;color:#7f1d1d; margin:5px 0;&quot;&gt;
+                        &lt;&lt;print _a.name&gt;&gt; 的“全网抵制期”已结束。
+                        &lt;br&gt;&lt;span style=&quot;font-size:0.9em; opacity:0.8;&quot;&gt;虽然大众已经淡忘，但口碑恢复还需要时间。&lt;/span&gt;
+                    &lt;/p&gt;
+                &lt;/div&gt;
+
+            /* --- 3. 产假结束 --- */
+            /* 🔴 修复：同上，只有工期归零才显示 */
+            &lt;&lt;elseif _a.job_type is &quot;maternity_leave&quot; and _a.busy_months == 0&gt;&gt;
+                &lt;div style=&quot;border-left: 4px solid #db2777; padding-left: 10px;&quot;&gt;
+                    &lt;div style=&quot;font-weight:bold; color:#be185d; font-size:1.1em;&quot;&gt;
+                        🍼 假期结束
+                    &lt;/div&gt;
+                    &lt;p style=&quot;color:#9d174d; margin:5px 0;&quot;&gt;
+                        &lt;&lt;print _a.name&gt;&gt; 的产假/修养期结束了。
+                        &lt;br&gt;状态已调整为：&lt;b&gt;空闲&lt;/b&gt; (可以接通告了)
+                    &lt;/p&gt;
+                &lt;/div&gt;
+
+            /* --- 4. 培训结束 --- */
+            &lt;&lt;elseif _a.job_type is &quot;training&quot; and _a.busy_months == 0&gt;&gt;
+                &lt;div style=&quot;border-left: 4px solid #3b82f6; padding-left: 10px;&quot;&gt;
+                    &lt;div style=&quot;font-weight:bold; color:#1d4ed8; font-size:1.1em;&quot;&gt;
+                        🎓 进修完成
+                    &lt;/div&gt;
+                    &lt;p style=&quot;color:#1e40af; margin:5px 0;&quot;&gt;
+                        &lt;&lt;print _a.name&gt;&gt; 完成了封闭式培训，能力值已提升！
+                    &lt;/p&gt;
+                &lt;/div&gt;
+            
+            /* --- 5. 兜底 (如工期未归零，则什么都不显示，或者显示进度) --- */
+            &lt;&lt;else&gt;&gt;
+                &lt;&lt;/if&gt;&gt;
+
+            /* 只有当真的结束了，才清空状态 */
+            &lt;&lt;if _a.busy_months == 0&gt;&gt;
+                &lt;&lt;set _a.project_name to &quot;&quot;&gt;&gt;&lt;&lt;set _a.job_type to &quot;&quot;&gt;&gt;
+            &lt;&lt;/if&gt;&gt;
         &lt;/div&gt;
     &lt;&lt;/for&gt;&gt;
 &lt;&lt;/if&gt;&gt;</tw-passagedata><tw-passagedata pid="49" name="NM_Rank" tags="" position="2825,575" size="100,100">&lt;&lt;if _rank_change_events.length &gt; 0&gt;&gt;
@@ -4722,19 +4910,29 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
     &lt;&lt;/if&gt;&gt;
 
 
-    /* =========================================================
-       B. 资源掉落 (保持不变，略微增加文案)
+/* =========================================================
+       B. 资源掉落
        ========================================================= */
-    &lt;&lt;set _drop_chance to 0&gt;&gt;
-    &lt;&lt;if $actors.zp.rank_level &gt;= 4&gt;&gt;&lt;&lt;set _drop_chance += 30&gt;&gt;&lt;&lt;/if&gt;&gt;
-    &lt;&lt;if $actors.qs.rank_level &gt;= 3&gt;&gt;&lt;&lt;set _drop_chance += 20&gt;&gt;&lt;&lt;/if&gt;&gt;
+    
+    /* 增加判断：如果危险值过高(即将封杀) 或 艺人已被封杀，则不掉落资源 */
+    &lt;&lt;set _is_banned to false&gt;&gt;
+    &lt;&lt;if $actors.zp.job_type is &quot;banned&quot;&gt;&gt;&lt;&lt;set _is_banned to true&gt;&gt;&lt;&lt;/if&gt;&gt;
+    
+    &lt;&lt;if $danger_level &lt; 100 and _is_banned is false&gt;&gt;
+        
+        /* 正常的掉落逻辑 */
+        &lt;&lt;set _drop_chance to 0&gt;&gt;
+        &lt;&lt;if $actors.zp.rank_level &gt;= 4&gt;&gt;&lt;&lt;set _drop_chance += 30&gt;&gt;&lt;&lt;/if&gt;&gt;
+        &lt;&lt;if $actors.qs.rank_level &gt;= 3&gt;&gt;&lt;&lt;set _drop_chance += 20&gt;&gt;&lt;&lt;/if&gt;&gt;
 
-    &lt;&lt;if random(1, 100) &lt; _drop_chance&gt;&gt;
-        &lt;&lt;set $resources.a += 1&gt;&gt;
-        &lt;&lt;set _resource_event to {type: &quot;good&quot;, desc: &quot;🎁 &lt;b&gt;天上掉馅饼：&lt;/b&gt; 某个资方大佬喝多了，硬塞给你一个 A级 资源邀请！&quot;}&gt;&gt;
-    &lt;&lt;else&gt;&gt;
-        &lt;&lt;set $resources.c += 2&gt;&gt;
-        &lt;&lt;set _resource_event to {type: &quot;normal&quot;, desc: &quot;📩 收到了一些没人要的 C级 边角料资源。&quot;}&gt;&gt;
+        &lt;&lt;if random(1, 100) &lt; _drop_chance&gt;&gt;
+            &lt;&lt;set $resources.a += 1&gt;&gt;
+            &lt;&lt;set _resource_event to {type: &quot;good&quot;, desc: &quot;🎁 &lt;b&gt;天上掉馅饼：&lt;/b&gt; 某个资方大佬喝多了，硬塞给你一个 A级 资源邀请！&quot;}&gt;&gt;
+        &lt;&lt;else&gt;&gt;
+            &lt;&lt;set $resources.c += 2&gt;&gt;
+            &lt;&lt;set _resource_event to {type: &quot;normal&quot;, desc: &quot;📩 收到了一些没人要的 C级 边角料资源。&quot;}&gt;&gt;
+        &lt;&lt;/if&gt;&gt;
+        
     &lt;&lt;/if&gt;&gt;
     
     /* 自动获取情报 */
@@ -4796,19 +4994,27 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
     /* 兼容旧代码，保留字符串形式的变量 */
     &lt;&lt;set _next_hotsearch to $current_hot_topic.text&gt;&gt;
 
-&lt;&lt;/widget&gt;&gt;</tw-passagedata><tw-passagedata pid="55" name="Widget_Logic_Cleanup" tags="widget" position="2950,700" size="100,100">   /* 收尾逻辑 */
-   &lt;&lt;widget &quot;Logic_Cleanup&quot;&gt;&gt;
-    /* 危险值恢复 */
-    &lt;&lt;if $danger_level &gt; 0&gt;&gt;&lt;&lt;set $danger_level -= 5&gt;&gt;&lt;&lt;/if&gt;&gt;
-    
-    /* 基础重置 */
+&lt;&lt;/widget&gt;&gt;</tw-passagedata><tw-passagedata pid="55" name="Widget_Logic_Cleanup" tags="widget" position="2950,700" size="100,100">&lt;&lt;widget &quot;Logic_Cleanup&quot;&gt;&gt;
+    /* 1. 危险值修正：自然恢复 */
+    &lt;&lt;if $danger_level &gt; 0&gt;&gt;
+        &lt;&lt;set $danger_level to Math.max(0, $danger_level - 5)&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
+
+    /* 2. 🔴【修复】兜底逻辑：防止资源和危险值变负数 */
+    &lt;&lt;set $resources.s to Math.max(0, $resources.s)&gt;&gt;
+    &lt;&lt;set $resources.a to Math.max(0, $resources.a)&gt;&gt;
+    &lt;&lt;set $resources.b to Math.max(0, $resources.b)&gt;&gt;
+    &lt;&lt;set $resources.c to Math.max(0, $resources.c)&gt;&gt;
+    &lt;&lt;set $danger_level to Math.max(0, $danger_level)&gt;&gt;
+
+    /* 3. 基础重置 */
     &lt;&lt;set $stamina to 100&gt;&gt;  
     &lt;&lt;set $action_points to 4&gt;&gt;
     &lt;&lt;set $charity_done to false&gt;&gt;
     
-    /* 月份增加 */
+    /* 4. 月份增加 */
     &lt;&lt;set $month += 1&gt;&gt;
-&lt;&lt;/widget&gt;&gt;</tw-passagedata><tw-passagedata pid="56" name="Widget_ZP_Events" tags="widget" position="600,500" size="100,100">&lt;&lt;widget &quot;Event_ZP_Drama&quot;&gt;&gt;
+&lt;&lt;/widget&gt;&gt;</tw-passagedata><tw-passagedata pid="56" name="Widget_ZP_Events" tags="widget" position="275,575" size="100,100">&lt;&lt;widget &quot;Event_ZP_Drama&quot;&gt;&gt;
     /* 初始化标记：假设没触发特殊事件 */
     &lt;&lt;set _zp_event_handled to false&gt;&gt;
     
@@ -4909,83 +5115,14 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
         &lt;&lt;/if&gt;&gt;
     &lt;&lt;/if&gt;&gt;
 &lt;&lt;/widget&gt;&gt;</tw-passagedata><tw-passagedata pid="57" name="Widget_ZP_Pregnancy" tags="widget" position="275,725" size="100,100">&lt;&lt;widget &quot;ZP_Init&quot;&gt;&gt;
-    /* 1. 初始化基础对象 */
     &lt;&lt;if not def $zp_preg&gt;&gt;
-        &lt;&lt;set $zp_preg to {
-            state: 0,         /* 0:未怀, 1:孕期, 2:恢复期, 3:完成 */
-            month: 0, 
-            event_flag: &quot;&quot;
-        }&gt;&gt;
+        &lt;&lt;set $zp_preg to { state: 0, month: 0, event_flag: &quot;&quot; }&gt;&gt;
     &lt;&lt;/if&gt;&gt;
-
-    /* 2. 初始化永久死锁开关 (独立于对象之外，更安全) */
     &lt;&lt;if not def $zp_pregnancy_happened&gt;&gt;
         &lt;&lt;set $zp_pregnancy_happened to false&gt;&gt;
     &lt;&lt;/if&gt;&gt;
-
-    /* 3. 自动纠错：如果你已经在孕期了，强制把锁锁上 */
-    &lt;&lt;if $zp_preg.state &gt; 0&gt;&gt;
-        &lt;&lt;set $zp_pregnancy_happened to true&gt;&gt;
-    &lt;&lt;/if&gt;&gt;
 &lt;&lt;/widget&gt;&gt;
 
-&lt;&lt;widget &quot;ZP_Monthly_Process&quot;&gt;&gt;
-    &lt;&lt;ZP_Init&gt;&gt;
-    &lt;&lt;set $zp_preg.event_flag to &quot;&quot;&gt;&gt; 
-
-    /* =======================================
-       核心修复：三重保险的触发条件
-       1. 必须是第3个月以后
-       2. 当前状态必须是 0 (未怀)
-       3. 死锁开关必须是 false (从未发生过)
-       ======================================= */
-    &lt;&lt;if $month &gt;= 3 and $zp_preg.state is 0 and $zp_pregnancy_happened is false&gt;&gt;
-        
-        &lt;&lt;if random(1, 100) &lt;= 30&gt;&gt;
-            /* 触发！ */
-            &lt;&lt;set $zp_preg.state to 1&gt;&gt;
-            &lt;&lt;set $zp_preg.month to 3&gt;&gt;
-            &lt;&lt;set $zp_preg.event_flag to &quot;discovery&quot;&gt;&gt;
-            
-            /* 🔒 落下死锁！以后天王老子来了也不能触发第二次 */
-            &lt;&lt;set $zp_pregnancy_happened to true&gt;&gt;
-        &lt;&lt;/if&gt;&gt;
-    
-    /* === 孕期推进 (State 1) === */
-    &lt;&lt;elseif $zp_preg.state is 1&gt;&gt;
-        &lt;&lt;set $zp_preg.month += 1&gt;&gt;
-        
-        /* 再次确认锁是锁上的 */
-        &lt;&lt;set $zp_pregnancy_happened to true&gt;&gt;
-
-        /* 孕7月：休假 */
-        &lt;&lt;if $zp_preg.month == 7&gt;&gt;
-            &lt;&lt;set $zp_preg.event_flag to &quot;leave_start&quot;&gt;&gt;
-            &lt;&lt;set $actors.zp.busy_months to 0&gt;&gt;
-            &lt;&lt;set $actors.zp.project_name to &quot;&quot;&gt;&gt;
-        
-        /* 孕10月及以上：生娃 (&gt;=10 防止卡住) */
-        &lt;&lt;elseif $zp_preg.month &gt;= 10&gt;&gt;
-            &lt;&lt;set $zp_preg.event_flag to &quot;birth&quot;&gt;&gt;
-            &lt;&lt;set $zp_preg.state to 2&gt;&gt; 
-            &lt;&lt;set $zp_preg.month to 0&gt;&gt;
-        &lt;&lt;/if&gt;&gt;
-
-    /* === 产后恢复 (State 2) === */
-    &lt;&lt;elseif $zp_preg.state is 2&gt;&gt;
-        &lt;&lt;set $zp_preg.month += 1&gt;&gt;
-        
-        &lt;&lt;if $zp_preg.month == 2&gt;&gt;
-            &lt;&lt;set $zp_preg.event_flag to &quot;partial_recover&quot;&gt;&gt;
-        &lt;&lt;elseif $zp_preg.month == 6&gt;&gt;
-            &lt;&lt;set $zp_preg.event_flag to &quot;full_recover&quot;&gt;&gt;
-            &lt;&lt;set $zp_preg.state to 3&gt;&gt;
-        &lt;&lt;/if&gt;&gt;
-    &lt;&lt;/if&gt;&gt;
-&lt;&lt;/widget&gt;&gt;
-
-/* (限制检查和事件显示部分代码保持不变，不需要动) */
-/* 为了防止你找不到，这里把检查锁的部分也附上，确保完整 */
 &lt;&lt;widget &quot;ZP_Check_Lock&quot;&gt;&gt;
     &lt;&lt;set _zp_lock_msg to &quot;&quot;&gt;&gt;
     &lt;&lt;set _check_type to $args[0]&gt;&gt;
@@ -4995,49 +5132,120 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
         &lt;&lt;elseif $zp_preg.state is 2 and $zp_preg.month &lt;= 2&gt;&gt;
             &lt;&lt;set _zp_lock_msg to &quot;🍼 展鹏正在坐月子调养身体，请稍后再来。&quot;&gt;&gt;
         &lt;&lt;elseif $zp_preg.state is 2 and $zp_preg.month &lt;= 6&gt;&gt;
-            &lt;&lt;if _check_type is &quot;job_drama&quot; or _check_type is &quot;job_stage&quot;&gt;&gt;
+             &lt;&lt;if _check_type is &quot;job_drama&quot; or _check_type is &quot;job_stage&quot;&gt;&gt;
                 &lt;&lt;set _zp_lock_msg to &quot;💪 展鹏身体尚未完全恢复，暂时无法适应高强度的剧组/舞台工作。&quot;&gt;&gt;
             &lt;&lt;/if&gt;&gt;
         &lt;&lt;/if&gt;&gt;
     &lt;&lt;/if&gt;&gt;
 &lt;&lt;/widget&gt;&gt;
 
+&lt;&lt;widget &quot;ZP_Monthly_Process&quot;&gt;&gt;
+    &lt;&lt;set $zp_preg.event_flag to &quot;&quot;&gt;&gt; 
+    
+    /* 阶段 0: 未怀孕 */
+    &lt;&lt;if $zp_preg.state is 0&gt;&gt;
+        &lt;&lt;if $month &gt;= 3 and $zp_pregnancy_happened is false&gt;&gt;
+            &lt;&lt;if random(1, 100) &lt;= 30&gt;&gt;
+                &lt;&lt;set $zp_preg.state to 1&gt;&gt;
+                &lt;&lt;set $zp_preg.month to 3&gt;&gt; 
+                &lt;&lt;set $zp_preg.event_flag to &quot;discovery&quot;&gt;&gt;
+                &lt;&lt;set $zp_pregnancy_happened to true&gt;&gt;
+            &lt;&lt;/if&gt;&gt;
+        &lt;&lt;/if&gt;&gt;
+    /* 阶段 1: 孕期中 */
+    &lt;&lt;elseif $zp_preg.state is 1&gt;&gt;
+        &lt;&lt;set $zp_preg.month += 1&gt;&gt;
+        &lt;&lt;if $zp_preg.month == 7&gt;&gt;
+            &lt;&lt;set $zp_preg.event_flag to &quot;leave_start&quot;&gt;&gt;
+            &lt;&lt;set $actors.zp.busy_months to 3&gt;&gt; 
+            &lt;&lt;set $actors.zp.job_type to &quot;maternity_leave&quot;&gt;&gt;
+            &lt;&lt;set $actors.zp.project_name to &quot;全封闭待产&quot;&gt;&gt;
+        &lt;&lt;/if&gt;&gt;
+        &lt;&lt;if $zp_preg.month &gt;= 10&gt;&gt;
+            &lt;&lt;set $zp_preg.event_flag to &quot;birth&quot;&gt;&gt;
+            &lt;&lt;set $zp_preg.state to 2&gt;&gt; 
+            &lt;&lt;set $zp_preg.month to 0&gt;&gt; 
+            &lt;&lt;set $actors.zp.busy_months to 2&gt;&gt;
+            &lt;&lt;set $actors.zp.job_type to &quot;maternity_leave&quot;&gt;&gt;
+            &lt;&lt;set $actors.zp.project_name to &quot;产后调理&quot;&gt;&gt;
+        &lt;&lt;/if&gt;&gt;
+    /* 阶段 2: 产后恢复 */
+    &lt;&lt;elseif $zp_preg.state is 2&gt;&gt;
+        &lt;&lt;set $zp_preg.month += 1&gt;&gt;
+        &lt;&lt;if $zp_preg.month == 2&gt;&gt;
+            &lt;&lt;set $zp_preg.event_flag to &quot;partial_recover&quot;&gt;&gt;
+        &lt;&lt;elseif $zp_preg.month == 6&gt;&gt;
+            &lt;&lt;set $zp_preg.event_flag to &quot;full_recover&quot;&gt;&gt;
+            &lt;&lt;set $zp_preg.state to 3&gt;&gt;
+        &lt;&lt;/if&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
+&lt;&lt;/widget&gt;&gt;
+
 &lt;&lt;widget &quot;ZP_Event_Display&quot;&gt;&gt;
     &lt;&lt;if $zp_preg.event_flag neq &quot;&quot;&gt;&gt;
-        &lt;div style=&quot;background:#fff0f5; border:2px solid #ffb6c1; border-radius:8px; padding:15px; margin:10px 0;&quot;&gt;
+        &lt;div style=&quot;background:#fff0f5; border:2px solid #ffb6c1; border-radius:8px; padding:20px; margin:15px 0; box-shadow: 0 4px 10px rgba(244, 114, 182, 0.2);&quot;&gt;
+            
+            /* 1. 发现怀孕 */
             &lt;&lt;if $zp_preg.event_flag is &quot;discovery&quot;&gt;&gt;
-                &lt;div style=&quot;font-size:3em; text-align:center;&quot;&gt;🤢&lt;/div&gt;
-                &lt;h3 style=&quot;color:#d81b60; text-align:center;&quot;&gt;意外的惊喜？&lt;/h3&gt;
-                &lt;p&gt;医生推了推眼镜：“恭喜，&lt;b&gt;怀孕三个月了。&lt;/b&gt;”&lt;/p&gt;
-                &lt;div style=&quot;background:#fff; padding:5px; text-align:center; color:#d81b60; font-weight:bold;&quot;&gt;
-                    🤰 触发特殊状态：孕期 (当前3月)
+                &lt;div style=&quot;font-size:3em; text-align:center; margin-bottom:10px;&quot;&gt;🤢&lt;/div&gt;
+                &lt;h3 style=&quot;color:#be185d; text-align:center; margin:0 0 10px 0;&quot;&gt;意外的“惊喜”&lt;/h3&gt;
+                &lt;div style=&quot;color:#831843; line-height:1.6;&quot;&gt;
+                    &lt;p&gt;最近展鹏总是能在片场随时随地睡着，还吐了导演一身。你硬拖着他去了医院。&lt;/p&gt;
+                    &lt;p&gt;医生拿着报告单，表情复杂地看着你们：“恭喜韩总，展先生，你们要做爸爸了，展先生已经怀孕三个月了。”&lt;/p&gt;
+                    &lt;p&gt;展鹏手里的奶茶“啪”地掉在了地上，化身尖叫鸡：“什么——！！？”&lt;/p&gt;
                 &lt;/div&gt;
+                &lt;div style=&quot;background:#fff; padding:8px; text-align:center; color:#db2777; font-weight:bold; margin-top:15px; border-radius:4px;&quot;&gt;
+                    🤰 状态更新：进入孕期 (当前3月)
+                &lt;/div&gt;
+            
+            /* 2. 开始休假 */
             &lt;&lt;elseif $zp_preg.event_flag is &quot;leave_start&quot;&gt;&gt;
-                &lt;div style=&quot;font-size:3em; text-align:center;&quot;&gt;🛋️&lt;/div&gt;
-                &lt;h3 style=&quot;color:#d81b60; text-align:center;&quot;&gt;待产休假&lt;/h3&gt;
-                &lt;p&gt;为了安全起见，公司决定停止展鹏的一切对外活动。&lt;/p&gt;
-                &lt;div style=&quot;background:#fff; padding:5px; text-align:center; color:#d81b60; font-weight:bold;&quot;&gt;
-                    🚫 进入全封闭待产 (无法工作)
+                &lt;div style=&quot;font-size:3em; text-align:center; margin-bottom:10px;&quot;&gt;🛋️&lt;/div&gt;
+                &lt;h3 style=&quot;color:#be185d; text-align:center; margin:0 0 10px 0;&quot;&gt;强制待产&lt;/h3&gt;
+                &lt;div style=&quot;color:#831843; line-height:1.6;&quot;&gt;
+                    &lt;p&gt;七个月了，宽松的衣服也遮不住展鹏隆起的腹部了。他在试衣间里发脾气，因为怎么都扣不上那条高定西装裤的扣子。&lt;/p&gt;
+                    &lt;p&gt;“别试了。”你从身后抱住滚圆的小腹，“回家吧，我养你。”&lt;/p&gt;
+                    &lt;p&gt;“就等你这句话呢！”展鹏愉快地跳进车里，开始了全封闭式的待产生活。&lt;/p&gt;
                 &lt;/div&gt;
+                &lt;div style=&quot;background:#fff; padding:8px; text-align:center; color:#db2777; font-weight:bold; margin-top:15px; border-radius:4px;&quot;&gt;
+                    🚫 状态更新：全封闭待产 (暂停工作)
+                &lt;/div&gt;
+
+            /* 3. 生娃 */
             &lt;&lt;elseif $zp_preg.event_flag is &quot;birth&quot;&gt;&gt;
-                &lt;div style=&quot;font-size:3em; text-align:center;&quot;&gt;👶&lt;/div&gt;
-                &lt;h3 style=&quot;color:#d81b60; text-align:center;&quot;&gt;新生命的降临&lt;/h3&gt;
-                &lt;p&gt;是个健康的女孩！母(父)女平安。&lt;/p&gt;
-                &lt;div style=&quot;background:#fff; padding:5px; text-align:center; color:#d81b60; font-weight:bold;&quot;&gt;
-                    🍼 状态更新：产后恢复期
+                &lt;div style=&quot;font-size:3em; text-align:center; margin-bottom:10px;&quot;&gt;👶&lt;/div&gt;
+                &lt;h3 style=&quot;color:#be185d; text-align:center; margin:0 0 10px 0;&quot;&gt;啼哭与新生&lt;/h3&gt;
+                &lt;div style=&quot;color:#831843; line-height:1.6;&quot;&gt;
+                    &lt;p&gt;手术室外的时间格外漫长。当你终于被允许进去时，展鹏脸色苍白，头发全被汗水打湿了，看起来狼狈又虚弱。&lt;/p&gt;
+                    &lt;p&gt;看到你进来，他费力地抬起眼皮，虚弱地撒娇：“老公.…..疼死了……以后你生……”&lt;/p&gt;
+                    &lt;p&gt;护士抱着一个皱巴巴的小团子过来：“恭喜，是个健康的女孩，眉眼很像妈妈呢！”&lt;/p&gt;
                 &lt;/div&gt;
+                &lt;div style=&quot;background:#fff; padding:8px; text-align:center; color:#db2777; font-weight:bold; margin-top:15px; border-radius:4px;&quot;&gt;
+                    🍼 状态更新：进入产后恢复期
+                &lt;/div&gt;
+
+            /* 4. 部分恢复 */
             &lt;&lt;elseif $zp_preg.event_flag is &quot;partial_recover&quot;&gt;&gt;
-                &lt;div style=&quot;font-size:3em; text-align:center;&quot;&gt;🧘‍♂️&lt;/div&gt;
-                &lt;h3 style=&quot;color:#d81b60; text-align:center;&quot;&gt;身材管理&lt;/h3&gt;
-                &lt;p&gt;身体恢复得不错，可以接一些轻松的通告了。&lt;/p&gt;
-                &lt;div style=&quot;background:#fff; padding:5px; text-align:center; color:#059669; font-weight:bold;&quot;&gt;
-                    ✅ 解锁：时尚、综艺、培训
+                &lt;div style=&quot;font-size:3em; text-align:center; margin-bottom:10px;&quot;&gt;🧘‍♂️&lt;/div&gt;
+                &lt;h3 style=&quot;color:#be185d; text-align:center; margin:0 0 10px 0;&quot;&gt;新手奶爸复出&lt;/h3&gt;
+                &lt;div style=&quot;color:#831843; line-height:1.6;&quot;&gt;
+                    &lt;p&gt;出了月子，展鹏恢复得惊人地快。虽然腹肌还没完全练回来，但他已经不想在家里带娃了。&lt;/p&gt;
+                    &lt;p&gt;“我要出去工作！”展鹏掀开衬衫给孩子喂奶，眼神转得飞快，“再不出去露脸，粉丝都要爬墙跑光了！奶粉钱你一个人赚我不放心！”&lt;/p&gt;
                 &lt;/div&gt;
+                &lt;div style=&quot;background:#fff; padding:8px; text-align:center; color:#059669; font-weight:bold; margin-top:15px; border-radius:4px;&quot;&gt;
+                    ✅ 解锁工作：时尚、综艺、培训
+                &lt;/div&gt;
+
+            /* 5. 完全恢复 */
             &lt;&lt;elseif $zp_preg.event_flag is &quot;full_recover&quot;&gt;&gt;
-                &lt;div style=&quot;font-size:3em; text-align:center;&quot;&gt;✨&lt;/div&gt;
-                &lt;h3 style=&quot;color:#d81b60; text-align:center;&quot;&gt;满血复活&lt;/h3&gt;
-                &lt;div style=&quot;background:#fff; padding:5px; text-align:center; color:#059669; font-weight:bold;&quot;&gt;
-                    ✅ 解锁：影视剧拍摄、商演舞台
+                &lt;div style=&quot;font-size:3em; text-align:center; margin-bottom:10px;&quot;&gt;✨&lt;/div&gt;
+                &lt;h3 style=&quot;color:#be185d; text-align:center; margin:0 0 10px 0;&quot;&gt;满血复活&lt;/h3&gt;
+                &lt;div style=&quot;color:#831843; line-height:1.6;&quot;&gt;
+                    &lt;p&gt;半年过去了，那个在泥浆里摸爬滚打的展鹏又回来了。&lt;/p&gt;
+                    &lt;p&gt;他站在镜子前整理好领带，回头抓着你的脖子把你拉过来接吻，喘着气冲你挑眉一笑：“韩总，你最赚钱的艺人的回来啦！”&lt;/p&gt;
+                &lt;/div&gt;
+                &lt;div style=&quot;background:#fff; padding:8px; text-align:center; color:#059669; font-weight:bold; margin-top:15px; border-radius:4px;&quot;&gt;
+                    ✅ 解锁全工作：影视剧、舞台回归
                 &lt;/div&gt;
             &lt;&lt;/if&gt;&gt;
         &lt;/div&gt;
@@ -5297,6 +5505,77 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
         &lt;&lt;button &quot;🔙 我学会了 (返回办公室)&quot; &quot;Office&quot;&gt;&gt;&lt;&lt;/button&gt;&gt;
     &lt;/div&gt;
 &lt;/div&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="60" name="Widget_Logic_Punishment" tags="widget" position="3200,700" size="100,100">&lt;&lt;widget &quot;Logic_Check_Punishment&quot;&gt;&gt;
+    &lt;&lt;set _punishment_triggered to false&gt;&gt;
+    &lt;&lt;set _fired_actors to []&gt;&gt; /* 记录被退货的艺人名字 */
+    &lt;&lt;set _total_penalty to 0&gt;&gt; /* 记录总违约金 */
+    
+    /* 如果危险值爆表 (大于等于100) */
+    &lt;&lt;if $danger_level &gt;= 100&gt;&gt;
+        &lt;&lt;set _punishment_triggered to true&gt;&gt;
+        
+        /* 1. 清空所有资源 &amp; 抹除掉落 */
+        &lt;&lt;set $resources to {s:0, a:0, b:0, c:0}&gt;&gt;
+        &lt;&lt;set _resource_event to null&gt;&gt;
+        
+        /* 2. 遍历所有艺人进行处理 */
+        &lt;&lt;for _key range Object.keys($actors)&gt;&gt;
+            &lt;&lt;set _a to $actors[_key]&gt;&gt;
+            
+            /* --- 检查是否正在接通告 (非空闲 且 非培训) --- */
+            &lt;&lt;if _a.busy_months &gt; 0 and _a.job_type neq &quot;training&quot; and _a.job_type neq &quot;banned&quot;&gt;&gt;
+                /* 触发退货惩罚 */
+                &lt;&lt;set _fired_actors.push(_a.name)&gt;&gt;
+                &lt;&lt;set _total_penalty += 500&gt;&gt;
+                &lt;&lt;set $money -= 500&gt;&gt; /* 直接扣钱 */
+            &lt;&lt;/if&gt;&gt;
+            
+            /* --- 统一执行封杀 (无论刚才是否在工作，现在都得回家) --- */
+            &lt;&lt;set _a.busy_months to 3&gt;&gt;
+            &lt;&lt;set _a.project_name to &quot;📉 口碑崩盘 (无人敢用)&quot;&gt;&gt;
+            &lt;&lt;set _a.job_type to &quot;banned&quot;&gt;&gt;
+            
+        &lt;&lt;/for&gt;&gt;
+        
+        /* 3. 危险值归零 */
+        &lt;&lt;set $danger_level to 0&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
+&lt;&lt;/widget&gt;&gt;</tw-passagedata><tw-passagedata pid="61" name="NM_Punishment" tags="" position="3200,575" size="100,100">&lt;&lt;nobr&gt;&gt;
+/* 只有触发了惩罚才显示内容 */
+&lt;&lt;if _punishment_triggered&gt;&gt;
+    
+    &lt;div style=&quot;background:#fef2f2; border:4px solid #ef4444; padding:20px; border-radius:10px; text-align:center; animation: shake 0.5s; margin-bottom: 20px;&quot;&gt;
+        &lt;div style=&quot;font-size:4em;&quot;&gt;📉&lt;/div&gt;
+        &lt;h2 style=&quot;color:#b91c1c; margin:0;&quot;&gt;危机爆发：全网抵制！&lt;/h2&gt;
+        &lt;hr style=&quot;border-color:#fecaca;&quot;&gt;
+        
+        &lt;p style=&quot;color:#7f1d1d; font-size:1.1em; font-weight:bold;&quot;&gt;
+            由于公司长期忽视舆论风险（危险值≥100），业内口碑彻底崩盘！
+        &lt;/p&gt;
+
+        &lt;div style=&quot;text-align:left; background:#fff; padding:15px; border-radius:5px; color:#b91c1c; margin-top:15px; border:1px solid #fecaca;&quot;&gt;
+            
+            /* 分支A：有人正在拍戏，触发违约金 */
+            &lt;&lt;if _fired_actors.length &gt; 0&gt;&gt;
+                &lt;div style=&quot;margin-bottom:10px; border-bottom:1px dashed #fca5a5; padding-bottom:10px;&quot;&gt;
+                    💥 &lt;b&gt;严重违约事故：&lt;/b&gt;&lt;br&gt;
+                    合作方愤而解约，将 &lt;b&gt;&lt;&lt;print _fired_actors.join(&quot;、&quot;)&gt;&gt;&lt;/b&gt; 赶出了剧组！&lt;br&gt;
+                    &lt;span style=&quot;font-size:1.2em; font-weight:bold; color:#ef4444;&quot;&gt;
+                        💸 支付违约金：- &lt;&lt;print _total_penalty&gt;&gt; 万
+                    &lt;/span&gt;
+                &lt;/div&gt;
+            &lt;&lt;/if&gt;&gt;
+
+            /* 通用后果 */
+            &lt;div&gt;
+                📉 &lt;b&gt;资源清零：&lt;/b&gt;所有库存资源已被资方撤回。&lt;br&gt;
+                🚫 &lt;b&gt;全员封杀：&lt;/b&gt;旗下艺人将被限制活动 &lt;b&gt;3 个月&lt;/b&gt;。
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+    &lt;/div&gt;
+
+&lt;&lt;/if&gt;&gt;
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata></tw-storydata>
 	<script id="script-sugarcube" type="text/javascript">
 	/*! SugarCube JS */
