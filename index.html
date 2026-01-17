@@ -2086,8 +2086,12 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
 
 &lt;div class=&quot;tech-card&quot; style=&quot;min-height:400px; display:flex; flex-direction:column; justify-content:center; align-items:center; background:none; box-shadow:none; border:none;&quot;&gt;
 
-/* --- 0. 关键：确保获取正确的艺人 --- */
-&lt;&lt;if not def $war_actor&gt;&gt;&lt;&lt;set $war_actor to &quot;zp&quot;&gt;&gt;&lt;&lt;/if&gt;&gt;
+/* --- 0. 核心修复：直接读取全局变量，不再重置 --- */
+/* 如果真的出问题没有变量，才默认回展鹏，防止报错 */
+&lt;&lt;if not def $war_actor&gt;&gt;
+    &lt;&lt;set $war_actor to &quot;zp&quot;&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+
 &lt;&lt;set _act to $actors[$war_actor]&gt;&gt;
 
 /* --- 1. 资源检查 --- */
@@ -2116,7 +2120,9 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
         &lt;div style=&quot;text-align:center;&quot;&gt;
             &lt;div style=&quot;font-size:3em;&quot;&gt;⚔️&lt;/div&gt;
             &lt;h3 style=&quot;margin:0; color:#334155;&quot;&gt;公关行动简报&lt;/h3&gt;
-            &lt;div style=&quot;font-size:0.8em; color:#94a3b8; font-family:monospace;&quot;&gt;OPERATOR: &lt;&lt;print _act.name&gt;&gt;&lt;/div&gt;
+            &lt;div style=&quot;font-size:0.8em; color:#94a3b8; font-family:monospace;&quot;&gt;
+                OPERATOR: &lt;&lt;print _act.name&gt;&gt; (Code: $war_actor)
+            &lt;/div&gt;
         &lt;/div&gt;
 
         /* === A. 流量硬刚 === */
@@ -2211,11 +2217,13 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
              &lt;div class=&quot;battle-card&quot;&gt;
                  &lt;div class=&quot;rank-badge&quot; style=&quot;background:#8b5cf6;&quot;&gt;BOOM&lt;/div&gt;
                  &lt;h3&gt;💣 投掷黑料&lt;/h3&gt;
+                 
                  /* 这里需要先扣除库存，逻辑较复杂，复用之前的逻辑 */
                  &lt;&lt;if $gossips.length &gt; 0&gt;&gt;
                      &lt;&lt;set _rnd_idx to random(0, $gossips.length - 1)&gt;&gt;
                      &lt;&lt;set _used_gossip to $gossips[_rnd_idx]&gt;&gt;
                      &lt;&lt;run $gossips.deleteAt(_rnd_idx)&gt;&gt;
+                     
                      &lt;p&gt;你使用了库存情报：&lt;b&gt;“_used_gossip.desc”&lt;/b&gt;&lt;/p&gt;
                      &lt;p&gt;虽然是你操作的，但为了避嫌，你用了 &lt;b&gt;&lt;&lt;print _act.name&gt;&gt;&lt;/b&gt; 的小号点赞手滑。&lt;/p&gt;
                      &lt;div class=&quot;reward-box&quot;&gt;危险值 -10 | 获得资源 C级&lt;/div&gt;
@@ -3587,8 +3595,7 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
   &lt;/div&gt;
 &lt;/div&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="43" name="StoryData" tags="系统" position="250,50" size="200,200">:: StoryData
-{
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="43" name="StoryData" tags="系统" position="250,50" size="200,200">{
   &quot;ifid&quot;: &quot;422EA8A9-BD04-412F-B420-496FBC46444B&quot;,
   &quot;format&quot;: &quot;SugarCube&quot;,
   &quot;format-version&quot;: &quot;2.37.3&quot;,
@@ -3601,11 +3608,11 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
 }</tw-passagedata><tw-passagedata pid="44" name="StoryInit" tags="系统" position="1675,75" size="100,200">/* ==============================
    1. 基础资源配置
    ============================== */
-&lt;&lt;set $money to 20000&gt;&gt;        
+&lt;&lt;set $money to 2000&gt;&gt;        
 &lt;&lt;set $month to 1&gt;&gt;           
 &lt;&lt;set $total_months to 60&gt;&gt;   
 &lt;&lt;set $stamina to 100&gt;&gt;       
-&lt;&lt;set $traffic to 200000&gt;&gt;      
+&lt;&lt;set $traffic to 20000&gt;&gt;      
 &lt;&lt;set $monthly_cost to 300&gt;&gt;  
 &lt;&lt;set $resources to { s: 0, a: 0, b: 2, c: 5 }&gt;&gt;
 &lt;&lt;set $company_res to 7&gt;&gt;
@@ -3732,7 +3739,12 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
 
 /* 确保体力补丁标记也初始化 */
 &lt;&lt;set $buff_zp_energy to false&gt;&gt;
-&lt;&lt;set $buff_player_energy to false&gt;&gt;</tw-passagedata><tw-passagedata pid="45" name="Train_Execute" tags="" position="1600,1475" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;set $buff_player_energy to false&gt;&gt;
+
+/* === 修复：主动出击变量初始化 === */
+&lt;&lt;if not def $war_actor&gt;&gt;
+    &lt;&lt;set $war_actor to &quot;zp&quot;&gt;&gt;
+&lt;&lt;/if&gt;&gt;</tw-passagedata><tw-passagedata pid="45" name="Train_Execute" tags="" position="1600,1475" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 /* --- 1. 锁判定 --- */
 &lt;&lt;ZP_Check_Lock &quot;training&quot;&gt;&gt;
@@ -5809,23 +5821,49 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
 &lt;/div&gt;
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="63" name="War_Actor_Selector_Widget" tags="" position="1275,1050" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;style&gt;
-    /* 让链接填满整个按钮区域 */
-    .war-btn-inner a {
-        display: block; width: 100%; padding: 10px;
-        text-decoration: none !important; font-weight: bold;
+    /* 按钮基础样式 */
+    .war-btn-inner {
+        background: #fff;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        text-align: center;
+        transition: all 0.2s;
+        cursor: pointer;
     }
-    .war-btn-inner a:hover { background-color: rgba(0,0,0,0.05); }
+    .war-btn-inner a {
+        display: block;
+        padding: 10px;
+        text-decoration: none !important;
+        font-weight: bold;
+        color: #64748b !important;
+    }
+    .war-btn-inner:hover {
+        border-color: #94a3b8;
+        background: #f8fafc;
+    }
+    
+    /* 选中状态样式 */
+    .war-btn-active {
+        color: #fff !important;
+        border-radius: 6px;
+        text-align: center;
+        font-weight: bold;
+        padding: 10px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
+    }
 &lt;/style&gt;
 
 &lt;div style=&quot;display:flex; gap:10px; width:100%;&quot;&gt;
+
     /* --- 展鹏按钮 --- */
     &lt;div style=&quot;flex:1;&quot;&gt;
         &lt;&lt;if $war_actor is &quot;zp&quot;&gt;&gt;
-            &lt;div style=&quot;background:#3b82f6; color:#fff; padding:10px; border-radius:6px; text-align:center; font-weight:bold; border:2px solid #2563eb; cursor:default; box-shadow:0 2px 5px rgba(59, 130, 246, 0.3);&quot;&gt;
+            &lt;div class=&quot;war-btn-active&quot; style=&quot;background:#3b82f6; border:2px solid #2563eb;&quot;&gt;
                 ✅ 展鹏
             &lt;/div&gt;
         &lt;&lt;else&gt;&gt;
-            &lt;div class=&quot;war-btn-inner&quot; style=&quot;background:#fff; border-radius:6px; text-align:center; border:1px solid #cbd5e1; overflow:hidden;&quot;&gt;
+            &lt;div class=&quot;war-btn-inner&quot;&gt;
                 &lt;&lt;link &quot;展鹏&quot;&gt;&gt;
                     &lt;&lt;set $war_actor to &quot;zp&quot;&gt;&gt;
                     &lt;&lt;replace &quot;#war-actor-selector&quot;&gt;&gt;&lt;&lt;include &quot;War_Actor_Selector_Widget&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;
@@ -5837,11 +5875,11 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
     /* --- 秦飒按钮 --- */
     &lt;div style=&quot;flex:1;&quot;&gt;
         &lt;&lt;if $war_actor is &quot;qs&quot;&gt;&gt;
-            &lt;div style=&quot;background:#f43f5e; color:#fff; padding:10px; border-radius:6px; text-align:center; font-weight:bold; border:2px solid #e11d48; cursor:default; box-shadow:0 2px 5px rgba(244, 63, 94, 0.3);&quot;&gt;
+            &lt;div class=&quot;war-btn-active&quot; style=&quot;background:#f43f5e; border:2px solid #e11d48;&quot;&gt;
                 ✅ 秦飒
             &lt;/div&gt;
         &lt;&lt;else&gt;&gt;
-             &lt;div class=&quot;war-btn-inner&quot; style=&quot;background:#fff; border-radius:6px; text-align:center; border:1px solid #cbd5e1; overflow:hidden;&quot;&gt;
+            &lt;div class=&quot;war-btn-inner&quot;&gt;
                 &lt;&lt;link &quot;秦飒&quot;&gt;&gt;
                     &lt;&lt;set $war_actor to &quot;qs&quot;&gt;&gt;
                     &lt;&lt;replace &quot;#war-actor-selector&quot;&gt;&gt;&lt;&lt;include &quot;War_Actor_Selector_Widget&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;
@@ -5853,11 +5891,11 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
     /* --- 白小纯按钮 --- */
     &lt;div style=&quot;flex:1;&quot;&gt;
         &lt;&lt;if $war_actor is &quot;new&quot;&gt;&gt;
-            &lt;div style=&quot;background:#10b981; color:#fff; padding:10px; border-radius:6px; text-align:center; font-weight:bold; border:2px solid #059669; cursor:default; box-shadow:0 2px 5px rgba(16, 185, 129, 0.3);&quot;&gt;
+            &lt;div class=&quot;war-btn-active&quot; style=&quot;background:#10b981; border:2px solid #059669;&quot;&gt;
                 ✅ 白小纯
             &lt;/div&gt;
         &lt;&lt;else&gt;&gt;
-             &lt;div class=&quot;war-btn-inner&quot; style=&quot;background:#fff; border-radius:6px; text-align:center; border:1px solid #cbd5e1; overflow:hidden;&quot;&gt;
+            &lt;div class=&quot;war-btn-inner&quot;&gt;
                 &lt;&lt;link &quot;白小纯&quot;&gt;&gt;
                     &lt;&lt;set $war_actor to &quot;new&quot;&gt;&gt;
                     &lt;&lt;replace &quot;#war-actor-selector&quot;&gt;&gt;&lt;&lt;include &quot;War_Actor_Selector_Widget&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;
@@ -5865,6 +5903,12 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
             &lt;/div&gt;
         &lt;&lt;/if&gt;&gt;
     &lt;/div&gt;
+
+&lt;/div&gt;
+
+/* Debug 提示：让你确认变量真的变了 */
+&lt;div style=&quot;text-align:center; font-size:0.8em; color:#94a3b8; margin-top:5px;&quot;&gt;
+    当前出战艺人代码: $war_actor
 &lt;/div&gt;
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata></tw-storydata>
 	<script id="script-sugarcube" type="text/javascript">
