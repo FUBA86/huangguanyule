@@ -105,317 +105,171 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
 		<div id="init-loading"><div>Loading&hellip;</div></div>
 	</div>
 	<tw-storydata name="👑 皇冠娱乐" startnode="41" creator="Twine" creator-version="2.10.0" format="SugarCube" format-version="2.37.3" ifid="422EA8A9-BD04-412F-B420-496FBC46444B" options="" tags="" zoom="0.6" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css">/* =========================================================
-   1. 全局基础设置 (Global)
+   1. 视觉指挥中心 (CSS Variables)
+   在这里统一管理颜色，修改一处，全身变色
+   ========================================================= */
+:root {
+    --bg-main: #f1f5f9;
+    --bg-dark: #0f172a;
+    --text-dark: #1e293b;
+    --text-light: #64748b;
+    --accent-gold: #fbbf24;
+    --accent-blue: #3b82f6;
+    --accent-pink: #db2777;
+    --border-light: #e2e8f0;
+    --shadow-soft: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+/* =========================================================
+   2. 基础框架 (Core Layout)
    ========================================================= */
 * { box-sizing: border-box; transition: all 0.2s ease; }
 
 body {
-    background-color: #f1f5f9;
-    /* 网页背景：波点纹理 */
+    background-color: var(--bg-main);
     background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
     background-size: 20px 20px;
-    color: #1e293b; /* 默认深色字 */
+    color: var(--text-dark);
     font-family: "Microsoft YaHei", "Segoe UI", sans-serif;
     font-size: 16px; margin: 0;
 }
+
 #story-title { display: none; }
 
-/* =========================================================
-   2. 左侧菜单栏 (UI-Bar)
-   ========================================================= */
-#ui-bar {
-    background-color: #0f172a;
-    border-right: 1px solid #334155;
-    width: 260px; padding: 15px; text-align: center;
-}
-#ui-bar a { color: #38bdf8; text-decoration: none; font-weight: bold; }
-#ui-bar a:hover { color: #facc15; }
-.sidebar-row {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
-}
-.stat-item { white-space: nowrap; font-size: 0.95em; }
-.res-box {
-    background: rgba(255, 255, 255, 0.08);
-    border-radius: 4px; padding: 6px 8px; margin: 10px 0;
-    display: flex; justify-content: space-between;
-}
-.actor-section { margin-top: 15px; border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 5px; }
-.actor-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px; }
-.wife-badge { background: #db2777; color: #fff; font-size: 0.7em; padding: 1px 5px; border-radius: 4px; margin-left: 6px; vertical-align: 1px; }
-
-/* =========================================================
-   3. 主界面容器
-   ========================================================= */
 .passage {
     max-width: 1100px !important; width: 95% !important;
     margin: 20px auto !important; padding: 0 !important;
 }
 
 /* =========================================================
-   4. 通用卡片样式 (Office & Others)
+   3. 侧边栏与导航 (UI-Bar)
    ========================================================= */
+#ui-bar {
+    background-color: var(--bg-dark);
+    border-right: 1px solid #334155;
+    width: 260px; padding: 15px; text-align: center;
+}
+
+#ui-bar a { color: #38bdf8; text-decoration: none; font-weight: bold; }
+#ui-bar a:hover { color: var(--accent-gold); }
+
+.sidebar-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.stat-item { white-space: nowrap; font-size: 0.9em; }
+
+.res-box {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 6px; padding: 8px; margin: 10px 0;
+    display: flex; justify-content: space-between;
+}
+
+.actor-section { margin-top: 15px; border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 10px; }
+.actor-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px; }
+.wife-badge { background: var(--accent-pink); color: #fff; font-size: 0.7em; padding: 2px 6px; border-radius: 4px; }
+
+/* =========================================================
+   4. 组件库 (Universal Components)
+   ========================================================= */
+
+/* 通用科技感卡片 */
 .tech-card {
     background: rgba(255, 255, 255, 0.98);
     backdrop-filter: blur(10px);
     border: 1px solid #fff;
     border-radius: 12px;
     box-shadow: 0 10px 40px rgba(0,0,0,0.08);
-    overflow: hidden; padding-bottom: 20px;
-    color: #1e293b;
+    overflow: hidden; margin-bottom: 20px;
 }
 
-/* =========================================================
-   5. 【新】商务中心专用样式 (Business Center)
-   改成了浅色底纹风格，高对比度
-   ========================================================= */
+/* 商务中心专用风格 */
 .tech-card-business {
-    background-color: #f8fafc; /* 米白色底 */
-    /* 添加淡雅的方格底纹，像商务报表纸 */
-    background-image: 
-        linear-gradient(#e2e8f0 1px, transparent 1px),
-        linear-gradient(90deg, #e2e8f0 1px, transparent 1px);
+    background-color: #f8fafc;
+    background-image: linear-gradient(#e2e8f0 1px, transparent 1px), linear-gradient(90deg, #e2e8f0 1px, transparent 1px);
     background-size: 20px 20px;
-    
-    color: #0f172a !important; /* 【核心】强制深黑字体 */
+    color: var(--bg-dark) !important;
     border: 1px solid #cbd5e1;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); /* 柔和的阴影 */
-    font-family: "Microsoft YaHei", sans-serif;
-    line-height: 1.6;
+    border-radius: 12px; padding: 25px;
+    box-shadow: var(--shadow-soft);
 }
 
-/* 商务中心里的标题 */
-.tech-card-business h3, .tech-card-business h4 {
-    color: #0f172a !important;
-    border-bottom-color: #cbd5e1 !important; /* 分割线变浅灰 */
-    text-shadow: none; /* 去掉文字阴影，因为背景是白的 */
-}
+/* 子卡片容器与子卡片 */
+.card-container { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
 
-/* 商务中心里的说明文字 */
-.tech-card-business span, .tech-card-business p, .tech-card-business div {
-    text-shadow: none; /* 去掉阴影 */
+.sub-card {
+    background: #fff; border: 1px solid var(--border-light);
+    border-radius: 8px; padding: 20px; flex: 1; 
+    min-width: 280px; max-width: 360px;
+    display: flex; flex-direction: column;
 }
-/* 弱化信息的颜色 (灰色) */
-.tech-card-business .text-muted { color: #64748b !important; }
+.sub-card:hover { transform: translateY(-3px); border-color: #94a3b8; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
 
 /* =========================================================
-   6. 【新】资源库存字体特效 (Resource Fonts)
-   用于右上角的库存显示，大号、加粗、彩色
+   5. 字体与等级 (Typography)
    ========================================================= */
 .res-rank-base {
-    font-family: "Arial Black", "Microsoft YaHei", sans-serif;
-    font-weight: 900; /* 超粗 */
-    font-size: 1.2em; /* 放大 */
-    margin-right: 8px; /* 间距 */
-    text-shadow: 1px 1px 0px rgba(255,255,255,1); /* 白描边，防糊 */
+    font-family: "Arial Black", sans-serif;
+    font-weight: 900; font-size: 1.2em; margin-left: 10px;
+    text-shadow: 1px 1px 0px #fff;
 }
-
-.res-s { color: #d97706; } /* S级：深金橙色 */
-.res-a { color: #9333ea; } /* A级：亮紫色 */
-.res-b { color: #16a34a; } /* B级：翠绿色 */
-.res-c { color: #64748b; } /* C级：蓝灰色 */
-
+.res-s { color: #d97706; text-shadow: 0 0 8px rgba(251, 191, 36, 0.4); }
+.res-a { color: #9333ea; }
+.res-b { color: var(--accent-blue); }
+.res-c { color: var(--text-light); font-size: 1em; opacity: 0.8; }
 
 /* =========================================================
-   7. 布局与子模块 (Layout & Sub-cards)
-   ========================================================= */
-.card-container {
-    display: flex; gap: 20px; flex-wrap: wrap;
-    justify-content: center; align-items: stretch;
-}
-
-/* 子卡片：在浅色背景上，用纯白底+阴影 */
-.sub-card {
-    background-color: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px; padding: 15px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-    flex: 1; min-width: 280px; max-width: 360px;
-    display: flex; flex-direction: column;
-    transition: all 0.3s ease;
-}
-.sub-card:hover {
-    border-color: #94a3b8;
-    transform: translateY(-3px);
-    box-shadow: 0 10px 15px rgba(0,0,0,0.05);
-}
-
-/* =========================================================
-   8. 仪表盘与按钮 (Dashboard & Buttons)
+   6. 仪表盘与操作区 (Dashboard)
    ========================================================= */
 .header-banner {
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    background: linear-gradient(135deg, var(--bg-dark) 0%, #1e293b 100%);
     color: #fff; padding: 20px 30px;
     display: flex; justify-content: space-between; align-items: center;
-    border-bottom: 4px solid #f59e0b;
+    border-bottom: 4px solid var(--accent-gold);
 }
+
 .status-bar {
-    background: #fff; padding: 15px 30px; border-bottom: 1px solid #e2e8f0;
-    display: flex; gap: 30px; font-size: 1.1em; color: #64748b;
+    background: #fff; padding: 15px 30px; border-bottom: 1px solid var(--border-light);
+    display: flex; gap: 30px; font-size: 1.1em; color: var(--text-light);
 }
+
 .dashboard-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 25px 30px; }
 
 .btn-box {
     background: #fff; border: 1px solid #cbd5e1; border-radius: 10px;
-    height: 120px; display: flex; flex-direction: column;
-    justify-content: center; align-items: center;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.02); position: relative;
+    height: 120px; display: flex; flex-direction: column; justify-content: center; align-items: center;
 }
-.btn-box:hover {
-    border-color: #3b82f6; transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(59, 130, 246, 0.15);
-}
-.btn-box a {
-    color: #334155 !important; font-weight: 800; font-size: 1.3em;
-    text-decoration: none; width: 100%; height: 100%;
-    display: flex; flex-direction: column; justify-content: center; align-items: center;
-}
-.btn-sub { font-size: 0.7em; color: #94a3b8; font-weight: normal; margin-top: 5px; text-transform: uppercase; }
-.btn-rest { background: #fff1f2; border-color: #fda4af; }
-.btn-rest a { color: #be123c !important; }
-.btn-gossip a { color: #059669 !important; }
+.btn-box:hover { border-color: var(--accent-blue); transform: translateY(-2px); box-shadow: 0 10px 20px rgba(59,130,246,0.1); }
+.btn-box a { color: #334155 !important; font-weight: 800; font-size: 1.2em; text-decoration: none; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;}
 
-.pie-chart { width: 160px; height: 160px; border-radius: 50%; border: 4px solid #fff; box-shadow: 0 8px 20px rgba(0,0,0,0.1); margin: 0 auto; display: block; }
+.btn-sub { font-size: 0.7em; color: #94a3b8; margin-top: 5px; text-transform: uppercase; }
 
-/* 按钮样式 */
-button {
-    background-color: #334155; /* 蓝灰按钮，商务感 */
-    color: #fff; border: 1px solid #475569;
-    padding: 6px 12px; border-radius: 4px;
-    cursor: pointer; font-size: 0.9em;
-    font-family: "Microsoft YaHei", sans-serif;
-    transition: background 0.2s;
+/* 资源选择按钮组 */
+.res-btn-group { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+.res-btn-group a, .res-btn-group span {
+    display: flex; justify-content: center; align-items: center;
+    width: 36px; height: 36px; border-radius: 6px;
+    font-weight: bold; font-family: monospace; text-decoration: none; border: 1px solid var(--border-light);
 }
-button:hover { background-color: #475569; border-color: #64748b; }
+.res-btn-group a { background: #fff; color: var(--text-dark) !important; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+.res-btn-group a:hover { background: var(--accent-blue); color: #fff !important; transform: translateY(-2px); }
+.res-btn-group span { background: #f1f5f9; color: #cbd5e1; cursor: not-allowed; }
 
 /* =========================================================
-   9. 手机适配 (Mobile)
+   7. 响应式与Tab (Responsive)
    ========================================================= */
 @media screen and (max-width: 768px) {
-    #story-caption { font-size: 0.9em; }
-    .dashboard-grid { grid-template-columns: 1fr; gap: 15px; padding: 15px; }
-    .btn-box { height: 90px; flex-direction: row; justify-content: flex-start; padding-left: 20px; }
-    .btn-box a { flex-direction: row; justify-content: flex-start; align-items: center; gap: 10px; font-size: 1.1em; }
-    .btn-sub { margin-top: 0; margin-left: auto; padding-right: 15px; }
-    .status-bar { flex-direction: column; gap: 8px; padding: 10px 15px; }
-    .card-container { flex-direction: column; align-items: center; }
-    .sub-card { width: 100%; max-width: 100%; }
-    .tech-card-business { padding: 15px; } /* 手机上内边距小一点 */
+    .dashboard-grid { grid-template-columns: 1fr; padding: 15px; }
+    .btn-box { height: 80px; flex-direction: row; padding-left: 20px; }
+    .status-bar { flex-direction: column; gap: 10px; }
+    .card-container { flex-direction: column; }
 }
 
-/* =========================================================
-   10. 结局与Tab样式
-   ========================================================= */
-.mega-btn {
-    display: inline-block; background: linear-gradient(to bottom, #facc15, #b45309);
-    color: #0f172a !important; font-size: 1.6em; font-weight: 900;
-    padding: 25px 80px; border-radius: 50px;
-    box-shadow: 0 10px 30px rgba(245, 158, 11, 0.4); border: 3px solid #fde047;
-    cursor: pointer; text-decoration: none; text-transform: uppercase;
-    letter-spacing: 2px;
-}
-.mega-btn:hover { transform: scale(1.05) translateY(-5px); }
-.restart-btn { background: linear-gradient(to bottom, #3b82f6, #1e3a8a); border-color: #93c5fd; color: #fff !important; }
-.tab-grid { display: flex; gap: 15px; margin-bottom: 25px; }
-.tab-btn { flex: 1; background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 8px; padding: 15px 10px; text-align: center; cursor: pointer; position: relative; overflow: hidden; }
-.tab-btn:hover { background: #fff; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-.tab-btn a { color: #475569 !important; font-weight: bold; font-size: 1.1em; text-decoration: none; display: block; width: 100%; height: 100%; }
-.tab-btn::after { content: ""; position: absolute; bottom: 0; left: 0; right: 0; height: 4px; background: #cbd5e1; }
-.tab-zp:hover { border-color: #f472b6; } .tab-zp:hover::after { background: #f472b6; }
-.tab-qs:hover { border-color: #60a5fa; } .tab-qs:hover::after { background: #60a5fa; }
-.tab-new:hover { border-color: #4ade80; } .tab-new:hover::after { background: #4ade80; }
-/* =========================================================
-   11. 通告中心资源按钮组 (Resource Buttons)
-   ========================================================= */
-.res-btn-group {
-    display: flex;
-    gap: 8px; /* 按钮之间的间距 */
-    margin-top: 5px;
-    flex-wrap: wrap;
-}
-
-/* 定义按钮的基本形状 (包括链接和禁用的span) */
-.res-btn-group a, .res-btn-group span {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 36px;
-    height: 36px;
-    border-radius: 6px;
-    font-weight: bold;
-    font-family: monospace;
-    font-size: 1.1em;
-    text-decoration: none;
-    border: 1px solid #e2e8f0;
-    transition: all 0.2s;
-}
-
-/* 可点击状态 (Link) */
-.res-btn-group a {
-    background-color: #fff;
-    color: #334155 !important;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-
-.res-btn-group a:hover {
-    background-color: #3b82f6; /* 悬停变蓝 */
-    color: #fff !important;
-    border-color: #2563eb;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 6px rgba(59, 130, 246, 0.3);
-}
-
-/* 禁用状态 (Span - 资源不足) */
-.res-btn-group span {
-    background-color: #f1f5f9;
-    color: #cbd5e1;
-    cursor: not-allowed;
-    border-color: #f1f5f9;
-}
-
-/* =========================================================
-   顶部资源条专用样式 (美化版)
-   ========================================================= */
-
-/* 1. 资源标题头 (带图标) */
-.res-header-label {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end; /* 靠右对齐 */
-    font-size: 0.9em;
-    color: #64748b; /* 稍微深一点的灰色，更有质感 */
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-/* 2. 资源数字的基础样式 (粗黑体、加大间距) */
-.res-rank-base {
-    font-family: 'Arial Black', 'Microsoft YaHei', sans-serif;
-    font-weight: 900;
-    font-size: 1.15em; /* 字体加大 */
-    margin-left: 12px; /* 拉大间距 */
-    letter-spacing: 0.5px;
-}
-
-/* 3. 各等级对应颜色 (带一点点文字光晕以增加高级感) */
-.res-s {
-    color: #fbbf24; /* 金色 */
-    text-shadow: 0 0 8px rgba(251, 191, 36, 0.4); /* 金色光晕 */
-}
-.res-a {
-    color: #e879f9; /* 紫色 */
-    text-shadow: 0 0 5px rgba(232, 121, 249, 0.2);
-}
-.res-b {
-    color: #60a5fa; /* 蓝色 */
-}
-.res-c {
-    color: #94a3b8; /* 灰色 */
-    font-size: 1em; /* C级稍微小一点点，突出对比 */
-    opacity: 0.8;
-}</style><script role="script" id="twine-user-script" type="text/twine-javascript">/* 全局禁用自动换行：所有节点默认都不会产生空行 */
+.tab-grid { display: flex; gap: 10px; margin-bottom: 20px; }
+.tab-btn { flex: 1; background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px; text-align: center; }
+.tab-btn a { font-weight: bold; text-decoration: none; color: var(--text-light) !important; }
+.tab-btn:hover { border-color: var(--accent-blue); background: #fff; }</style><script role="script" id="twine-user-script" type="text/twine-javascript">/* 全局禁用自动换行：所有节点默认都不会产生空行 */
 Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag><tw-tag name="widget" color="purple"></tw-tag><tw-passagedata pid="1" name="Artist_Management" tags="" position="1525,1325" size="100,100">&lt;&lt;nobr&gt;&gt;
 /* 默认选中艺人 */
 &lt;&lt;if not def $current_actor&gt;&gt;
@@ -2070,192 +1924,232 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
 &lt;/div&gt;
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="25" name="Marketing_Battle" tags="" position="1300,1175" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;style&gt;
+    /* 1. 基础动画 */
     @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    @keyframes pulse-gold { 0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(245, 158, 11, 0); } 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); } }
+    
+    /* 2. 战报容器 */
     .battle-container {
         background-color: #f1f5f9;
-        background-image: linear-gradient(rgba(59, 130, 246, 0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(59, 130, 246, 0.15) 1px, transparent 1px);
+        background-image: linear-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px);
         background-size: 20px 20px;
-        border: 2px dashed #cbd5e1; border-radius: 16px; padding: 40px 30px;
-        width: 100%; max-width: 800px; display: flex; flex-direction: column; align-items: center;
+        border: 2px dashed #cbd5e1; border-radius: 16px;
+        padding: 40px 30px; width: 100%; max-width: 800px;
+        display: flex; flex-direction: column; align-items: center;
         box-shadow: 0 20px 50px rgba(0,0,0,0.15); animation: slideUp 0.5s ease-out;
     }
-    .battle-card { width: 100%; max-width: 550px; border-radius: 12px; padding: 25px; margin-top: 20px; position: relative; overflow: hidden; background:#fff; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; }
-    .rank-badge { position: absolute; top: 0; right: 0; padding: 5px 15px; border-bottom-left-radius: 12px; font-weight: 900; font-size: 1.2em; color:#fff; background:#3b82f6;}
-    .reward-box { background: rgba(0,0,0,0.03); padding: 10px; border-radius: 6px; margin-top: 15px; font-size: 0.9em; font-weight: bold; border:1px dashed #cbd5e1; }
+
+    .battle-card { width: 100%; max-width: 650px; border-radius: 12px; padding: 25px; margin-top: 20px; position: relative; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: left; border: 1px solid rgba(255,255,255,0.8); }
+    .rank-badge { position: absolute; top: 0; right: 0; padding: 5px 15px; border-bottom-left-radius: 12px; font-weight: 900; font-size: 1.2em; font-family: Impact, sans-serif; letter-spacing: 2px; }
+    .result-icon { font-size: 4em; float: right; opacity: 0.2; margin-top: -10px; }
+    .news-title { font-size: 1.4em; font-weight: bold; margin-bottom: 12px; display: block; }
+    
+    /* 🟢 强化后的正文字体：大号、加粗、不斜体 */
+    .battle-card p { font-size: 1.15em; font-weight: bold; line-height: 1.6; margin: 10px 0; }
+    .gossip-desc { font-size: 1.25em; font-weight: 900; color: #1e293b; margin-bottom: 15px; display: block; background: rgba(255,255,255,0.4); padding: 10px; border-radius: 4px; }
+
+    .card-green { background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); border-left: 8px solid #94a3b8; color: #475569; }
+    .card-green .rank-badge { background: #cbd5e1; color: #64748b; }
+    .card-blue { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border-left: 8px solid #3b82f6; color: #1e40af; }
+    .card-blue .rank-badge { background: #3b82f6; color: white; }
+    .card-red { background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); border-left: 8px solid #ef4444; color: #991b1b; }
+    .card-red .rank-badge { background: #ef4444; color: white; }
+    .card-gold { background: linear-gradient(135deg, #fffbeb 0%, #fff7ed 100%); border: 2px solid #f59e0b; color: #78350f; animation: pulse-gold 2s infinite; }
+    .card-gold .rank-badge { background: linear-gradient(to right, #f59e0b, #b45309); color: #fff; }
+
+    .reward-tag { background: #fff; border: 1px solid #e2e8f0; padding: 8px 15px; border-radius: 6px; font-weight: 900; font-size: 0.9em; display: inline-block; margin: 4px; color: #1e40af; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
 &lt;/style&gt;
 
 &lt;div class=&quot;tech-card&quot; style=&quot;min-height:400px; display:flex; flex-direction:column; justify-content:center; align-items:center; background:none; box-shadow:none; border:none;&quot;&gt;
 
-/* --- 0. 核心修复：直接读取全局变量，不再重置 --- */
-/* 如果真的出问题没有变量，才默认回展鹏，防止报错 */
-&lt;&lt;if not def $war_actor&gt;&gt;
-    &lt;&lt;set $war_actor to &quot;zp&quot;&gt;&gt;
-&lt;&lt;/if&gt;&gt;
-
+/* --- 0. 变量抓取 --- */
 &lt;&lt;set _act to $actors[$war_actor]&gt;&gt;
+&lt;&lt;set _changeList to []&gt;&gt;
 
 /* --- 1. 资源检查 --- */
-&lt;&lt;if not def $cost_s&gt;&gt;&lt;&lt;set $cost_s to 0&gt;&gt;&lt;&lt;/if&gt;&gt;
-
 &lt;&lt;if $money &lt; $cost&gt;&gt;
-    &lt;div style=&quot;background:#fef2f2; border:2px solid #ef4444; color:#b91c1c; padding:30px; border-radius:12px; text-align:center;&quot;&gt;
-        &lt;div style=&quot;font-size:3em;&quot;&gt;💸&lt;/div&gt;&lt;h3&gt;资金不足&lt;/h3&gt;&lt;p&gt;缺口: $cost 万&lt;/p&gt;&lt;br&gt;[[🔙 返回|Marketing_Center]]
+    &lt;div style=&quot;background:#fef2f2; border:2px solid #ef4444; color:#b91c1c; padding:40px; border-radius:12px; text-align:center;&quot;&gt;
+        &lt;div style=&quot;font-size:3em;&quot;&gt;💸&lt;/div&gt;&lt;h3 style=&quot;margin-top:10px;&quot;&gt;资金不足&lt;/h3&gt;&lt;p&gt;缺口: $cost 万&lt;/p&gt;[[🔙 返回营销中心|Marketing_Center]]
     &lt;/div&gt;
-&lt;&lt;elseif def $cost_t and $traffic &lt; $cost_t&gt;&gt;
-    &lt;div style=&quot;background:#eff6ff; border:2px solid #3b82f6; color:#1e40af; padding:30px; border-radius:12px; text-align:center;&quot;&gt;
-        &lt;div style=&quot;font-size:3em;&quot;&gt;📉&lt;/div&gt;&lt;h3&gt;流量不足&lt;/h3&gt;&lt;p&gt;缺口: $cost_t&lt;/p&gt;&lt;br&gt;[[🔙 返回|Marketing_Center]]
-    &lt;/div&gt;
-&lt;&lt;elseif $stamina &lt; $cost_s&gt;&gt;
-    &lt;div style=&quot;background:#fff7ed; border:2px solid #f97316; color:#c2410c; padding:30px; border-radius:12px; text-align:center;&quot;&gt;
-        &lt;div style=&quot;font-size:3em;&quot;&gt;😴&lt;/div&gt;&lt;h3&gt;体力不足&lt;/h3&gt;&lt;p&gt;缺口: $cost_s&lt;/p&gt;&lt;br&gt;[[🔙 返回|Marketing_Center]]
-    &lt;/div&gt;
-
-/* --- 2. 战斗执行 --- */
 &lt;&lt;else&gt;&gt;
+    /* 执行扣费 */
     &lt;&lt;set $money -= $cost&gt;&gt;
     &lt;&lt;if def $cost_t&gt;&gt;&lt;&lt;set $traffic -= $cost_t&gt;&gt;&lt;&lt;/if&gt;&gt;
-    &lt;&lt;set $stamina -= $cost_s&gt;&gt;
 
     &lt;div class=&quot;battle-container&quot;&gt;
-        &lt;div style=&quot;text-align:center;&quot;&gt;
-            &lt;div style=&quot;font-size:3em;&quot;&gt;⚔️&lt;/div&gt;
-            &lt;h3 style=&quot;margin:0; color:#334155;&quot;&gt;公关行动简报&lt;/h3&gt;
-            &lt;div style=&quot;font-size:0.8em; color:#94a3b8; font-family:monospace;&quot;&gt;
-                OPERATOR: &lt;&lt;print _act.name&gt;&gt; (Code: $war_actor)
+        
+        &lt;div style=&quot;text-align:center; margin-bottom:20px; width:100%;&quot;&gt;
+            &lt;div style=&quot;font-size:3em; margin-bottom:5px;&quot;&gt;⚔️&lt;/div&gt;
+            &lt;h3 style=&quot;margin:0; color:#334155; text-transform: uppercase; letter-spacing: 2px;&quot;&gt;公关行动执行报告&lt;/h3&gt;
+            &lt;div style=&quot;font-size:0.85em; color:#94a3b8; font-family: monospace;&quot;&gt;SERIAL: PR-&lt;&lt;print random(1000,9999)&gt;&gt; / AGENT: &lt;&lt;print _act.name&gt;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+
+      /* === 1. 落井下石 (神鬼二象性逻辑升级) === */
+        &lt;&lt;if $battle_type is &quot;kick_rival&quot;&gt;&gt;
+             &lt;&lt;set _roll to random(1, 100)&gt;&gt;
+             
+             &lt;&lt;if _roll &lt;= 15&gt;&gt;
+                /* SSS成功 */
+                &lt;div class=&quot;battle-card card-gold&quot;&gt;
+                    &lt;div class=&quot;rank-badge&quot;&gt;SSS&lt;/div&gt;&lt;span class=&quot;result-icon&quot;&gt;👑&lt;/span&gt;
+                    &lt;span class=&quot;news-title&quot;&gt;👑 神性爆发：铁锤定音&lt;/span&gt;
+                    &lt;p&gt;公关部精准预热，一记铁锤砸穿地心！全网流量如海啸般涌入我方账户，对家彻底哑火，甚至连澄清声明都不敢发。&lt;/p&gt;
+                    &lt;&lt;set $traffic += 5000&gt;&gt;&lt;&lt;set $danger_level to Math.max(0, $danger_level - 10)&gt;&gt;
+                    &lt;&lt;run _changeList.push(&quot;全局流量 +5000&quot;, &quot;公司危险 -10&quot;)&gt;&gt;
+                &lt;/div&gt;
+             
+             &lt;&lt;elseif _roll &lt;= 80&gt;&gt;
+                /* A级成功 (16-80) */
+                &lt;div class=&quot;battle-card card-blue&quot;&gt;
+                    &lt;div class=&quot;rank-badge&quot;&gt;A&lt;/div&gt;&lt;span class=&quot;result-icon&quot;&gt;👟&lt;/span&gt;
+                    &lt;span class=&quot;news-title&quot;&gt;👊 趁乱补刀&lt;/span&gt;
+                    &lt;p&gt;趁着对家翻车，你指挥水军疯狂煽风点火。公关部这次表现稳健，成功劫持了对方的大量潜在流量，转化为公司关注度。&lt;/p&gt;
+                    &lt;&lt;set $traffic += 1000&gt;&gt;&lt;&lt;set $danger_level to Math.max(0, $danger_level - 10)&gt;&gt;
+                    &lt;&lt;run _changeList.push(&quot;全局流量 +1000&quot;, &quot;公司危险 -10&quot;)&gt;&gt;
+                &lt;/div&gt;
+             
+             &lt;&lt;else&gt;&gt;
+                /* B级翻车 (81-100) - 🔴【新增】弄巧成拙逻辑 */
+                &lt;div class=&quot;battle-card card-red&quot;&gt;
+                    &lt;div class=&quot;rank-badge&quot;&gt;FAIL&lt;/div&gt;&lt;span class=&quot;result-icon&quot;&gt;💩&lt;/span&gt;
+                    &lt;span class=&quot;news-title&quot;&gt;💥 弄巧成拙：水军翻车&lt;/span&gt;
+                    &lt;p&gt;公关部的操作太蠢太明显了！买的低级水军竟然在评论区发错文案，被对家反手一个“卖惨”公关。网友纷纷倒戈，开始心疼对家，并大骂我方艺人 &lt;b&gt;&lt;&lt;print _act.name&gt;&gt;&lt;/b&gt; 吃血馒头！&lt;/p&gt;
+                    &lt;&lt;set _act.reputation to Math.max(0, _act.reputation - 5)&gt;&gt;
+                    &lt;&lt;set $danger_level += 15&gt;&gt;
+                    &lt;&lt;run _changeList.push(_act.name + &quot; 口碑 -5&quot;, &quot;公司危险 +15&quot;, &quot;流量收益: 0&quot;)&gt;&gt;
+                &lt;/div&gt;
+             &lt;&lt;/if&gt;&gt;
+             
+             /* 行动结束重置热搜 */
+             &lt;&lt;set $current_hot_topic to { text: &quot;热搜利用完毕&quot;, type: &quot;normal&quot;, target: &quot;none&quot; }&gt;&gt;
+
+        /* === 2. 流量硬刚 (差异化文案) === */
+        &lt;&lt;elseif $battle_type is &quot;traffic&quot;&gt;&gt;
+            &lt;div class=&quot;battle-card card-blue&quot;&gt;
+                &lt;div class=&quot;rank-badge&quot;&gt;PVP&lt;/div&gt;&lt;span class=&quot;result-icon&quot;&gt;🌊&lt;/span&gt;
+                &lt;span class=&quot;news-title&quot;&gt;🌊 流量硬刚：资本对决&lt;/span&gt;
+                &lt;&lt;if $war_actor is &quot;zp&quot;&gt;&gt;
+                    &lt;p&gt;“展鹏，起床营业了！”在你的金钱攻势下，展鹏被迫营业，靠着一张“厌世咸鱼脸”硬生生杀出了一条血路。&lt;/p&gt;
+                &lt;&lt;elseif $war_actor is &quot;qs&quot;&gt;&gt;
+                    &lt;p&gt;“给老娘让开。”秦飒的红毯通稿铺天盖地，艳压群芳。营销号纷纷倒戈：“这才是内娱真正的女王。”&lt;/p&gt;
+                &lt;&lt;elseif $war_actor is &quot;new&quot;&gt;&gt;
+                    &lt;p&gt;“谁敢欺负我们乖崽！”白小纯楚楚可怜的照片一发，妈粉瞬间战斗力爆表，把广场洗得干干净净。&lt;/p&gt;
+                &lt;&lt;/if&gt;&gt;
+                &lt;&lt;set _act.reputation += 5&gt;&gt;&lt;&lt;set $traffic += 500&gt;&gt;
+                &lt;&lt;run _changeList.push(_act.name + &quot; 口碑 +5&quot;, &quot;全局流量 +500&quot;)&gt;&gt;
+            &lt;/div&gt;
+
+        /* === 3. 独自美丽 (差异化文案) === */
+        &lt;&lt;elseif $battle_type is &quot;solo&quot;&gt;&gt;
+            &lt;div class=&quot;battle-card card-blue&quot;&gt;
+                &lt;div class=&quot;rank-badge&quot;&gt;SOLO&lt;/div&gt;&lt;span class=&quot;result-icon&quot;&gt;💔&lt;/span&gt;
+                &lt;span class=&quot;news-title&quot;&gt;💔 提纯行动：独美宣言&lt;/span&gt;
+                &lt;&lt;if $war_actor is &quot;zp&quot;&gt;&gt;
+                    &lt;p&gt;工作室发布声明：“已婚，勿扰。”虽然大家不知道他有什么作品，但“人夫感”拉满。乐子人狂喜。&lt;/p&gt;
+                    &lt;&lt;set _act.fans.clown += 200&gt;&gt;&lt;&lt;set _act.fans.cp += 100&gt;&gt;&lt;&lt;set _act.reputation -= 2&gt;&gt;
+                    &lt;&lt;run _changeList.push(_act.name + &quot; 口碑 -2&quot;, &quot;乐子人粉 +200&quot;, &quot;CP粉 +100&quot;)&gt;&gt;
+                &lt;&lt;elseif $war_actor is &quot;qs&quot;&gt;&gt;
+                    &lt;p&gt;秦飒亲自下场回复：“男人只会影响我拔刀的速度。”全网疯转，毒唯直接高潮，大喊姐姐独美。&lt;/p&gt;
+                    &lt;&lt;set _act.fans.toxic += 300&gt;&gt;&lt;&lt;set _act.reputation += 5&gt;&gt;
+                    &lt;&lt;run _changeList.push(_act.name + &quot; 口碑 +5&quot;, &quot;毒唯粉 +300&quot;)&gt;&gt;
+                &lt;&lt;elseif $war_actor is &quot;new&quot;&gt;&gt;
+                    &lt;p&gt;公司发布声明：“还是孩子，拒绝早恋谣言。”妈粉们松了一口气，纷纷表示要监督乖崽好好学习。&lt;/p&gt;
+                    &lt;&lt;set _act.fans.mom += 400&gt;&gt;&lt;&lt;set _act.reputation += 2&gt;&gt;
+                    &lt;&lt;run _changeList.push(_act.name + &quot; 口碑 +2&quot;, &quot;妈粉 +400&quot;)&gt;&gt;
+                &lt;&lt;/if&gt;&gt;
+            &lt;/div&gt;
+
+        /* === 4. 捆绑炒作 (差异化文案) === */
+        &lt;&lt;elseif $battle_type is &quot;cp_bundle&quot;&gt;&gt;
+            &lt;div class=&quot;battle-card card-red&quot;&gt;
+                &lt;div class=&quot;rank-badge&quot;&gt;CP&lt;/div&gt;&lt;span class=&quot;result-icon&quot;&gt;🍬&lt;/span&gt;
+                &lt;span class=&quot;news-title&quot;&gt;❤️ 工业糖精：全网嗑糖&lt;/span&gt;
+                &lt;&lt;if $war_actor is &quot;zp&quot;&gt;&gt;
+                    &lt;p&gt;展鹏深夜为神秘女子买粥的照片曝光。虽然很假，但架不住他眼神实在太拉丝了。CP粉：“他超爱！”&lt;/p&gt;
+                    &lt;&lt;set _act.fans.cp += 800&gt;&gt;&lt;&lt;run _changeList.push(&quot;CP粉 +800&quot;)&gt;&gt;
+                &lt;&lt;elseif $war_actor is &quot;qs&quot;&gt;&gt;
+                    &lt;p&gt;秦飒和某顶流的红毯对视动图上了热搜。一种“恶女x忠犬”的张力拉满，路人嗑疯了。&lt;/p&gt;
+                    &lt;&lt;set _act.fans.cp += 600&gt;&gt;&lt;&lt;run _changeList.push(&quot;CP粉 +600&quot;)&gt;&gt;
+                &lt;&lt;elseif $war_actor is &quot;new&quot;&gt;&gt;
+                    &lt;p&gt;白小纯和前辈的“摸头杀”花絮流出。“姐弟恋”好香！妈粉虽然心情复杂，但全网热度暴涨。&lt;/p&gt;
+                    &lt;&lt;set _act.fans.cp += 500&gt;&gt;&lt;&lt;run _changeList.push(&quot;CP粉 +500&quot;)&gt;&gt;
+                &lt;&lt;/if&gt;&gt;
+                &lt;&lt;set $danger_level += 10&gt;&gt;&lt;&lt;run _changeList.push(&quot;公司危险值 +10&quot;)&gt;&gt;
+            &lt;/div&gt;
+
+        /* === 5. 随机爆黑料 (炫酷吐槽版) === */
+        &lt;&lt;elseif $battle_type is &quot;gossip_attack&quot;&gt;&gt;
+            &lt;&lt;if $gossips.length == 0&gt;&gt;
+                 &lt;div class=&quot;battle-card card-green&quot; style=&quot;text-align:center;&quot;&gt;
+                    &lt;div class=&quot;rank-badge&quot;&gt;FAIL&lt;/div&gt;&lt;span style=&quot;font-size:3em;&quot;&gt;📭&lt;/span&gt;
+                    &lt;p&gt;&lt;b&gt;尴尬了！一条料都没有！&lt;/b&gt;&lt;br&gt;公关部翻遍了保险柜，发现里面空空如也。&lt;/p&gt;
+                 &lt;/div&gt;
+            &lt;&lt;else&gt;&gt;
+                 &lt;&lt;set _rnd_idx to random(0, $gossips.length - 1)&gt;&gt;
+                 &lt;&lt;set _used_gossip to $gossips[_rnd_idx]&gt;&gt;
+                 &lt;&lt;run $gossips.deleteAt(_rnd_idx)&gt;&gt;
+                 &lt;div style=&quot;background:#334155; color:#fff; padding:6px 15px; border-radius:4px; font-size:0.85em; margin-bottom:10px;&quot;&gt;📡 DATA SENDING IN PROGRESS...&lt;/div&gt;
+                 
+                 &lt;&lt;if _used_gossip.type is &quot;green&quot;&gt;&gt;
+                    &lt;div class=&quot;battle-card card-green&quot;&gt;
+                        &lt;div class=&quot;rank-badge&quot;&gt;N&lt;/div&gt;&lt;span class=&quot;result-icon&quot;&gt;😓&lt;/span&gt;
+                        &lt;span class=&quot;news-title&quot;&gt;📉 拿错剧本了？&lt;/span&gt;
+                        &lt;span class=&quot;gossip-desc&quot;&gt;“_used_gossip.desc”&lt;/span&gt;
+                        &lt;p&gt;这种路边摊消息也能当武器？公关部是小学生吗！你看着这条不痛不痒的八卦，觉得公关部在浪费你的老婆本。&lt;/p&gt;
+                        &lt;&lt;set $danger_level to Math.max(0, $danger_level - 2)&gt;&gt;&lt;&lt;set $traffic += 500&gt;&gt;
+                        &lt;&lt;run _changeList.push(&quot;全局流量 +500&quot;, &quot;公司危险 -2&quot;)&gt;&gt;
+                    &lt;/div&gt;
+                 &lt;&lt;elseif _used_gossip.type is &quot;blue&quot;&gt;&gt;
+                    &lt;div class=&quot;battle-card card-blue&quot;&gt;
+                        &lt;div class=&quot;rank-badge&quot;&gt;R&lt;/div&gt;&lt;span class=&quot;result-icon&quot;&gt;👊&lt;/span&gt;
+                        &lt;span class=&quot;news-title&quot;&gt;📊 有效打击&lt;/span&gt;
+                        &lt;span class=&quot;gossip-desc&quot;&gt;“_used_gossip.desc”&lt;/span&gt;
+                        &lt;p&gt;公关部表现还算正常。虽然不是惊天大瓜，但足以让对家头疼一阵子了。&lt;/p&gt;
+                        &lt;&lt;set $danger_level to Math.max(0, $danger_level - 5)&gt;&gt;&lt;&lt;set $resources.c += 1&gt;&gt;
+                        &lt;&lt;run _changeList.push(&quot;获得 C级资源 x1&quot;, &quot;公司危险 -5&quot;)&gt;&gt;
+                    &lt;/div&gt;
+                 &lt;&lt;elseif _used_gossip.type is &quot;red&quot;&gt;&gt;
+                    &lt;div class=&quot;battle-card card-red&quot;&gt;
+                        &lt;div class=&quot;rank-badge&quot;&gt;SR&lt;/div&gt;&lt;span class=&quot;result-icon&quot;&gt;🔥&lt;/span&gt;
+                        &lt;span class=&quot;news-title&quot;&gt;💣 公关部杀疯了！&lt;/span&gt;
+                        &lt;span class=&quot;gossip-desc&quot;&gt;“_used_gossip.desc”&lt;/span&gt;
+                        &lt;p&gt;公关部终于睡醒了！这记重拳砸得对家眼冒金星，连夜发声明澄清，这波血赚。&lt;/p&gt;
+                        &lt;&lt;set $danger_level to Math.max(0, $danger_level - 10)&gt;&gt;&lt;&lt;set $resources.b += 1&gt;&gt;
+                        &lt;&lt;run _changeList.push(&quot;获得 B级资源 x1&quot;, &quot;公司危险 -10&quot;)&gt;&gt;
+                    &lt;/div&gt;
+                 &lt;&lt;elseif _used_gossip.type is &quot;gold&quot;&gt;&gt;
+                    &lt;div class=&quot;battle-card card-gold&quot;&gt;
+                        &lt;div class=&quot;rank-badge&quot;&gt;SSR&lt;/div&gt;&lt;span class=&quot;result-icon&quot;&gt;👑&lt;/span&gt;
+                        &lt;span class=&quot;news-title&quot;&gt;⚡ 医学奇迹！&lt;/span&gt;
+                        &lt;span class=&quot;gossip-desc&quot;&gt;“_used_gossip.desc”&lt;/span&gt;
+                        &lt;p&gt;你不敢相信这是公关部那群人干出来的！核弹级机密，这波操作足以载入娱乐圈教科书！&lt;/p&gt;
+                        &lt;&lt;set $danger_level to Math.max(0, $danger_level - 20)&gt;&gt;&lt;&lt;set $resources.a += 1&gt;&gt;
+                        &lt;&lt;run _changeList.push(&quot;获得 A级资源 x1&quot;, &quot;公司危险 -20&quot;)&gt;&gt;
+                    &lt;/div&gt;
+                 &lt;&lt;/if&gt;&gt;
+            &lt;&lt;/if&gt;&gt;
+        &lt;&lt;/if&gt;&gt;
+
+        /* 🟢 底部加成明细区 */
+        &lt;div style=&quot;margin-top:25px; width:100%; max-width:650px; border-top:2px solid #cbd5e1; padding-top:20px;&quot;&gt;
+            &lt;div style=&quot;font-size:0.9em; color:#64748b; margin-bottom:12px; font-weight:bold; display:flex; justify-content:space-between;&quot;&gt;
+                &lt;span&gt;📈 最终执行加成明细：&lt;/span&gt;
+                &lt;span style=&quot;color:#1e40af;&quot;&gt;执行人：公关部&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div style=&quot;display:flex; flex-wrap:wrap; gap:8px;&quot;&gt;
+                &lt;&lt;for _item range _changeList&gt;&gt;
+                    &lt;span class=&quot;reward-tag&quot;&gt;_item&lt;/span&gt;
+                &lt;&lt;/for&gt;&gt;
             &lt;/div&gt;
         &lt;/div&gt;
 
-        /* === A. 流量硬刚 === */
-        &lt;&lt;if $battle_type is &quot;traffic&quot;&gt;&gt;
-            &lt;div class=&quot;battle-card&quot;&gt;
-                &lt;div class=&quot;rank-badge&quot; style=&quot;background:#3b82f6;&quot;&gt;PVP&lt;/div&gt;
-                &lt;h3&gt;🌊 流量攻势&lt;/h3&gt;
-                
-                /* 个性化文案 */
-                &lt;&lt;if $war_actor is &quot;zp&quot;&gt;&gt;
-                    &lt;p&gt;“展鹏，起床营业了！”&lt;/p&gt;
-                    &lt;p&gt;在你的金钱攻势下，展鹏被迫营业，靠着一张“厌世咸鱼脸”硬生生杀出了一条血路。粉丝在下面狂欢：“老婆终于动了！”&lt;/p&gt;
-                &lt;&lt;elseif $war_actor is &quot;qs&quot;&gt;&gt;
-                    &lt;p&gt;“给老娘让开。”&lt;/p&gt;
-                    &lt;p&gt;秦飒的红毯通稿铺天盖地，艳压群芳。营销号纷纷倒戈：“这才是内娱真正的恶女女王，其他都是洗脚婢。”&lt;/p&gt;
-                &lt;&lt;elseif $war_actor is &quot;new&quot;&gt;&gt;
-                    &lt;p&gt;“谁敢欺负我们乖崽！”&lt;/p&gt;
-                    &lt;p&gt;白小纯楚楚可怜的照片一发，妈粉瞬间战斗力爆表，把广场洗得干干净净：“守护全世界最好的小白！”&lt;/p&gt;
-                &lt;&lt;/if&gt;&gt;
-
-                &lt;&lt;if random(1,100) &lt; 60 + _act.rank_level * 10&gt;&gt;
-                    &lt;div class=&quot;reward-box&quot; style=&quot;color:#15803d; border-color:#86efac;&quot;&gt;
-                        🎉 &lt;b&gt;大获全胜！&lt;/b&gt;&lt;br&gt;
-                        &lt;&lt;print _act.name&gt;&gt; 口碑 +5 | 流量回流 +500
-                        &lt;&lt;set _act.reputation += 5&gt;&gt;&lt;&lt;set $traffic += 500&gt;&gt;
-                    &lt;/div&gt;
-                &lt;&lt;else&gt;&gt;
-                     &lt;div class=&quot;reward-box&quot; style=&quot;color:#b91c1c; border-color:#fca5a5;&quot;&gt;
-                        💨 &lt;b&gt;陷入胶着...&lt;/b&gt;&lt;br&gt;
-                        虽然砸了钱，但水花不大。流量勉强 +50。
-                        &lt;&lt;set $traffic += 50&gt;&gt;
-                    &lt;/div&gt;
-                &lt;&lt;/if&gt;&gt;
-            &lt;/div&gt;
-
-        /* === B. 独自美丽 (提纯) === */
-        &lt;&lt;elseif $battle_type is &quot;solo&quot;&gt;&gt;
-             &lt;div class=&quot;battle-card&quot;&gt;
-                &lt;div class=&quot;rank-badge&quot; style=&quot;background:#10b981;&quot;&gt;SOLO&lt;/div&gt;
-                &lt;h3&gt;💔 提纯行动&lt;/h3&gt;
-                
-                &lt;&lt;if $war_actor is &quot;zp&quot;&gt;&gt;
-                    &lt;p&gt;工作室发布声明：“已婚，勿扰，专注作品。”&lt;/p&gt;
-                    &lt;p&gt;虽然大家不知道他有什么作品，但“人夫感”拉满。梦女心碎，但CP粉和乐子人狂喜。&lt;/p&gt;
-                    &lt;div class=&quot;reward-box&quot;&gt;乐子人 +200 | CP粉 +100 | 口碑 -2&lt;/div&gt;
-                    &lt;&lt;set _act.fans.clown += 200&gt;&gt;&lt;&lt;set _act.fans.cp += 100&gt;&gt;&lt;&lt;set _act.reputation -= 2&gt;&gt;
-                
-                &lt;&lt;elseif $war_actor is &quot;qs&quot;&gt;&gt;
-                    &lt;p&gt;秦飒亲自下场回复：“男人只会影响我拔刀的速度。”&lt;/p&gt;
-                    &lt;p&gt;太飒了！全网疯转。毒唯直接高潮，大喊姐姐独美。&lt;/p&gt;
-                    &lt;div class=&quot;reward-box&quot;&gt;毒唯 +300 | 事业粉 +100 | 口碑 +5&lt;/div&gt;
-                    &lt;&lt;set _act.fans.toxic += 300&gt;&gt;&lt;&lt;set _act.fans.career += 100&gt;&gt;&lt;&lt;set _act.reputation += 5&gt;&gt;
-                
-                &lt;&lt;elseif $war_actor is &quot;new&quot;&gt;&gt;
-                    &lt;p&gt;公司发布严正声明：“孩子还小，以学业和事业为重，拒绝早恋谣言。”&lt;/p&gt;
-                    &lt;p&gt;妈粉们松了一口气，纷纷表示要监督乖崽学习。&lt;/p&gt;
-                    &lt;div class=&quot;reward-box&quot;&gt;妈粉 +400 | 口碑 +2&lt;/div&gt;
-                    &lt;&lt;set _act.fans.mom += 400&gt;&gt;&lt;&lt;set _act.reputation += 2&gt;&gt;
-                &lt;&lt;/if&gt;&gt;
-            &lt;/div&gt;
-
-        /* === C. 捆绑炒作 (CP) === */
-        &lt;&lt;elseif $battle_type is &quot;cp_bundle&quot;&gt;&gt;
-             &lt;div class=&quot;battle-card&quot;&gt;
-                &lt;div class=&quot;rank-badge&quot; style=&quot;background:#f43f5e;&quot;&gt;CP&lt;/div&gt;
-                &lt;h3&gt;🍬 工业糖精&lt;/h3&gt;
-                
-                &lt;&lt;if $war_actor is &quot;zp&quot;&gt;&gt;
-                    &lt;p&gt;你安排了一组“展鹏深夜为神秘女子买粥”的照片。&lt;/p&gt;
-                    &lt;p&gt;虽然很假，但架不住他眼神实在太拉丝了。CP粉：“他超爱！这都不嗑？”&lt;/p&gt;
-                    &lt;div class=&quot;reward-box&quot;&gt;CP粉 +800 | 毒唯 -200 | 危险值 +10&lt;/div&gt;
-                    &lt;&lt;set _act.fans.cp += 800&gt;&gt;&lt;&lt;set _act.fans.toxic -= 200&gt;&gt;
-                
-                &lt;&lt;elseif $war_actor is &quot;qs&quot;&gt;&gt;
-                    &lt;p&gt;秦飒和某顶流的红毯对视动图上了热搜。&lt;/p&gt;
-                    &lt;p&gt;一种“恶女x忠犬”的张力拉满。虽然秦飒一脸不耐烦，但网友这就爱这一口。&lt;/p&gt;
-                    &lt;div class=&quot;reward-box&quot;&gt;CP粉 +600 | 毒唯 -400 (掉粉严重) | 危险值 +15&lt;/div&gt;
-                    &lt;&lt;set _act.fans.cp += 600&gt;&gt;&lt;&lt;set _act.fans.toxic -= 400&gt;&gt;
-                
-                &lt;&lt;elseif $war_actor is &quot;new&quot;&gt;&gt;
-                    &lt;p&gt;白小纯和合作女演员的“摸头杀”花絮流出。&lt;/p&gt;
-                    &lt;p&gt;“姐弟恋”好香！年下小奶狗谁不爱？妈粉虽然心情复杂，但路人嗑疯了。&lt;/p&gt;
-                    &lt;div class=&quot;reward-box&quot;&gt;CP粉 +500 | 妈粉 -100 | 危险值 +5&lt;/div&gt;
-                    &lt;&lt;set _act.fans.cp += 500&gt;&gt;&lt;&lt;set _act.fans.mom -= 100&gt;&gt;
-                &lt;&lt;/if&gt;&gt;
-                
-                &lt;&lt;set $danger_level += 10&gt;&gt; /* 额外危险值 */
-            &lt;/div&gt;
-            
-        /* === D. 爆黑料 (通用) === */
-        &lt;&lt;elseif $battle_type is &quot;gossip_attack&quot;&gt;&gt;
-             &lt;div class=&quot;battle-card&quot;&gt;
-                 &lt;div class=&quot;rank-badge&quot; style=&quot;background:#8b5cf6;&quot;&gt;BOOM&lt;/div&gt;
-                 &lt;h3&gt;💣 投掷黑料&lt;/h3&gt;
-                 
-                 /* 这里需要先扣除库存，逻辑较复杂，复用之前的逻辑 */
-                 &lt;&lt;if $gossips.length &gt; 0&gt;&gt;
-                     &lt;&lt;set _rnd_idx to random(0, $gossips.length - 1)&gt;&gt;
-                     &lt;&lt;set _used_gossip to $gossips[_rnd_idx]&gt;&gt;
-                     &lt;&lt;run $gossips.deleteAt(_rnd_idx)&gt;&gt;
-                     
-                     &lt;p&gt;你使用了库存情报：&lt;b&gt;“_used_gossip.desc”&lt;/b&gt;&lt;/p&gt;
-                     &lt;p&gt;虽然是你操作的，但为了避嫌，你用了 &lt;b&gt;&lt;&lt;print _act.name&gt;&gt;&lt;/b&gt; 的小号点赞手滑。&lt;/p&gt;
-                     &lt;div class=&quot;reward-box&quot;&gt;危险值 -10 | 获得资源 C级&lt;/div&gt;
-                     &lt;&lt;set $danger_level to Math.max(0, $danger_level - 10)&gt;&gt;&lt;&lt;set $resources.c += 1&gt;&gt;
-                 &lt;&lt;else&gt;&gt;
-                     &lt;p&gt;尴尬，没库存了！(不扣资源)&lt;/p&gt;
-                 &lt;&lt;/if&gt;&gt;
-             &lt;/div&gt;
-
-        /* === E. 落井下石 (通用) === */
-        &lt;&lt;elseif $battle_type is &quot;kick_rival&quot;&gt;&gt;
-             &lt;div class=&quot;battle-card&quot;&gt;
-                 &lt;div class=&quot;rank-badge&quot; style=&quot;background:#0f172a;&quot;&gt;KICK&lt;/div&gt;
-                 &lt;h3&gt;👟 落井下石&lt;/h3&gt;
-                 &lt;p&gt;趁着对家倒霉，&lt;b&gt;&lt;&lt;print _act.name&gt;&gt;&lt;/b&gt; 的大粉头子（其实是你）带头去踩了一脚。&lt;/p&gt;
-                 &lt;div class=&quot;reward-box&quot;&gt;流量 +1000 | 危险值 -10&lt;/div&gt;
-                 &lt;&lt;set $traffic += 1000&gt;&gt;&lt;&lt;set $danger_level to Math.max(0, $danger_level - 10)&gt;&gt;
-             &lt;/div&gt;
-        &lt;&lt;/if&gt;&gt;
-
-        &lt;div style=&quot;margin-top:30px;&quot;&gt;
-            &lt;&lt;link &quot;✅ 确认战果 (返回)&quot; &quot;Marketing_Center&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+        &lt;div style=&quot;margin-top:40px;&quot;&gt;
+            &lt;&lt;link &quot;✅ 确认并签署报告&quot; &quot;Marketing_Center&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
         &lt;/div&gt;
     &lt;/div&gt;
 &lt;&lt;/if&gt;&gt;
 &lt;/div&gt;
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="26" name="Marketing_Center" tags="" position="1125,1025" size="100,100">&lt;&lt;nobr&gt;&gt;
-/* 1. 确保出战变量有默认值 */
-&lt;&lt;if not def $war_actor&gt;&gt;
-    &lt;&lt;set $war_actor to &quot;zp&quot;&gt;&gt;
-&lt;&lt;/if&gt;&gt;
-
 &lt;div class=&quot;tech-card&quot;&gt;
   /* 标题栏 */
   &lt;div class=&quot;header-banner&quot; style=&quot;background: linear-gradient(to right, #3730a3, #312e81);&quot;&gt;
@@ -2270,55 +2164,48 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
          &lt;div style=&quot;background:#f0fdf4; border:2px solid #22c55e; padding:30px; text-align:center; border-radius:8px;&quot;&gt;
             &lt;div style=&quot;font-size:4em; margin-bottom:15px;&quot;&gt;💖&lt;/div&gt;
             &lt;h3 style=&quot;color:#15803d;&quot;&gt;本月公益目标已达成&lt;/h3&gt;
-            &lt;p style=&quot;color:#166534;&quot;&gt;公司本月已进行过大额捐赠，为了保持低调，公关部暂停一切营销活动。&lt;/p&gt;
+            &lt;p style=&quot;color:#166534;&quot;&gt;公司本月已进行过大额捐赠，公关部暂停一切营销活动。&lt;/p&gt;
             &lt;div style=&quot;font-size:0.9em; color:#86efac; margin-top:10px;&quot;&gt;( 下个月恢复功能 )&lt;/div&gt;
-        &lt;/div&gt;
+         &lt;/div&gt;
         &lt;div style=&quot;margin-top:30px; text-align:center;&quot;&gt;[[🔙 返回办公室|Office]]&lt;/div&gt;
 
     &lt;&lt;else&gt;&gt;
     
-        /* --- 0. 当前热搜监控台 --- */
+        /* --- 0. 实时热搜监控台 (🔴【修改】落井下石 100w) --- */
         &lt;div style=&quot;background:#0f172a; color:#fff; padding:15px; border-radius:8px; margin-bottom:20px; border:1px solid #334155; box-shadow:0 4px 10px rgba(0,0,0,0.2);&quot;&gt;
             &lt;div style=&quot;font-size:0.8em; color:#94a3b8; margin-bottom:5px;&quot;&gt;📡 实时热搜监控&lt;/div&gt;
             &lt;div style=&quot;font-size:1.2em; font-weight:bold; letter-spacing:1px; display:flex; justify-content:space-between; align-items:center;&quot;&gt;
                 &lt;span&gt;🔥 &lt;&lt;print $current_hot_topic.text&gt;&gt;&lt;/span&gt;
-                
                 &lt;&lt;if $current_hot_topic.type is &quot;rival_scandal&quot;&gt;&gt;
                     &lt;span style=&quot;background:#22c55e; color:#fff; font-size:0.6em; padding:2px 6px; border-radius:4px;&quot;&gt;对家翻车&lt;/span&gt;
                 &lt;&lt;elseif $current_hot_topic.type is &quot;my_scandal&quot;&gt;&gt;
                     &lt;span style=&quot;background:#ef4444; color:#fff; font-size:0.6em; padding:2px 6px; border-radius:4px;&quot;&gt;严重警报&lt;/span&gt;
-                &lt;&lt;else&gt;&gt;
-                    &lt;span style=&quot;background:#64748b; color:#fff; font-size:0.6em; padding:2px 6px; border-radius:4px;&quot;&gt;社会新闻&lt;/span&gt;
                 &lt;&lt;/if&gt;&gt;
             &lt;/div&gt;
             
             &lt;div style=&quot;margin-top:10px; border-top:1px dashed #334155; padding-top:10px;&quot;&gt;
-                /* A. 对家出事 */
                 &lt;&lt;if $current_hot_topic.type is &quot;rival_scandal&quot;&gt;&gt;
                     &lt;div style=&quot;display:flex; justify-content:space-between; align-items:center;&quot;&gt;
                         &lt;span style=&quot;font-size:0.9em; color:#86efac;&quot;&gt;机会！对手陷入丑闻，是否买水军踩一脚？&lt;/span&gt;
-                        &lt;&lt;link &quot;👊 落井下石 (-20w | ⬆️1000流)&quot; &quot;Marketing_Battle&quot;&gt;&gt;
-                             &lt;&lt;set $battle_type to &quot;kick_rival&quot;, $cost to 20, $cost_t to 0, $cost_s to 0&gt;&gt;
+                        &lt;&lt;link &quot;👊 落井下石 (-100w | ⬆️随机流量)&quot; &quot;Marketing_Battle&quot;&gt;&gt;
+                             &lt;&lt;set $battle_type to &quot;kick_rival&quot;, $cost to 100, $cost_t to 0, $cost_s to 0&gt;&gt;
                         &lt;&lt;/link&gt;&gt;
                     &lt;/div&gt;
-                
-                /* B. 自己出事 */
                 &lt;&lt;elseif $current_hot_topic.type is &quot;my_scandal&quot;&gt;&gt;
                     &lt;div style=&quot;display:flex; justify-content:space-between; align-items:center;&quot;&gt;
                         &lt;span style=&quot;font-size:0.9em; color:#fca5a5;&quot;&gt;警告！舆论正在发酵，请立刻撤热搜！&lt;/span&gt;
                         &lt;&lt;link &quot;💸 强行撤榜 (-500w | -5000流)&quot; &quot;PR_Execute&quot;&gt;&gt;
                               &lt;&lt;set $type to &quot;remove_search&quot;, $cost to 500, $cost_t to 5000&gt;&gt;
                         &lt;&lt;/link&gt;&gt;
-                     &lt;/div&gt;
-                
+                    &lt;/div&gt;
                 &lt;&lt;else&gt;&gt;
                      &lt;span style=&quot;font-size:0.9em; color:#64748b;&quot;&gt;当前无相关热点可利用。&lt;/span&gt;
                 &lt;&lt;/if&gt;&gt;
             &lt;/div&gt;
         &lt;/div&gt;
 
-        /* --- 流量加油站 --- */
-        &lt;div style=&quot;background: linear-gradient(to right, #eff6ff, #dbeafe); border: 1px solid #bfdbfe; padding: 15px; border-radius: 8px; margin-bottom: 25px; display:flex; justify-content:space-between; align-items:center;&quot;&gt;
+        /* --- 1. 流量加油站 (补回缺失部分) --- */
+        &lt;div style=&quot;background: linear-gradient(to right, #eff6ff, #dbeafe); border: 1px solid #bfdbfe; padding: 15px; border-radius: 8px; margin-bottom: 20px; display:flex; justify-content:space-between; align-items:center;&quot;&gt;
              &lt;div&gt;
                 &lt;div style=&quot;font-weight:bold; color:#1e40af; font-size:1.1em;&quot;&gt;🌊 流量加油站&lt;/div&gt;
                 &lt;div style=&quot;font-size:0.8em; color:#60a5fa;&quot;&gt;当前流量库存: &lt;b&gt;$traffic&lt;/b&gt;&lt;/div&gt;
@@ -2326,115 +2213,71 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
              &lt;&lt;link &quot;🛒 购买水军&quot; &quot;Public_Relations&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
         &lt;/div&gt;
 
-        /* === 1. 危机公关台 === */
-        &lt;div class=&quot;actor-mini-card&quot; style=&quot;border-left:4px solid #ef4444;&quot;&gt;
+        /* --- 2. 危机公关台 (补回缺失部分) --- */
+        &lt;div class=&quot;actor-mini-card&quot; style=&quot;border-left:4px solid #ef4444; margin-bottom:20px;&quot;&gt;
           &lt;div style=&quot;display:flex; justify-content:space-between; align-items:center;&quot;&gt;
             &lt;b&gt;🚑 危机公关台&lt;/b&gt;
-            &lt;span style=&quot;font-size:0.9em;&quot;&gt;
-              危险值: 
-              &lt;&lt;if $danger_level &gt; 50&gt;&gt;&lt;b style=&quot;color:red&quot;&gt;$danger_level&lt;/b&gt;
-              &lt;&lt;else&gt;&gt;&lt;b style=&quot;color:green&quot;&gt;$danger_level&lt;/b&gt;&lt;&lt;/if&gt;&gt;
-            &lt;/span&gt;
+            &lt;span style=&quot;font-size:0.9em;&quot;&gt;危险值: &lt;&lt;if $danger_level &gt; 50&gt;&gt;&lt;b style=&quot;color:red&quot;&gt;$danger_level&lt;/b&gt;&lt;&lt;else&gt;&gt;&lt;b style=&quot;color:green&quot;&gt;$danger_level&lt;/b&gt;&lt;&lt;/if&gt;&gt;&lt;/span&gt;
           &lt;/div&gt;
-          
-          &lt;div style=&quot;background:#fef2f2; color:#b91c1c; padding:8px; border-radius:4px; margin:10px 0; font-size:0.9em;&quot;&gt;
-            🚨 &lt;b&gt;当前状态：&lt;/b&gt; &lt;&lt;if $danger_level &gt; 50&gt;&gt;高危预警&lt;&lt;else&gt;&gt;平稳运行&lt;&lt;/if&gt;&gt;
-          &lt;/div&gt;
-          &lt;hr&gt;
-          
-          &lt;div style=&quot;display:grid; grid-template-columns: 1fr 1fr; gap:10px;&quot;&gt;
+          &lt;div style=&quot;display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:10px;&quot;&gt;
             &lt;div&gt;
-              &lt;&lt;link &quot;⚖️ 律师函 (5w | 📉500流)&quot; &quot;PR_Execute&quot;&gt;&gt;
-                  &lt;&lt;set $type to &quot;lawyer&quot;, $cost to 5, $cost_t to 500&gt;&gt;
-              &lt;&lt;/link&gt;&gt;
-              &lt;div style=&quot;font-size:0.75em; color:#94a3b8;&quot;&gt;效果微弱，危险-2&lt;/div&gt;
+              &lt;&lt;link &quot;⚖️ 律师函 (5w | 📉500流)&quot; &quot;PR_Execute&quot;&gt;&gt;&lt;&lt;set $type to &quot;lawyer&quot;, $cost to 5, $cost_t to 500&gt;&gt;&lt;&lt;/link&gt;&gt;
+              &lt;div style=&quot;font-size:0.7em; color:#94a3b8;&quot;&gt;效果微弱，危险-2&lt;/div&gt;
             &lt;/div&gt;
             &lt;div&gt;
-              &lt;&lt;link &quot;🌪️ 祸水东引 (20w | 📉2k流)&quot; &quot;PR_Execute&quot;&gt;&gt;
-                  &lt;&lt;set $type to &quot;divert&quot;, $cost to 20, $cost_t to 2000&gt;&gt;
-              &lt;&lt;/link&gt;&gt;
-              &lt;div style=&quot;font-size:0.75em; color:#94a3b8;&quot;&gt;抛出其他瓜，危险-10&lt;/div&gt;
+              &lt;&lt;link &quot;🌪️ 祸水东引 (20w | 📉2k流)&quot; &quot;PR_Execute&quot;&gt;&gt;&lt;&lt;set $type to &quot;divert&quot;, $cost to 20, $cost_t to 2000&gt;&gt;&lt;&lt;/link&gt;&gt;
+              &lt;div style=&quot;font-size:0.7em; color:#94a3b8;&quot;&gt;抛出其他瓜，危险-10&lt;/div&gt;
             &lt;/div&gt;
             &lt;div&gt;
-               /* 🔴 修正：全网洗地 危险值-30 */
-               &lt;&lt;link &quot;🌊 全网洗地 (50w | 📉5k流)&quot; &quot;PR_Execute&quot;&gt;&gt;
-                   &lt;&lt;set $type to &quot;water&quot;, $cost to 50, $cost_t to 5000&gt;&gt;
-               &lt;&lt;/link&gt;&gt;
-               &lt;div style=&quot;font-size:0.75em; color:#15803d; font-weight:bold;&quot;&gt;简单粗暴，危险-30&lt;/div&gt;
+               &lt;&lt;link &quot;🌊 全网洗地 (50w | 📉5k流)&quot; &quot;PR_Execute&quot;&gt;&gt;&lt;&lt;set $type to &quot;water&quot;, $cost to 50, $cost_t to 5000&gt;&gt;&lt;&lt;/link&gt;&gt;
+               &lt;div style=&quot;font-size:0.7em; color:#15803d; font-weight:bold;&quot;&gt;简单粗暴，危险-30&lt;/div&gt;
             &lt;/div&gt;
             &lt;div&gt;
-               &lt;&lt;link &quot;📹 直播澄清 (0w | 📉3k流)&quot; &quot;PR_Execute&quot;&gt;&gt;
-                   &lt;&lt;set $type to &quot;live_apology&quot;, $cost to 0, $cost_t to 3000&gt;&gt;
-               &lt;&lt;/link&gt;&gt;
-               &lt;div style=&quot;font-size:0.75em; color:#94a3b8;&quot;&gt;高风险赌博&lt;/div&gt;
+               &lt;&lt;link &quot;📹 直播澄清 (0w | 📉3k流)&quot; &quot;PR_Execute&quot;&gt;&gt;&lt;&lt;set $type to &quot;live_apology&quot;, $cost to 0, $cost_t to 3000&gt;&gt;&lt;&lt;/link&gt;&gt;
+               &lt;div style=&quot;font-size:0.7em; color:#94a3b8;&quot;&gt;高风险赌博&lt;/div&gt;
             &lt;/div&gt;
           &lt;/div&gt;
         &lt;/div&gt;
 
-        /* === 2. 营销战争模块 (主动出击) === */
-        &lt;div class=&quot;actor-mini-card&quot; style=&quot;border-left:4px solid #3b82f6; margin-top:20px;&quot;&gt;
-          &lt;div style=&quot;margin-bottom:10px; font-weight:bold; color:#1e40af;&quot;&gt;
-            ⚔️ 主动出击 &lt;span style=&quot;font-size:0.8em; font-weight:normal; color:#64748b;&quot;&gt;(请点击选择出战艺人)&lt;/span&gt;
-          &lt;/div&gt;
-          
-          /* 🔴 核心修改：使用 ID 替换模式，点击按钮直接切换变量 */
+        /* --- 3. 营销战争模块 (恢复精致文案版本) --- */
+        &lt;div class=&quot;actor-mini-card&quot; style=&quot;border-left:4px solid #3b82f6;&quot;&gt;
+          &lt;div style=&quot;margin-bottom:10px; font-weight:bold; color:#1e40af;&quot;&gt;⚔️ 主动出击 &lt;span style=&quot;font-size:0.8em; font-weight:normal; color:#64748b;&quot;&gt;(请先点击选择出战艺人)&lt;/span&gt;&lt;/div&gt;
           &lt;div id=&quot;war-actor-selector&quot; style=&quot;background:#f1f5f9; padding:10px; border-radius:6px; margin-bottom:15px; display:flex; gap:10px;&quot;&gt;
              &lt;&lt;include &quot;War_Actor_Selector_Widget&quot;&gt;&gt;
           &lt;/div&gt;
-
           &lt;hr&gt;
           &lt;div style=&quot;display:grid; grid-template-columns: 1fr 1fr; gap:10px;&quot;&gt;
             &lt;div&gt;
                &lt;div style=&quot;font-size:0.8em; color:#64748b;&quot;&gt;VS 同性竞品&lt;/div&gt;
-               &lt;&lt;link &quot;👊 流量硬刚 (50w | 📉5k流)&quot; &quot;Marketing_Battle&quot;&gt;&gt;
-                   &lt;&lt;set $battle_type to &quot;traffic&quot;, $cost to 50, $cost_t to 5000, $cost_s to 0&gt;&gt;
-               &lt;&lt;/link&gt;&gt;
+               &lt;&lt;link &quot;👊 流量硬刚 (50w | 📉5k流)&quot; &quot;Marketing_Battle&quot;&gt;&gt;&lt;&lt;set $battle_type to &quot;traffic&quot;, $cost to 50, $cost_t to 5000, $cost_s to 0&gt;&gt;&lt;&lt;/link&gt;&gt;
                &lt;br&gt;
-               
                &lt;&lt;if $gossips.length &gt; 0&gt;&gt;
-                   &lt;&lt;link &quot;💣 爆黑料 (📉2k流 | ⚡20)&quot; &quot;Marketing_Battle&quot;&gt;&gt;
-                       &lt;&lt;set $battle_type to &quot;gossip_attack&quot;, $cost to 0, $cost_t to 2000, $cost_s to 20&gt;&gt;
-                   &lt;&lt;/link&gt;&gt;
-                   &lt;div style=&quot;font-size:0.75em; color:#94a3b8;&quot;&gt;随机消耗一条库存情报&lt;/div&gt;
+                   &lt;&lt;link &quot;💣 爆黑料 (📉2k流 | ⚡20)&quot; &quot;Marketing_Battle&quot;&gt;&gt;&lt;&lt;set $battle_type to &quot;gossip_attack&quot;, $cost to 0, $cost_t to 2000, $cost_s to 20&gt;&gt;&lt;&lt;/link&gt;&gt;
+                   &lt;div style=&quot;font-size:0.75em; color:#94a3b8;&quot;&gt;随机消耗一条情报&lt;/div&gt;
                &lt;&lt;else&gt;&gt;
                    &lt;span style=&quot;color:#ccc; text-decoration:line-through&quot;&gt;库存暂无情报&lt;/span&gt;
-                   &lt;div style=&quot;font-size:0.75em; color:#ef4444;&quot;&gt;请先去情报所买瓜&lt;/div&gt;
                &lt;&lt;/if&gt;&gt;
             &lt;/div&gt;
             &lt;div&gt;
                &lt;div style=&quot;font-size:0.8em; color:#64748b;&quot;&gt;VS 异性/合作&lt;/div&gt;
-               &lt;&lt;link &quot;💔 独自美丽 (50w | 📉3k流)&quot; &quot;Marketing_Battle&quot;&gt;&gt;
-                   &lt;&lt;set $battle_type to &quot;solo&quot;, $cost to 50, $cost_t to 3000, $cost_s to 0&gt;&gt;
-               &lt;&lt;/link&gt;&gt;
+               &lt;&lt;link &quot;💔 独自美丽 (50w | 📉3k流)&quot; &quot;Marketing_Battle&quot;&gt;&gt;&lt;&lt;set $battle_type to &quot;solo&quot;, $cost to 50, $cost_t to 3000, $cost_s to 0&gt;&gt;&lt;&lt;/link&gt;&gt;
                &lt;br&gt;
-               &lt;&lt;link &quot;❤️ 捆绑炒作 (50w | 📉3k流)&quot; &quot;Marketing_Battle&quot;&gt;&gt;
-                   &lt;&lt;set $battle_type to &quot;cp_bundle&quot;, $cost to 50, $cost_t to 3000, $cost_s to 0&gt;&gt;
-               &lt;&lt;/link&gt;&gt;
+               &lt;&lt;link &quot;❤️ 捆绑炒作 (50w | 📉3k流)&quot; &quot;Marketing_Battle&quot;&gt;&gt;&lt;&lt;set $battle_type to &quot;cp_bundle&quot;, $cost to 50, $cost_t to 3000, $cost_s to 0&gt;&gt;&lt;&lt;/link&gt;&gt;
             &lt;/div&gt;
           &lt;/div&gt;
         &lt;/div&gt;
 
-        /* === 3. 💖 公益慈善 === */
+        /* --- 4. 公益慈善 --- */
         &lt;div class=&quot;actor-mini-card&quot; style=&quot;border-left:4px solid #10b981; margin-top:20px; background:#f0fdf4;&quot;&gt;
-          &lt;b&gt;💖 公益慈善&lt;/b&gt; &lt;span style=&quot;font-size:0.8em; color:#ef4444;&quot;&gt;(无需流量，但每月限一次)&lt;/span&gt;
-          &lt;hr style=&quot;border-color:#bbf7d0;&quot;&gt;
-          &lt;div style=&quot;display:flex; gap:10px; justify-content:space-around;&quot;&gt;
-             &lt;div style=&quot;text-align:center;&quot;&gt;
-                &lt;&lt;link &quot;物资捐赠 (100w)&quot; &quot;PR_Execute&quot;&gt;&gt;&lt;&lt;set $type to &quot;charity&quot;, $cost to 100, $cost_t to 0&gt;&gt;&lt;&lt;/link&gt;&gt;
-             &lt;/div&gt;
-             &lt;div style=&quot;text-align:center;&quot;&gt;
-                &lt;&lt;link &quot;希望小学 (300w)&quot; &quot;PR_Execute&quot;&gt;&gt;&lt;&lt;set $type to &quot;charity&quot;, $cost to 300, $cost_t to 0&gt;&gt;&lt;&lt;/link&gt;&gt;
-             &lt;/div&gt;
-             &lt;div style=&quot;text-align:center;&quot;&gt;
-                &lt;&lt;link &quot;成立基金会 (500w)&quot; &quot;PR_Execute&quot;&gt;&gt;&lt;&lt;set $type to &quot;charity&quot;, $cost to 500, $cost_t to 0&gt;&gt;&lt;&lt;/link&gt;&gt;
-             &lt;/div&gt;
+          &lt;b&gt;💖 公益慈善&lt;/b&gt; &lt;span style=&quot;font-size:0.8em; color:#ef4444;&quot;&gt;(每月限一次)&lt;/span&gt;
+          &lt;div style=&quot;display:flex; gap:10px; justify-content:space-around; margin-top:10px;&quot;&gt;
+             &lt;&lt;link &quot;物资捐赠 (100w)&quot; &quot;PR_Execute&quot;&gt;&gt;&lt;&lt;set $type to &quot;charity&quot;, $cost to 100, $cost_t to 0&gt;&gt;&lt;&lt;/link&gt;&gt;
+             &lt;&lt;link &quot;希望小学 (300w)&quot; &quot;PR_Execute&quot;&gt;&gt;&lt;&lt;set $type to &quot;charity&quot;, $cost to 300, $cost_t to 0&gt;&gt;&lt;&lt;/link&gt;&gt;
+             &lt;&lt;link &quot;成立基金会 (500w)&quot; &quot;PR_Execute&quot;&gt;&gt;&lt;&lt;set $type to &quot;charity&quot;, $cost to 500, $cost_t to 0&gt;&gt;&lt;&lt;/link&gt;&gt;
           &lt;/div&gt;
         &lt;/div&gt;
 
-        &lt;hr&gt;
-        &lt;div style=&quot;text-align:center; margin-top:20px;&quot;&gt;
-          [[🔙 返回办公室|Office]]
-        &lt;/div&gt;
+        &lt;div style=&quot;text-align:center; margin-top:20px;&quot;&gt;[[🔙 返回办公室|Office]]&lt;/div&gt;
     &lt;&lt;/if&gt;&gt;
   &lt;/div&gt;
 &lt;/div&gt;
@@ -3608,11 +3451,11 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
 }</tw-passagedata><tw-passagedata pid="44" name="StoryInit" tags="系统" position="1675,75" size="100,200">/* ==============================
    1. 基础资源配置
    ============================== */
-&lt;&lt;set $money to 2000&gt;&gt;        
+&lt;&lt;set $money to 20000&gt;&gt;        
 &lt;&lt;set $month to 1&gt;&gt;           
 &lt;&lt;set $total_months to 60&gt;&gt;   
 &lt;&lt;set $stamina to 100&gt;&gt;       
-&lt;&lt;set $traffic to 20000&gt;&gt;      
+&lt;&lt;set $traffic to 200000&gt;&gt;      
 &lt;&lt;set $monthly_cost to 300&gt;&gt;  
 &lt;&lt;set $resources to { s: 0, a: 0, b: 2, c: 5 }&gt;&gt;
 &lt;&lt;set $company_res to 7&gt;&gt;
@@ -3744,7 +3587,10 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
 /* === 修复：主动出击变量初始化 === */
 &lt;&lt;if not def $war_actor&gt;&gt;
     &lt;&lt;set $war_actor to &quot;zp&quot;&gt;&gt;
-&lt;&lt;/if&gt;&gt;</tw-passagedata><tw-passagedata pid="45" name="Train_Execute" tags="" position="1600,1475" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+
+
+</tw-passagedata><tw-passagedata pid="45" name="Train_Execute" tags="" position="1600,1475" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 /* --- 1. 锁判定 --- */
 &lt;&lt;ZP_Check_Lock &quot;training&quot;&gt;&gt;
@@ -4904,9 +4750,9 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
         &lt;&lt;set _old_label to _a.rank_label&gt;&gt;
 
         /* 判定门槛 */
-        &lt;&lt;if _star_power &gt; 1000000&gt;&gt;
+        &lt;&lt;if _star_power &gt; 500000&gt;&gt;
             &lt;&lt;set _a.rank_label to &quot;顶流&quot;&gt;&gt;&lt;&lt;set _a.rank_level to 5&gt;&gt;
-        &lt;&lt;elseif _star_power &gt; 400000&gt;&gt;
+        &lt;&lt;elseif _star_power &gt; 150000&gt;&gt;
             &lt;&lt;set _a.rank_label to &quot;一线&quot;&gt;&gt;&lt;&lt;set _a.rank_level to 4&gt;&gt;
         &lt;&lt;elseif _star_power &gt; 60000&gt;&gt; 
             &lt;&lt;set _a.rank_label to &quot;二线&quot;&gt;&gt;&lt;&lt;set _a.rank_level to 3&gt;&gt;
