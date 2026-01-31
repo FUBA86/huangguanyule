@@ -3197,159 +3197,214 @@ Config.passages.nobr = true;</script><tw-tag name="系统" color="red"></tw-tag>
     &lt;/div&gt;
 &lt;/div&gt;</tw-passagedata><tw-passagedata pid="33" name="Resource_Get" tags="" position="2325,1550" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;style&gt;
-    .result-page {
-        min-height: 500px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    /* 🎨 商务结算页样式 V2.1 (灰蓝商务版) */
+    
+    /* 1. 全局容器 */
+    .business-container {
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        min-height: 550px;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        text-align: center;
         padding: 40px;
-        color: white;
+        font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif;
     }
     
+    /* 2. 结果卡片 */
     .result-card {
-        background: rgba(255, 255, 255, 0.95);
-        border-radius: 20px;
-        padding: 50px 60px;
-        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
-        max-width: 500px;
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 40px 50px;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+        border: 1px solid #cbd5e1;
+        max-width: 480px;
         width: 100%;
-        color: #333;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
     }
     
-    .result-icon {
-        font-size: 8em;
-        margin-bottom: 20px;
-        display: block;
+    /* 顶部装饰条 */
+    .status-bar {
+        height: 6px;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    
+    /* 3. 图标与标题 */
+    .status-icon-box {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3em;
+        margin: 0 auto 20px auto;
     }
     
     .result-title {
-        font-size: 2.5em;
-        font-weight: 900;
+        font-size: 1.8em;
+        font-weight: 800;
+        color: #1e293b; 
         margin-bottom: 10px;
-        background: linear-gradient(45deg, #ff6b6b, #ffd166, #06d6a0, #118ab2, #073b4c);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
+        letter-spacing: -0.5px;
     }
     
-    .result-desc {
-        font-size: 1.3em;
-        color: #555;
+    .result-subtitle {
+        font-size: 1em;
+        color: #64748b;
         margin-bottom: 30px;
         line-height: 1.5;
     }
     
-    .count-display {
-        font-size: 5em;
+    /* 4. 数据展示区 */
+    .data-panel {
+        background: #f8fafc;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 25px;
+        border: 1px dashed #94a3b8;
+    }
+    
+    .data-label {
+        font-size: 0.8em;
+        text-transform: uppercase;
+        color: #64748b;
+        letter-spacing: 1px;
+        margin-bottom: 5px;
+        font-weight: 600;
+    }
+    
+    .data-value {
+        font-size: 3.5em;
         font-weight: 900;
-        color: #ff6b6b;
-        text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        margin: 20px 0;
+        font-family: monospace;
         line-height: 1;
     }
     
-    .hint-box {
-        background: #f8f9fa;
-        border-radius: 12px;
-        padding: 15px;
-        margin: 20px 0;
-        border-left: 4px solid #06d6a0;
+    /* 5. 提示框 */
+    .info-box {
+        background: #fff;
+        border-left: 4px solid #94a3b8;
+        padding: 12px 15px;
         text-align: left;
+        font-size: 0.9em;
+        color: #475569;
+        margin-bottom: 25px;
+        border: 1px solid #e2e8f0;
+        border-left-width: 4px;
     }
     
-    .action-btn {
+    /* 6. 按钮 */
+    .btn-return {
         display: inline-block;
-        background: linear-gradient(to right, #06d6a0, #118ab2);
+        background: #0f172a; /* Slate-900 */
         color: white;
-        padding: 16px 40px;
-        border-radius: 50px;
-        font-size: 1.2em;
-        font-weight: bold;
+        padding: 12px 30px;
+        border-radius: 6px;
+        font-weight: 600;
         text-decoration: none;
         border: none;
         cursor: pointer;
-        box-shadow: 0 8px 20px rgba(6, 214, 160, 0.4);
-        transition: all 0.3s ease;
-        margin-top: 20px;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        width: 100%;
+        box-sizing: border-box;
     }
     
-    .action-btn:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 12px 25px rgba(6, 214, 160, 0.6);
+    .btn-return:hover {
+        background: #334155;
+        transform: translateY(-2px);
     }
+
+    /* === 状态配色 (核心修改区) === */
     
-    .extra-info {
-        background: linear-gradient(45deg, #ffd166, #ff9e6d);
-        color: #333;
-        padding: 12px 20px;
-        border-radius: 10px;
-        margin: 20px 0;
-        font-weight: bold;
-        font-size: 1.1em;
-    }
+    /* 🔵 成功状态：改为灰蓝色 (Slate Blue) */
+    .success-theme .status-bar { background: #475569; } /* Slate-600 */
+    .success-theme .status-icon-box { background: #f1f5f9; color: #334155; } /* Slate-100 / Slate-700 */
+    .success-theme .data-value { color: #475569; } /* Slate-600 */
+    .success-theme .info-box { border-left-color: #475569; } /* 提示框左边也是灰蓝 */
     
-    .back-hint {
-        color: rgba(255, 255, 255, 0.8);
-        font-size: 0.9em;
-        margin-top: 30px;
-        font-style: italic;
-    }
+    /* 🔴 失败状态：保持玫瑰红警示 */
+    .fail-theme .status-bar { background: #ef4444; }
+    .fail-theme .status-icon-box { background: #fef2f2; color: #b91c1c; }
+    .fail-theme .data-value { color: #94a3b8; text-decoration: line-through; }
+    .fail-theme .info-box { border-left-color: #ef4444; background: #fff1f2; color: #be123c; }
+
 &lt;/style&gt;
 
-&lt;div class=&quot;result-page&quot;&gt;
-    &lt;div class=&quot;result-card&quot;&gt;
-        /* === 失败情况 === */
-        &lt;&lt;if $last_gained_res is &quot;fail&quot;&gt;&gt;
-            &lt;span class=&quot;result-icon&quot;&gt;😢&lt;/span&gt;
-            &lt;h1 class=&quot;result-title&quot;&gt;谈判破裂&lt;/h1&gt;
-            &lt;div class=&quot;result-desc&quot;&gt;
-                虽然支付了费用，但未能达成合作意向
+&lt;div class=&quot;business-container&quot;&gt;
+    
+    /* === 逻辑判断 === */
+    &lt;&lt;if $last_gained_res is &quot;fail&quot;&gt;&gt;
+        
+        /* 🔴 失败状态卡片 */
+        &lt;div class=&quot;result-card fail-theme&quot;&gt;
+            &lt;div class=&quot;status-bar&quot;&gt;&lt;/div&gt;
+            
+            &lt;div class=&quot;status-icon-box&quot;&gt;❌&lt;/div&gt;
+            
+            &lt;h1 class=&quot;result-title&quot;&gt;谈判中止&lt;/h1&gt;
+            &lt;div class=&quot;result-subtitle&quot;&gt;
+                Negotiation Failed&lt;br&gt;
+                由于某些不可控因素，本次资源置换未能达成。
             &lt;/div&gt;
             
-            &lt;div class=&quot;hint-box&quot;&gt;
-                💡 &lt;b&gt;提示：&lt;/b&gt;资金已消耗，但未获得任何资源。&lt;br&gt;
-                可能是对方临时变卦，或者谈判条件不合适。
+            &lt;div class=&quot;info-box&quot;&gt;
+                💡 &lt;b&gt;风险提示：&lt;/b&gt;&lt;br&gt;
+                资金与体力已按流程扣除。可能是对方临时抬价，建议稍后重试。
             &lt;/div&gt;
             
-        /* === 成功情况 === */
-        &lt;&lt;else&gt;&gt;
-            &lt;span class=&quot;result-icon&quot;&gt;🎉&lt;/span&gt;
-            &lt;h1 class=&quot;result-title&quot;&gt;谈判成功！&lt;/h1&gt;
-            &lt;div class=&quot;result-desc&quot;&gt;
-                成功建立合作，获得了新的资源
+            &lt;&lt;button &quot;🔙 返回商务中心&quot; &quot;btn-return&quot;&gt;&gt;
+                &lt;&lt;goto &quot;Buy_Resource&quot;&gt;&gt;
+            &lt;&lt;/button&gt;&gt;
+        &lt;/div&gt;
+
+    &lt;&lt;else&gt;&gt;
+        
+        /* 🔵 成功状态卡片 (灰蓝商务风) */
+        &lt;div class=&quot;result-card success-theme&quot;&gt;
+            &lt;div class=&quot;status-bar&quot;&gt;&lt;/div&gt;
+            
+            &lt;div class=&quot;status-icon-box&quot;&gt;🤝&lt;/div&gt;
+            
+            &lt;h1 class=&quot;result-title&quot;&gt;签约成功&lt;/h1&gt;
+            &lt;div class=&quot;result-subtitle&quot;&gt;
+                Deal Closed Successfully&lt;br&gt;
+                已成功签署合同，资源已录入公司系统。
             &lt;/div&gt;
             
-            &lt;div class=&quot;count-display&quot;&gt;
-                x&lt;&lt;print $last_gained_count&gt;&gt;
-            &lt;/div&gt;
-            
-            &lt;div class=&quot;result-desc&quot;&gt;
-                已存入公司资源库
-            &lt;/div&gt;
-            
-            &lt;div class=&quot;hint-box&quot;&gt;
-                💡 &lt;b&gt;提示：&lt;/b&gt;具体获得的资源等级&lt;br&gt;
-                请返回上一页查看&quot;资源库存总览&quot;
+            &lt;div class=&quot;data-panel&quot;&gt;
+                &lt;div class=&quot;data-label&quot;&gt;Acquired Resources&lt;/div&gt;
+                &lt;div class=&quot;data-value&quot;&gt;+&lt;&lt;print $last_gained_count&gt;&gt;&lt;/div&gt;
             &lt;/div&gt;
             
             &lt;&lt;if def $last_gained_extra&gt;&gt;
-                &lt;div class=&quot;extra-info&quot;&gt;
-                    ✨ &lt;&lt;print $last_gained_extra&gt;&gt;
+                &lt;div class=&quot;info-box&quot; style=&quot;border-left-color: #f59e0b; background: #fffbeb; color: #92400e;&quot;&gt;
+                    ✨ &lt;b&gt;额外触发：&lt;/b&gt; &lt;&lt;print $last_gained_extra&gt;&gt;
+                &lt;/div&gt;
+            &lt;&lt;else&gt;&gt;
+                &lt;div class=&quot;info-box&quot;&gt;
+                    📋 &lt;b&gt;系统日志：&lt;/b&gt;&lt;br&gt;
+                    资源类型与等级已更新，请前往“通告中心”查看详细库存。
                 &lt;/div&gt;
             &lt;&lt;/if&gt;&gt;
-        &lt;&lt;/if&gt;&gt;
+            
+            &lt;&lt;button &quot;✅ 确认归档&quot; &quot;btn-return&quot;&gt;&gt;
+                &lt;&lt;goto &quot;Buy_Resource&quot;&gt;&gt;
+            &lt;&lt;/button&gt;&gt;
+        &lt;/div&gt;
         
-        &lt;&lt;button &quot;✅ 返回商务中心&quot; &quot;action-btn&quot;&gt;&gt;
-            &lt;&lt;goto &quot;Buy_Resource&quot;&gt;&gt;
-        &lt;&lt;/button&gt;&gt;
-    &lt;/div&gt;
+    &lt;&lt;/if&gt;&gt;
     
-    &lt;div class=&quot;back-hint&quot;&gt;
-        提示：资源等级和数量已更新，可在侧边栏或商务中心查看
+    &lt;div style=&quot;margin-top: 20px; font-size: 0.85em; color: #94a3b8;&quot;&gt;
+        MUGEN ENTERTAINMENT SYSTEM V2.1
     &lt;/div&gt;
+
 &lt;/div&gt;
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="34" name="Rest_Transition" tags="" position="2550,225" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;div class=&quot;tech-card&quot; style=&quot;min-height: 60vh; position:relative; display:flex; flex-direction:column; justify-content:center; align-items:center;&quot;&gt;
