@@ -1,0 +1,306 @@
+/* =========================================================================
+   样式表：颜色 / 字体 / 卡片外观，都在这里改
+   -------------------------------------------------------------------------
+   ★ 常用改动：把 #7c3aed（紫色）换成你喜欢的颜色即可换主题色
+   ========================================================================= */
+
+/* ---------- 引擎自身框架（建议不要动） ---------- */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; height: 100%; }
+#app { display: flex; min-height: 100vh; }
+#ui-bar { flex: 0 0 260px; }
+#story-wrap { flex: 1 1 auto; min-width: 0; overflow-x: hidden; }
+#ui-bar-toggle { display: none; }
+.engine-error {
+  background:#fff1f2; border:2px solid #f43f5e; color:#881337;
+  padding:18px; border-radius:10px; font-size:14px; line-height:1.7; white-space:pre-wrap;
+}
+
+/* =========================================================================
+   下面内容来自原 Twine 工程的 StoryStylesheet，未做改动
+   ========================================================================= */
+/* =========================================================
+   1. 视觉指挥中心 (配色升级为：商务灰蓝 Slate Theme)
+   ========================================================= */
+:root {
+    /* 背景色：极浅灰蓝 */
+    --bg-main: #f8fafc; 
+    --bg-dark: #0f172a; /* 深蓝黑导航栏 */
+    
+    /* 文字色 */
+    --text-dark: #1e293b; /* 正文深灰 */
+    --text-light: #64748b; /* 次要文字 */
+    
+    /* 强调色：保持原有逻辑，但微调色值更高级 */
+    --accent-gold: #fbbf24; /* 金色 (S级/钱) */
+    --accent-blue: #3b82f6; /* 蓝色 (B级/科技) */
+    --accent-pink: #db2777; /* 粉色 (A级/女性) */
+    
+    /* 边框与阴影 */
+    --border-light: #cbd5e1; /* 加深一点边框，更有质感 */
+    --shadow-soft: 0 4px 6px -1px rgba(0,0,0,0.05);
+}
+
+/* =========================================================
+   2. 基础框架 (Core Layout - 保持原样)
+   ========================================================= */
+* { box-sizing: border-box; transition: all 0.2s ease; }
+
+body {
+    background-color: var(--bg-main);
+    /* 更加细腻的网格背景 */
+    background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+    background-size: 20px 20px;
+    color: var(--text-dark);
+    font-family: -apple-system, "Microsoft YaHei", "Segoe UI", sans-serif;
+    font-size: 16px; margin: 0;
+}
+
+#story-title { display: none; }
+
+.passage {
+    max-width: 1100px !important; width: 95% !important;
+    margin: 20px auto !important; padding: 0 !important;
+}
+
+/* =========================================================
+   3. 侧边栏 (UI-Bar - 保持结构，微调配色)
+   ========================================================= */
+#ui-bar {
+    background-color: var(--bg-dark);
+    border-right: 1px solid #334155;
+    width: 260px; padding: 15px; text-align: center;
+}
+
+#ui-bar a { color: #38bdf8; text-decoration: none; font-weight: bold; }
+#ui-bar a:hover { color: var(--accent-gold); }
+
+.sidebar-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.stat-item { white-space: nowrap; font-size: 0.9em; color: #cbd5e1; }
+
+.res-box {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 6px; padding: 8px; margin: 10px 0;
+    display: flex; justify-content: space-between;
+}
+
+.actor-section { 
+    margin-top: 15px; 
+    border-top: 1px dashed rgba(255,255,255,0.2);
+    padding-top: 10px; 
+}
+.actor-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px; }
+.wife-badge { background: var(--accent-pink); color: #fff; font-size: 0.7em; padding: 2px 6px; border-radius: 4px; }
+
+/* =========================================================
+   4. 通用卡片组件 (Tech Card - 保持原样，微调阴影)
+   ========================================================= */
+.tech-card {
+    background: #ffffff;
+    border: 1px solid var(--border-light); /* 更有实感的边框 */
+    border-radius: 12px;
+    box-shadow: var(--shadow-soft);
+    overflow: hidden; 
+    margin-bottom: 20px;
+    color: var(--text-dark);
+}
+
+/* 商务中心专用风格 */
+.tech-card-business {
+    background-color: #f8fafc;
+    background-image: linear-gradient(#e2e8f0 1px, transparent 1px), linear-gradient(90deg, #e2e8f0 1px, transparent 1px);
+    background-size: 20px 20px;
+    color: var(--bg-dark) !important;
+    border: 1px solid var(--border-light);
+    border-radius: 12px; padding: 25px;
+    box-shadow: var(--shadow-soft);
+}
+
+/* 粉丝中心/子卡片容器 */
+.card-container { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+
+.sub-card {
+    background: #fff;
+    border: 1px solid var(--border-light);
+    border-radius: 8px; padding: 20px; flex: 1; 
+    min-width: 280px; max-width: 360px;
+    display: flex; flex-direction: column;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+.sub-card:hover { 
+    transform: translateY(-3px); 
+    border-color: #94a3b8; 
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+}
+
+/* =========================================================
+   5. 仪表盘布局 (Dashboard - 🚨 核心修复区)
+   ========================================================= */
+.header-banner {
+    background: linear-gradient(135deg, var(--bg-dark) 0%, #1e293b 100%);
+    color: #fff; padding: 20px 30px;
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 4px solid var(--accent-gold);
+}
+
+/* 办公室九宫格布局 (保持原样) */
+.dashboard-grid { 
+    display: grid; 
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 20px; padding: 25px 30px;
+}
+
+/* 办公室按钮盒子 (保持原样) */
+.btn-box {
+    background: #fff; 
+    border: 1px solid var(--border-light); 
+    border-radius: 10px;
+    height: 120px; 
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    transition: all 0.2s;
+}
+.btn-box:hover { 
+    border-color: var(--accent-blue); 
+    transform: translateY(-2px); 
+    box-shadow: 0 4px 12px rgba(59,130,246,0.1);
+}
+/* 强制覆盖链接样式，防止变蓝 */
+.btn-box a { 
+    color: var(--text-dark) !important; 
+    font-weight: 800; font-size: 1.2em; 
+    text-decoration: none; width: 100%; height: 100%; 
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+}
+
+.btn-sub { font-size: 0.7em; color: var(--text-light); margin-top: 5px; text-transform: uppercase; }
+
+/* =========================================================
+   6. 资源与按钮组 (Resource Group - 🚨 核心修复区)
+   ========================================================= */
+/* 资源库存条 */
+.res-rank-base {
+    font-family: "Arial Black", sans-serif;
+    font-weight: 900; font-size: 1.2em; margin-left: 10px;
+}
+.res-s { color: #d97706; }
+.res-a { color: #9333ea; }
+.res-b { color: var(--accent-blue); }
+.res-c { color: var(--text-light); opacity: 0.8; }
+
+/* 通告中心的小按钮组 */
+.res-btn-group { 
+    display: flex;
+    gap: 8px; margin-top: 8px; flex-wrap: wrap; 
+}
+.res-btn-group a, .res-btn-group span {
+    display: flex; justify-content: center; align-items: center;
+    width: 36px; height: 36px; border-radius: 6px;
+    font-weight: bold; font-family: monospace; 
+    text-decoration: none; border: 1px solid var(--border-light);
+}
+.res-btn-group a { background: #fff; color: var(--text-dark) !important; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+.res-btn-group a:hover { background: var(--accent-blue); color: #fff !important; transform: translateY(-2px); }
+.res-btn-group span { background: #f1f5f9; color: #cbd5e1; cursor: not-allowed; }
+
+/* =========================================================
+   7. 艺人切换 Tab (Artist Tabs - 保持原样)
+   ========================================================= */
+.tab-grid { display: flex; gap: 10px; margin-bottom: 20px; }
+.tab-btn { 
+    flex: 1; background: #f1f5f9; border: 1px solid var(--border-light); 
+    border-radius: 8px; text-align: center; transition: all 0.2s ease;
+}
+.tab-btn a { 
+    display: block; padding: 12px; font-weight: bold; 
+    text-decoration: none !important; color: var(--text-light) !important;
+}
+.tab-btn:hover { background: #fff; border-color: var(--accent-blue); }
+.tab-btn:hover a { color: var(--accent-blue) !important; }
+
+/* =========================================================
+   8. [NEW] 新增：剧本选择页专用样式 (Biz Card)
+   这是为了配合 Job_Drama_Select 等新页面的，不影响旧页面
+   ========================================================= */
+.page-container {
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    padding: 20px; min-height: 80vh;
+}
+
+.biz-card {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--border-light);
+    width: 100%; max-width: 600px;
+    overflow: hidden; margin-bottom: 20px;
+}
+
+.biz-header {
+    background: var(--bg-dark); color: white;
+    padding: 15px 25px; display: flex; justify-content: space-between; align-items: center;
+}
+.biz-header-title { font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+
+.biz-body { padding: 30px; }
+
+.info-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 15px; text-align: left; margin: 20px 0;
+}
+.info-item {
+    background: #f8fafc; border: 1px solid var(--border-light);
+    padding: 10px 15px; border-radius: 6px;
+}
+.info-label { display: block; font-size: 0.8em; color: var(--text-light); margin-bottom: 4px; }
+.info-value { font-weight: 700; color: var(--text-dark); font-family: monospace; font-size: 1.1em; }
+
+.btn-group { display: flex; gap: 15px; margin-top: 25px; }
+
+/* 通用按钮 */
+.btn-primary {
+    display: block; width: 100%; padding: 12px 20px;
+    background: var(--bg-dark); color: white !important;
+    border-radius: 6px; font-weight: 600; text-align: center; text-decoration: none;
+    border: none; cursor: pointer; transition: all 0.2s;
+}
+.btn-primary:hover { background: #334155; transform: translateY(-2px); }
+
+.btn-secondary {
+    display: block; width: 100%; padding: 12px 20px;
+    background: white; color: var(--text-light) !important;
+    border: 1px solid var(--border-light);
+    border-radius: 6px; font-weight: 600; text-align: center; text-decoration: none;
+    cursor: pointer; transition: all 0.2s;
+}
+.btn-secondary:hover { background: #f8fafc; border-color: #94a3b8; }
+
+/* 徽章 */
+.badge { padding: 3px 8px; border-radius: 4px; font-size: 0.8em; font-weight: bold; }
+.badge-success { background: #ecfdf5; color: #059669; }
+.badge-danger { background: #fef2f2; color: #dc2626; }
+.badge-neutral { background: rgba(255,255,255,0.2); color: #fff; }
+
+/* 提示框 */
+.alert-box {
+    padding: 15px; border-radius: 8px; font-size: 0.9em; margin-bottom: 20px; text-align: left;
+}
+.alert-box.info {
+    background: #f8fafc; border: 1px dashed var(--border-light); color: var(--text-light); font-style: italic;
+}
+
+/* =========================================================================
+   引擎补充：能让 Narrow 屏幕（手机）也能正常玩
+   ========================================================================= */
+@media (max-width: 860px) {
+  #app { flex-direction: column; }
+  #ui-bar { flex: none; width: 100%; }
+  #ui-bar-toggle { display: block; }
+  #ui-bar-body { display: none; }
+  #ui-bar.open #ui-bar-body { display: block; }
+}

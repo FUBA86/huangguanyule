@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>预览 · 奶油蓝（Cream Blue）</title>
+<link rel="stylesheet" href="style.css?v=241047">
+<link rel="stylesheet" href="style_v5.css?v=31">
+</head>
+<body>
+<div id="app">
+  <div id="ui-bar">
+    <button id="ui-bar-toggle" type="button" onclick="document.getElementById('ui-bar').classList.toggle('open')">
+      <span>📊</span><span>状态面板</span><span class="chev">▾</span>
+    </button>
+    <div id="ui-bar-body">
+      <div id="ui-bar-caption"></div>
+      <div id="ui-bar-tools">
+        <button type="button" onclick="TweeEngine.save()">💾 存档</button>
+        <button type="button" onclick="TweeEngine.load()">📂 读档</button>
+        <button type="button" onclick="TweeEngine.restart()">🔄 重开</button>
+      </div>
+    </div>
+  </div>
+  <div id="story-wrap">
+    <div id="story">
+      <div id="story-title"></div>
+      <div id="passages"><div class="passage" id="passage-main"></div></div>
+    </div>
+  </div>
+</div>
+<script src="engine.js?v=241047"></script>
+<script src="ui.js?v=241047"></script>
+<script src="story/05_widgets.js?v=241047"></script>
+<script src="story/10_core.js?v=241047"></script>
+<script src="story/15_patch.js?v=241047"></script>
+<script src="story/20_prologue.js?v=241047"></script>
+<script src="story/30_act1.js?v=241047"></script>
+<script src="story/40_act2.js?v=241047"></script>
+<script src="story/50_act3.js?v=241047"></script>
+<script src="story/52_movie.js?v=241047"></script>
+<script src="story/60_act4.js?v=241047"></script>
+<script src="story/70_endings.js?v=241047"></script>
+<script src="story/80_work.js?v=241047"></script>
+<script src="story/85_business.js?v=241047"></script>
+<script src="story/90_marketing.js?v=241047"></script>
+<script src="story/92_fanwall.js?v=241047"></script>
+<script src="story/95_artist.js?v=241047"></script>
+<script src="story/96_month.js?v=241047"></script>
+<script>
+TweeEngine.init({ passages: window.__STORY_PASSAGES || [], start: 'Game_Notice', main: 'passage-main', caption: 'ui-bar-caption' });
+TweeEngine.setPreview(true);
+TweeEngine.newGame();
+var q = new URLSearchParams(location.search);
+var v = TweeEngine.state.vars;
+if (q.get('m')) v.month = parseInt(q.get('m'), 10);
+if (q.get('stage')) v.zp_story_stage = parseInt(q.get('stage'), 10);
+if (q.get('money')) v.money = parseInt(q.get('money'), 10);
+TweeEngine.goto(q.get('p') || 'Office');
+</script>
+
+
+</body>
+</html>

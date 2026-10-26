@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>经济公司模拟器 2.3</title>
+<link rel="stylesheet" href="style.css">
+<style>
+/* ---- 这几条是页面框架的补充样式，一般不用改 ---- */
+#ui-bar-body { display:flex; flex-direction:column; gap:14px; }
+#ui-bar-tools { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
+#ui-bar-tools button {
+  background:rgba(255,255,255,0.08); color:#cbd5e1; border:1px solid rgba(255,255,255,0.18);
+  border-radius:6px; padding:6px 10px; font-size:12px; cursor:pointer;
+}
+#ui-bar-tools button:hover { background:rgba(255,255,255,0.16); color:#fff; }
+#ui-bar-toggle {
+  width:100%; background:rgba(255,255,255,0.08); color:#cbd5e1; border:none;
+  border-radius:6px; padding:8px; cursor:pointer; font-size:13px; margin-bottom:10px;
+}
+.link-internal { cursor:pointer; }
+button.btn-macro { font-family:inherit; font-size:inherit; }
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ============ 左侧状态栏（每屏自动刷新） ============ -->
+  <div id="ui-bar">
+    <button id="ui-bar-toggle" onclick="document.getElementById('ui-bar').classList.toggle('open')">◀/▶ 状态面板</button>
+    <div id="ui-bar-body">
+      <div id="ui-bar-caption"></div>
+      <div id="ui-bar-tools">
+        <button onclick="TweeEngine.save();alert('已保存进度。')">💾 存档</button>
+        <button onclick="TweeEngine.load()">📂 读档</button>
+        <button onclick="TweeEngine.restart()">🔄 重开</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 右侧正文 ============ -->
+  <div id="story-wrap">
+    <div id="story">
+      <div id="story-title"></div>
+      <div id="passages">
+        <div class="passage" id="passage-main"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============ 引擎（不要改） ============ -->
+<script src="engine.js"></script>
+
+<!-- ============ 故事内容（要改剧情就改这些文件） ============ -->
+<script src="story/05_widgets.js"></script>
+<script src="story/10_core.js"></script>
+<script src="story/15_patch.js"></script>
+<script src="story/20_prologue.js"></script>
+<script src="story/30_act1.js"></script>
+<script src="story/40_act2.js"></script>
+<script src="story/50_act3.js"></script>
+<script src="story/60_act4.js"></script>
+<script src="story/70_endings.js"></script>
+<script src="story/80_work.js"></script>
+<script src="story/85_business.js"></script>
+<script src="story/90_marketing.js"></script>
+<script src="story/95_artist.js"></script>
+<script src="story/96_month.js"></script>
+
+<script>
+/* ============ 启动 ============ */
+TweeEngine.init({
+  passages: window.__STORY_PASSAGES || [],
+  start: 'Game_Notice',
+  main: 'passage-main',
+  caption: 'ui-bar-caption'
+});
+
+/* 编辑器预览：?p=故事块名 —— 用独立存档位，不会动你的真实进度 */
+var _q = new URLSearchParams(location.search).get('p');
+if (_q) {
+  TweeEngine.setPreview(true);
+  TweeEngine.newGame();
+  TweeEngine.goto(_q);
+} else if (TweeEngine.hasSave()) {
+  TweeEngine.load();
+} else {
+  TweeEngine.newGame();
+}
+
+/* 编辑器点了保存后，这里自动刷新，立刻能看到改动 */
+try {
+  var _bc = new BroadcastChannel('twee-editor');
+  _bc.onmessage = function () { location.reload(); };
+} catch (e) { }
+</script>
+
+</body>
+</html>

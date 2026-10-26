@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#f6f8fd">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>无垠娱乐 · CEO</title>
+<link rel="stylesheet" href="style.css?v=241047">
+<link rel="stylesheet" href="style_v5.css?v=31">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ============ 状态面板（手机端可折叠） ============ -->
+  <div id="ui-bar">
+    <button id="ui-bar-toggle" type="button"
+            onclick="document.getElementById('ui-bar').classList.toggle('open')">
+      <span>📊</span><span>状态面板</span><span class="chev">▾</span>
+    </button>
+    <div id="ui-bar-body">
+      <div id="ui-bar-caption"></div>
+      <div id="ui-bar-tools">
+        <button type="button" onclick="TweeEngine.save();UI.toast('进度已保存',{tone:'ok'})">💾 存档</button>
+        <button type="button" onclick="TweeEngine.load()">📂 读档</button>
+        <button type="button" onclick="TweeEngine.restart()">🔄 重开</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 正文 ============ -->
+  <div id="story-wrap">
+    <div id="story">
+      <div id="story-title"></div>
+      <div id="passages">
+        <div class="passage" id="passage-main"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     ⚠️ 这里的 ?v=241047 是「防缓存版本号」。
+     改完 story/ 下任何 js 之后，把这个数字的末位 +1（…241025 改成 …241026），
+     浏览器才会重新读取新代码；否则它会继续用旧文件，
+     就会出现「找不到 passage：xxx」这种明明代码里有的报错。
+     ═══════════════════════════════════════════════════════════════════ -->
+
+<!-- ============ 引擎（不要改） ============ -->
+<script src="engine.js?v=241047"></script>
+
+<!-- ============ 界面组件：弹窗 / 提示（不要改） ============ -->
+<script src="ui.js?v=241047"></script>
+
+<!-- ============ 故事内容（要改剧情就改这些文件） ============ -->
+<script src="story/05_widgets.js?v=241047"></script>
+<script src="story/10_core.js?v=241047"></script>
+<script src="story/15_patch.js?v=241047"></script>
+<script src="story/20_prologue.js?v=241047"></script>
+<script src="story/30_act1.js?v=241047"></script>
+<script src="story/40_act2.js?v=241047"></script>
+<script src="story/50_act3.js?v=241047"></script>
+<script src="story/52_movie.js?v=241047"></script>
+<script src="story/60_act4.js?v=241047"></script>
+<script src="story/70_endings.js?v=241047"></script>
+<script src="story/80_work.js?v=241047"></script>
+<script src="story/85_business.js?v=241047"></script>
+<script src="story/90_marketing.js?v=241047"></script>
+<script src="story/92_fanwall.js?v=241047"></script>
+<script src="story/95_artist.js?v=241047"></script>
+<script src="story/96_month.js?v=241047"></script>
+
+<script>
+/* ============ 启动 ============ */
+TweeEngine.init({
+  passages: window.__STORY_PASSAGES || [],
+  start: 'Game_Notice',
+  main: 'passage-main',
+  caption: 'ui-bar-caption'
+});
+
+/* 编辑器预览：?p=故事块名 —— 用独立存档位，不会动你的真实进度 */
+var _q = new URLSearchParams(location.search).get('p');
+if (_q) {
+  TweeEngine.setPreview(true);
+  TweeEngine.newGame();
+  TweeEngine.goto(_q);
+} else if (TweeEngine.hasSave()) {
+  TweeEngine.load();
+} else {
+  TweeEngine.newGame();
+}
+
+/* 编辑器点了保存后，这里自动刷新，立刻能看到改动 */
+try {
+  var _bc = new BroadcastChannel('twee-editor');
+  _bc.onmessage = function () { location.reload(); };
+} catch (e) { }
+</script>
+
+</body>
+</html>

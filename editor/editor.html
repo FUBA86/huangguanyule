@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>剧情编辑器 · 经济公司模拟器</title>
+<style>
+:root{
+  --bg:#f1f5f9; --panel:#ffffff; --line:#e2e8f0; --line2:#cbd5e1;
+  --text:#1e293b; --muted:#64748b; --faint:#94a3b8;
+  --brand:#7c3aed; --brand-soft:#f5f3ff;
+  --ok:#059669; --warn:#b45309; --warn-bg:#fffbeb; --err:#dc2626; --err-bg:#fef2f2;
+}
+*{box-sizing:border-box;}
+html,body{height:100%;margin:0;}
+body{
+  background:var(--bg); color:var(--text);
+  font-family:-apple-system,"Microsoft YaHei","Segoe UI",sans-serif; font-size:14px;
+  display:flex; flex-direction:column; overflow:hidden;
+}
+button{font-family:inherit; font-size:13px; cursor:pointer;}
+input,select{font-family:inherit; font-size:13px;}
+
+/* ---------- 顶栏 ---------- */
+#top{
+  flex:0 0 auto; display:flex; align-items:center; gap:12px;
+  padding:10px 16px; background:var(--panel); border-bottom:1px solid var(--line);
+}
+#top h1{font-size:15px; margin:0; font-weight:800; letter-spacing:.5px;}
+#top h1 small{font-weight:500; color:var(--faint); font-size:12px; margin-left:6px;}
+.spacer{flex:1;}
+#fileSel{max-width:230px; padding:6px 8px; border:1px solid var(--line2); border-radius:6px; background:#fff;}
+#search{padding:6px 10px; border:1px solid var(--line2); border-radius:6px; width:200px;}
+.btn{padding:6px 12px; border-radius:6px; border:1px solid var(--line2); background:#fff; color:var(--text);}
+.btn:hover{background:#f8fafc;}
+.btn.primary{background:var(--brand); border-color:var(--brand); color:#fff; font-weight:700;}
+.btn.primary:hover{background:#6d28d9;}
+#status{font-size:12px; color:var(--muted); min-width:110px;}
+#status.dirty{color:var(--warn); font-weight:700;}
+#status.saved{color:var(--ok); font-weight:700;}
+
+/* ---------- 主体 ---------- */
+#main{flex:1; display:flex; min-height:0;}
+#left{
+  flex:0 0 260px; background:var(--panel); border-right:1px solid var(--line);
+  display:flex; flex-direction:column; min-height:0;
+}
+#left .hd{padding:10px 12px; border-bottom:1px solid var(--line); font-size:12px; color:var(--muted); font-weight:700;}
+#blocks{overflow:auto; flex:1;}
+.blk{padding:9px 12px; border-bottom:1px solid #f1f5f9; cursor:pointer; font-size:13px;}
+.blk:hover{background:#f8fafc;}
+.blk.on{background:var(--brand-soft); border-left:3px solid var(--brand); padding-left:9px;}
+.blk .n{font-weight:700; font-size:12px; color:var(--brand); word-break:break-all;}
+.blk .d{color:var(--faint); font-size:11px; margin-top:3px;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.blk.on .d{color:#7e6ba8;}
+
+#center{flex:1; min-width:0; display:flex; flex-direction:column; background:var(--panel);}
+#bar{
+  flex:0 0 auto; padding:8px 12px; border-bottom:1px solid var(--line);
+  display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+}
+#bar .lbl{font-size:12px; color:var(--muted);}
+#blkName{
+  font-weight:800; color:var(--brand); font-size:13px;
+  background:var(--brand-soft); padding:4px 10px; border-radius:6px;
+}
+.tip{font-size:11px; color:var(--faint);}
+
+#editorWrap{flex:1; min-height:0; position:relative; overflow:hidden;}
+#hl,#ta{
+  position:absolute; inset:0; margin:0; padding:14px 16px;
+  font-family:"Cascadia Mono","Consolas","Courier New","Microsoft YaHei",monospace;
+  font-size:13px; line-height:1.75; letter-spacing:0;
+  white-space:pre-wrap; word-wrap:break-word; tab-size:2;
+  border:0; outline:none;
+}
+#hl{background:#fff; overflow:auto; pointer-events:none; color:var(--text);}
+#ta{background:transparent; color:transparent; caret-color:#111; resize:none; overflow:auto;}
+#ta::selection{background:#c7d2fe;}
+.t-macro{color:#7c3aed; font-weight:600;}
+.t-var{color:#b45309; font-weight:600;}
+.t-tmp{color:#0369a1; font-weight:600;}
+.t-link{color:#0d9488; font-weight:600;}
+.t-cmt{color:#94a3b8; font-style:italic;}
+.t-tag{color:#94a3b8;}
+.t-str{color:#be185d;}
+
+#check{
+  flex:0 0 auto; max-height:150px; overflow:auto;
+  border-top:1px solid var(--line); background:#fff; padding:8px 14px; font-size:12px;
+}
+#check .ok{color:var(--ok);}
+#check .w{color:var(--warn); background:var(--warn-bg); padding:4px 8px; border-radius:5px; margin-bottom:4px;}
+#check .e{color:var(--err); background:var(--err-bg); padding:4px 8px; border-radius:5px; margin-bottom:4px;}
+
+#right{
+  flex:0 0 380px; border-left:1px solid var(--line); background:var(--panel);
+  display:flex; flex-direction:column; min-height:0;
+}
+#right .hd{padding:8px 12px; border-bottom:1px solid var(--line); font-size:12px;
+  color:var(--muted); font-weight:700; display:flex; align-items:center; gap:8px;}
+#rel{padding:8px 12px; border-bottom:1px solid var(--line); font-size:12px; max-height:150px; overflow:auto;}
+#rel .rl{margin-bottom:4px; color:var(--muted);}
+#rel a{color:var(--brand); text-decoration:none; cursor:pointer; font-weight:600;}
+#rel a:hover{text-decoration:underline;}
+#pv{flex:1; min-height:0; border:0; width:100%; background:#fff;}
+
+#mask{
+  position:fixed; inset:0; background:rgba(15,23,42,.35); display:none;
+  align-items:center; justify-content:center; z-index:50;
+}
+#dlg{background:#fff; border-radius:12px; padding:20px; width:420px; box-shadow:0 20px 40px rgba(0,0,0,.2);}
+#dlg h3{margin:0 0 12px; font-size:15px;}
+#dlg label{display:block; font-size:12px; color:var(--muted); margin:10px 0 4px;}
+#dlg input,#dlg select{width:100%; padding:8px 10px; border:1px solid var(--line2); border-radius:6px;}
+#dlg .row{display:flex; gap:8px; justify-content:flex-end; margin-top:18px;}
+.hintline{font-size:11px; color:var(--faint); margin-top:10px; line-height:1.7;}
+#toast{
+  position:fixed; left:50%; bottom:28px; transform:translateX(-50%);
+  background:#0f172a; color:#fff; padding:10px 20px; border-radius:8px; font-size:13px;
+  opacity:0; pointer-events:none; transition:opacity .25s; z-index:99;
+}
+#toast.on{opacity:.95;}
+</style>
+</head>
+<body>
+
+<div id="top">
+  <h1>📝 剧情编辑器<small>经济公司模拟器</small></h1>
+  <select id="fileSel"></select>
+  <input id="search" placeholder="🔍 搜索剧情文字 / 块名">
+  <span class="spacer"></span>
+  <span id="status">加载中…</span>
+  <button class="btn" id="btnReload">↻ 预览</button>
+  <button class="btn primary" id="btnSave">💾 保存 (Ctrl+S)</button>
+</div>
+
+<div id="main">
+  <div id="left">
+    <div class="hd" id="leftHd">故事块</div>
+    <div id="blocks"></div>
+  </div>
+
+  <div id="center">
+    <div id="bar">
+      <span class="lbl">当前块</span>
+      <span id="blkName">—</span>
+      <button class="btn" onclick="ins('btn')">🔗 插入按钮</button>
+      <button class="btn" onclick="ins('set')">💰 加减数值</button>
+      <button class="btn" onclick="ins('if')">🔀 条件判断</button>
+      <button class="btn" onclick="ins('var')">📊 显示数值</button>
+      <button class="btn" onclick="ins('cmt')">💬 注释</button>
+      <span class="spacer"></span>
+      <span class="tip">改完点「保存」，游戏页面会自动刷新</span>
+    </div>
+
+    <div id="editorWrap">
+      <pre id="hl"></pre>
+      <textarea id="ta" spellcheck="false"></textarea>
+    </div>
+
+    <div id="check"></div>
+  </div>
+
+  <div id="right">
+    <div class="hd">👁 预览 <button class="btn" id="btnPv" style="padding:3px 8px;">刷新</button></div>
+    <div id="rel"></div>
+    <iframe id="pv" src="about:blank"></iframe>
+  </div>
+</div>
+
+<div id="mask">
+  <div id="dlg">
+    <h3 id="dlgTitle">插入跳转按钮</h3>
+    <div id="dlgBody"></div>
+    <div class="row">
+      <button class="btn" onclick="closeDlg()">取消</button>
+      <button class="btn primary" id="dlgOk">插入</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* =====================================================================
+   剧情编辑器
+   ===================================================================== */
+var API = '';
+var FILES = {};      // file -> {header, blocks:[{name,src}]}
+var NAMES = [];      // 全部块名（用于跳转下拉与检查）
+var curFile = '', curIdx = -1, dirty = false;
+var $ = function (id) { return document.getElementById(id); };
+
+/* ---------- 加载 ---------- */
+function loadAll(cb) {
+  fetch(API + '/api/list').then(r => r.json()).then(d => {
+    var fs = d.files.filter(f => !f.error);
+    var jobs = fs.map(f => fetch(API + '/api/file?f=' + encodeURIComponent(f.file)).then(r => r.json()));
+    return Promise.all(jobs).then(arr => {
+      FILES = {}; NAMES = [];
+      arr.forEach(o => {
+        FILES[o.file] = o;
+        o.blocks.forEach(b => NAMES.push(b.name));
+      });
+      cb();
+    });
+  }).catch(e => {
+    $('status').textContent = '连不上本地服务';
+    alert('连不上本地服务。\n请关闭本页，重新双击「启动编辑器.bat」打开。');
+  });
+}
+
+/* ---------- 左侧列表 ---------- */
+function summary(src) {
+  /* 摘要：抓第一段中文文字，避开宏里的比较符号干扰 */
+  var m = src.match(/[\u4e00-\u9fff][^<>`"']{1,36}/);
+  if (m) {
+    var t = m[0].replace(/\s+/g, ' ').trim();
+    if (t.length >= 2) return t;
+  }
+  var t2 = src.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/\s+/g, ' ').trim();
+  return t2.slice(0, 30) || '（纯逻辑块，没有文字）';
+}
+
+function renderList() {
+  var q = $('search').value.trim().toLowerCase();
+  var box = $('blocks');
+  box.innerHTML = '';
+  var shown = 0;
+  for (var f in FILES) {
+    var blocks = FILES[f].blocks;
+    var hits = blocks.map((b, i) => ({ b: b, i: i, f: f }))
+      .filter(x => !q || x.b.name.toLowerCase().indexOf(q) >= 0 || x.b.src.toLowerCase().indexOf(q) >= 0);
+    if (!hits.length) continue;
+    var g = document.createElement('div');
+    g.style.cssText = 'padding:6px 12px;background:#f8fafc;font-size:11px;color:#64748b;font-weight:700;border-bottom:1px solid #eef2f7;';
+    g.textContent = f.replace('.js', '');
+    box.appendChild(g);
+    hits.forEach(x => {
+      shown++;
+      var d = document.createElement('div');
+      d.className = 'blk' + (x.f === curFile && x.i === curIdx ? ' on' : '');
+      d.innerHTML = '<div class="n"></div><div class="d"></div>';
+      d.querySelector('.n').textContent = x.b.name;
+      d.querySelector('.d').textContent = summary(x.b.src);
+      d.onclick = function () { openBlock(x.f, x.i); };
+      box.appendChild(d);
+    });
+  }
+  $('leftHd').textContent = q ? ('搜索结果 ' + shown + ' 个') : '故事块（共 ' + Object.keys(FILES).length + ' 个文件）';
+}
+
+/* ---------- 打开一个块 ---------- */
+function openBlock(f, i) {
+  if (dirty && !confirm('当前块有没保存的改动，要切换吗？（未保存的会丢失）')) return;
+  curFile = f; curIdx = i;
+  var b = FILES[f].blocks[i];
+  $('blkName').textContent = b.name;
+  $('ta').value = b.src;
+  dirty = false; setStatus('');
+  // 同步文件下拉
+  $('fileSel').value = f;
+  renderList(); hl(); check(); relations(); preview();
+  $('ta').scrollTop = 0; $('hl').scrollTop = 0;
+}
+
+/* ---------- 语法高亮 ---------- */
+function esc(s) {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+var TOKENS = /(\/\*[\s\S]*?\*\/)|(<<(?:[^>]|>[^>])*?>>)|(\[\[[\s\S]*?\]\])|(\$[A-Za-z_][\w]*)|((?:^|[^\w$])(?:_[A-Za-z][\w]*))/g;
+
+function hl() {
+  var src = $('ta').value;
+  var out = '', last = 0, m;
+  TOKENS.lastIndex = 0;
+  function push(txt, cls) {
+    out += cls ? '<span class="' + cls + '">' + esc(txt) + '</span>' : esc(txt);
+  }
+  while ((m = TOKENS.exec(src))) {
+    push(src.slice(last, m.index), '');
+    if (m[1]) push(m[1], 't-cmt');
+    else if (m[2]) push(m[2], 't-macro');
+    else if (m[3]) push(m[3], 't-link');
+    else if (m[4]) push(m[4], 't-var');
+    else if (m[5]) {
+      // 保留 _ 前面的那个字符
+      var pre = m[5].charAt(0);
+      var body = m[5].slice(1);
+      push(pre, ''); push(body, 't-tmp');
+    }
+    last = m.index + m[0].length;
+  }
+  push(src.slice(last), '');
+  $('hl').innerHTML = out;
+  $('hl').scrollTop = $('ta').scrollTop;
+}
+
+$('ta').addEventListener('input', function () {
+  dirty = true; setStatus('● 未保存'); hl(); check();
+});
+$('ta').addEventListener('scroll', function () { $('hl').scrollTop = $('ta').scrollTop; });
+$('ta').addEventListener('keydown', function (e) {
+  if (e.key === 'Tab') {
+    e.preventDefault();
+    var s = this.selectionStart, t = this.selectionEnd;
+    this.value = this.value.slice(0, s) + '  ' + this.value.slice(t);
+    this.selectionStart = this.selectionEnd = s + 2;
+  }
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') { e.preventDefault(); save(); }
+});
+
+/* ---------- 检查 ---------- */
+function extractLinks(src) {
+  var out = [];
+  var re = /<<(?:link|button)\s+"(?:[^"\\]|\\.)*"\s+"([^"]+)"/g, m;
+  while ((m = re.exec(src))) out.push(m[1]);
+  re = /<<(?:goto|include)\s+"([^"]+)"/g;
+  while ((m = re.exec(src))) out.push(m[1]);
+  re = /\[\[([^\]]+)\]\]/g;
+  while ((m = re.exec(src))) {
+    var t = m[1];
+    if (t.indexOf('|') >= 0) t = t.split('|').pop();
+    else if (t.indexOf('->') >= 0) t = t.split('->').pop();
+    out.push(t.trim());
+  }
+  re = /data-passage="([^"]+)"/g;
+  while ((m = re.exec(src))) out.push(m[1]);
+  return out;
+}
+
+function check() {
+  var src = $('ta').value;
+  var msgs = [];
+  var PAIRS = ['if', 'link', 'button', 'for', 'nobr', 'silently', 'capture', 'widget', 'replace'];
+  PAIRS.forEach(function (t) {
+    var o = (src.match(new RegExp('<<\\s*' + t + '\\b', 'g')) || []).length;
+    var c = (src.match(new RegExp('<<\\s*/\\s*' + t + '\\s*>>', 'g')) || []).length;
+    if (o !== c) msgs.push(['e', '「<<' + t + '>>』开了 ' + o + ' 个，但只关了 ' + c + ' 个 —— 数量对不上，游戏可能显示错乱']);
+  });
+  // 反引号
+  if ((src.match(/`/g) || []).length % 2 === 1)
+    msgs.push(['e', '反引号 ` 数量是单数，可能漏了一个']);
+  // 跳转目标
+  var bad = extractLinks(src).filter(function (x) { return x && NAMES.indexOf(x) < 0; });
+  bad = bad.filter(function (v, i, a) { return a.indexOf(v) === i; });
+  if (bad.length) msgs.push(['w', '跳转目标不存在：' + bad.join('、') + '（改块名后要同步改这里）']);
+  // 空
+  if (!src.trim()) msgs.push(['w', '这一块是空的，玩家点进来会看到白屏']);
+
+  var box = $('check');
+  if (!msgs.length) { box.innerHTML = '<span class="ok">✓ 检查通过，没发现问题</span>'; return; }
+  box.innerHTML = msgs.map(function (m) {
+    return '<div class="' + m[0] + '">' + (m[0] === 'e' ? '✕ ' : '⚠ ') + m[1] + '</div>';
+  }).join('');
+}
+
+/* ---------- 关系 ---------- */
+function relations() {
+  if (curIdx < 0) { $('rel').innerHTML = ''; return; }
+  var name = FILES[curFile].blocks[curIdx].name;
+  var outs = extractLinks(FILES[curFile].blocks[curIdx].src)
+    .filter(function (v, i, a) { return a.indexOf(v) === i; });
+  var ins = [];
+  for (var f in FILES) {
+    FILES[f].blocks.forEach(function (b) {
+      if (b.name !== name && extractLinks(b.src).indexOf(name) >= 0) ins.push(b.name);
+    });
+  }
+  var h = '<div class="rl"><b>这一块可以跳到：</b><br>';
+  h += outs.length ? outs.map(function (n) {
+    return '<a onclick="jump(\'' + n + '\')">' + n + '</a>';
+  }).join(' &nbsp; ') : '<span style="color:#94a3b8">（没有跳转）</span>';
+  h += '</div><div class="rl"><b>哪些块会跳到这里：</b><br>';
+  h += ins.length ? ins.map(function (n) {
+    return '<a onclick="jump(\'' + n + '\')">' + n + '</a>';
+  }).join(' &nbsp; ') : '<span style="color:#94a3b8">（没人跳过来）</span>';
+  h += '</div>';
+  $('rel').innerHTML = h;
+}
+
+function jump(n) {
+  for (var f in FILES) {
+    var i = FILES[f].blocks.findIndex(function (b) { return b.name === n; });
+    if (i >= 0) { openBlock(f, i); return; }
+  }
+}
+
+/* ---------- 预览 ---------- */
+function preview() {
+  if (curIdx < 0) return;
+  var n = FILES[curFile].blocks[curIdx].name;
+  $('pv').src = '/index.html?p=' + encodeURIComponent(n);
+}
+$('btnPv').onclick = preview;
+$('btnReload').onclick = preview;
+
+/* ---------- 插入 ---------- */
+function ins(kind) {
+  var ta = $('ta');
+  var s = ta.selectionStart, e = ta.selectionEnd;
+  var sel = ta.value.slice(s, e);
+  function put(txt) {
+    ta.value = ta.value.slice(0, s) + txt + ta.value.slice(e);
+    ta.focus();
+    ta.selectionStart = s;
+    ta.selectionEnd = s + txt.length;
+    dirty = true; setStatus('● 未保存'); hl(); check();
+  }
+  if (kind === 'set') {
+    put('<<set $money += 100>>');
+  } else if (kind === 'var') {
+    put('$money');
+  } else if (kind === 'cmt') {
+    put('/* 这里写备注，不会显示给玩家 */');
+  } else if (kind === 'if') {
+    put('<<if $money >= 100>>\n  钱够的时候显示这里\n<<else>>\n  钱不够显示这里\n<</if>>');
+  } else if (kind === 'btn') {
+    showBtnDlg(put, sel);
+  }
+}
+
+function showBtnDlg(put, sel) {
+  $('dlgTitle').textContent = '插入跳转按钮';
+  $('dlgBody').innerHTML =
+    '<label>按钮上显示的文字</label>' +
+    '<input id="dTxt" value="' + (sel || '继续').replace(/"/g, '&quot;') + '">' +
+    '<label>点了之后跳到哪一屏（可直接输入，也可从下面选）</label>' +
+    '<input id="dTgt" list="dList" placeholder="故事块名">' +
+    '<datalist id="dList">' + NAMES.map(n => '<option value="' + n + '">').join('') + '</datalist>' +
+    '<label>另外还要做的事（可留空）</label>' +
+    '<input id="dAct" placeholder="例如：<<set $money -= 100>>">' +
+    '<div class="hintline">提示：留空就只是单纯跳转。</div>';
+  $('mask').style.display = 'flex';
+  $('dlgOk').onclick = function () {
+    var t = $('dTxt').value || '继续';
+    var g = $('dTgt').value.trim();
+    var a = $('dAct').value.trim();
+    if (!g) { alert('要填跳转目标，不然按钮点了没反应'); return; }
+    put('<<link "' + t + '" "' + g + '">' + a + '>>' + (a ? '' : '') + '<</link>>');
+    closeDlg();
+  };
+}
+function closeDlg() { $('mask').style.display = 'none'; }
+$('mask').onclick = function (e) { if (e.target === $('mask')) closeDlg(); };
+
+/* ---------- 保存 ---------- */
+function setStatus(s) {
+  var el = $('status');
+  el.textContent = s || (dirty ? '● 未保存' : '已同步');
+  el.className = dirty ? 'dirty' : '';
+}
+
+function save(silent) {
+  if (!curFile) return;
+  FILES[curFile].blocks[curIdx].src = $('ta').value;
+  var payload = { file: curFile, blocks: FILES[curFile].blocks };
+  fetch(API + '/api/save', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).then(r => r.json()).then(d => {
+    if (d.error) { alert('保存失败：' + d.error); return; }
+    dirty = false;
+    $('status').textContent = '✓ 已保存';
+    $('status').className = 'saved';
+    try { new BroadcastChannel('twee-editor').postMessage('reload'); } catch (e) { }
+    if (!silent) toast('已保存！游戏页面会自动刷新');
+    setTimeout(preview, 300);
+  }).catch(e => alert('保存失败：' + e));
+}
+$('btnSave').onclick = function () { save(); };
+
+function toast(msg) {
+  var t = $('toast');
+  t.textContent = msg; t.className = 'on';
+  setTimeout(function () { t.className = ''; }, 2200);
+}
+
+/* ---------- 文件切换 ---------- */
+$('fileSel').onchange = function () {
+  var f = this.value;
+  if (FILES[f] && FILES[f].blocks.length) openBlock(f, 0);
+};
+$('search').oninput = renderList;
+
+/* ---------- 启动 ---------- */
+loadAll(function () {
+  var sel = $('fileSel');
+  sel.innerHTML = Object.keys(FILES).map(function (f) {
+    return '<option value="' + f + '">' + f.replace('.js', '') + '（' + FILES[f].blocks.length + '）</option>';
+  }).join('');
+  var first = Object.keys(FILES)[0];
+  openBlock(first, 0);
+  renderList();
+});
+</script>
+</body>
+</html>

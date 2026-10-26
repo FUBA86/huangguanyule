@@ -1,0 +1,975 @@
+/* =========================================================================
+   预览：马卡龙玻璃拟态 v5（只在这个预览页生效，不影响正式版）
+   加载顺序：style.css → style_v5.css
+   ========================================================================= */
+
+/* ===== 1. 令牌：把"靛蓝科技风"换成马卡龙 ===== */
+:root {
+  --brand-1: #7A9AD6;
+  --brand-2: #9CB7E3;
+  --brand-3: #C8D9F1;
+  --brand-soft: #EEF4FD;
+  --brand-ink: #516C9B;
+
+  --ink-900: #2C3547;
+  --ink-700: #47526B;
+  --ink-500: #68738D;
+  --ink-400: #828DA4;
+  --ink-300: #CBD3E2;
+  --ink-200: #E4E9F2;
+  --ink-100: #F1F4FA;
+  --ink-50: #FAFBFE;
+
+  --ok: #74C2A2;      --ok-bg: #EEF9F3;
+  --warn: #F1DBB2;    --warn-bg: #FEFBF3;
+  --danger: #E39FAF;  --danger-bg: #FDF0F3;
+  --peach: #F0B296;   --peach-bg: #FDF3EC;
+  --lilac: #B3A3DD;   --lilac-bg: #F3F0FC;
+  --sky: #8CB9E2;     --sky-bg: #EFF7FD;
+  --gold: #C9A25F;
+
+  --surface: rgba(255, 253, 248, .84);
+  --surface-2: rgba(255, 253, 248, .66);
+  --hairline: rgba(126, 146, 180, .15);
+  --hairline-2: rgba(126, 146, 180, .26);
+
+  --sh-1: 0 1px 2px rgba(96, 116, 155, .07);
+  --sh-2: 0 6px 18px -10px rgba(96, 116, 155, .32);
+  --sh-3: 0 14px 34px -18px rgba(96, 116, 155, .42);
+  --sh-glow: 0 10px 24px -14px rgba(122, 154, 214, .72);
+
+  --r-sm: 12px;
+  --r-md: 16px;
+  --r-lg: 20px;
+  --r-xl: 26px;
+
+  --bg-main: #FDFCF9;
+  --text-dark: #2C3547;
+  --text-light: #68738D;
+  --accent-blue: #7A9AD6;
+  --accent-pink: #E39FAF;
+  --accent-gold: #F1DBB2;
+  --border-light: #E8E4DA;
+}
+
+/* ===== 2. 背景：柔和马卡龙光晕，去掉网格纸 ===== */
+body {
+  background-color: #FCFBF8 !important;
+  background-image:
+    linear-gradient(158deg, #E8F1FD 0%, #F2F7FE 30%, #FCFBF8 66%, #FDFCFA 100%),
+    radial-gradient(1100px 700px at 4% -14%, rgba(122, 154, 214, .40), transparent 60%),
+    radial-gradient(900px 620px at 106% 6%, rgba(158, 190, 232, .28), transparent 62%),
+    radial-gradient(760px 560px at 46% 112%, rgba(126, 196, 170, .16), transparent 62%),
+    radial-gradient(620px 460px at 96% 86%, rgba(240, 178, 150, .16), transparent 64%),
+    radial-gradient(560px 420px at 2% 76%, rgba(241, 219, 178, .10), transparent 66%) !important;
+  background-size: auto !important;
+  background-attachment: fixed !important;
+}
+body::before { opacity: .12 !important; }
+
+/* ===== 3. 侧栏 ===== */
+.side-brand {
+  background: linear-gradient(135deg, #7E9DD8, #A6BEE6 52%, #C0B4E0) !important;
+  box-shadow: 0 12px 26px -16px rgba(94, 122, 175, .8), inset 0 1px 0 rgba(255, 253, 248, .62) !important;
+  border: 1px solid rgba(255, 253, 248, .58);
+}
+#ui-bar {
+  background: linear-gradient(180deg, rgba(244, 248, 254, .92), rgba(255, 253, 247, .88)) !important;
+  border-right: 1px solid rgba(122, 154, 214, .12) !important;
+}
+.sidebar-row { border-radius: 12px; }
+#ui-bar .actor-card,
+#ui-bar .actor-mini,
+.actor-card, .actor-mini {
+  border-radius: 16px !important;
+  background: linear-gradient(158deg, rgba(240, 247, 255, .98), rgba(255, 253, 248, .94)) !important;
+  border: 1px solid rgba(122, 154, 214, .22) !important;
+  box-shadow: 0 6px 16px -14px rgba(96, 116, 155, .5) !important;
+}
+.sidebar-row:hover { background: rgba(122, 154, 214, .10) !important; }
+
+/* ===== 4. 主卡片：玻璃 ===== */
+.passage .tech-card,
+#passages .tech-card,
+.passage .tech-card-business,
+#passages .tech-card-business {
+  background: linear-gradient(156deg, rgba(255, 255, 251, .95) 10%, rgba(240, 247, 255, .93) 58%, rgba(232, 242, 254, .92)) !important;
+  backdrop-filter: blur(20px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(160%) !important;
+  border: 1px solid rgba(255, 255, 255, .78) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 20px 44px -30px rgba(96, 116, 155, .42), 0 0 0 1px rgba(122, 154, 214, .16) !important;
+}
+.passage .tech-card::before {
+  height: 0 !important;
+  background: none !important;
+}
+
+/* ===== 5. 页头：从深色横幅改成浅色玻璃条 ===== */
+.passage .header-banner,
+#passages .header-banner,
+.tech-card > .header-banner {
+  background: linear-gradient(116deg, rgba(224, 235, 252, .97), rgba(244, 248, 254, .95) 48%, rgba(250, 246, 251, .95)) !important;
+  color: #4A5470 !important;
+  border-bottom: 1px solid rgba(122, 154, 214, .20) !important;
+  box-shadow: inset 0 -1px 0 rgba(255, 253, 248, .9) !important;
+  padding: clamp(14px, 2.4vw, 20px) clamp(16px, 3vw, 24px) !important;
+}
+.passage .header-banner::after { background: none !important; }
+.passage .header-banner::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: auto 0 0 0 !important;
+  height: 2px !important;
+  background: linear-gradient(90deg, #7A9AD6, #8CB9E2 20%, #74C2A2 44%, #F1DBB2 66%, #F0B296 82%, #E39FAF 94%, #B3A3DD) !important;
+  opacity: .62 !important;
+  pointer-events: none;
+}
+.passage .header-banner span,
+.passage .header-banner b,
+.passage .header-banner h1,
+.passage .header-banner h2,
+.passage .header-banner h3 {
+  color: #26406E !important;
+  font-weight: 800 !important;
+  letter-spacing: .02em !important;
+  text-shadow: none !important;
+}
+.passage .header-banner > div,
+.passage .header-banner p,
+.passage .header-banner small,
+.passage .header-banner em {
+  color: #5A6780 !important;
+  text-shadow: none !important;
+}
+/* 页头里的按钮：雾蓝玻璃胶囊 */
+.passage .header-banner a,
+.passage .header-banner .link-internal,
+.passage .header-banner button {
+  background: rgba(122, 154, 214, .17) !important;
+  color: #3A4F7C !important;
+  border: 1px solid rgba(122, 154, 214, .36) !important;
+  border-radius: 999px !important;
+  box-shadow: none !important;
+  font-weight: 700 !important;
+}
+.passage .header-banner a:hover {
+  background: rgba(122, 154, 214, .29) !important;
+  color: #3D4A66 !important;
+}
+
+/* ===== 6. 办公室：功能格 ===== */
+.dashboard-grid {
+  background: linear-gradient(180deg, rgba(238, 245, 255, .55), rgba(255, 253, 247, 0) 78%) !important;
+  border-radius: 20px !important;
+  margin: 4px 10px 8px !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 14px !important;
+  padding: clamp(14px, 2.2vw, 22px) !important;
+}
+.btn-box {
+  background: linear-gradient(160deg, rgba(255, 255, 252, .95), rgba(238, 245, 255, .86)) !important;
+  border: 1px solid rgba(255, 253, 248, .96) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 10px 26px -20px rgba(96, 116, 155, .55), inset 0 1px 0 #fff !important;
+  min-width: 0 !important;
+  min-height: 96px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important;
+  padding: 14px 12px !important;
+  text-align: center !important;
+}
+.btn-box::before {
+  background: radial-gradient(58% 108% at 50% 108%, rgba(122, 154, 214, .26), transparent 72%) !important;
+}
+.btn-box:hover {
+  border-color: rgba(122, 154, 214, .46) !important;
+  box-shadow: 0 16px 32px -22px rgba(96, 116, 155, .65), 0 0 0 3px rgba(122, 154, 214, .13) !important;
+}
+/* 六个功能格：每格一整片淡彩（不是只有一角有色），保持玻璃感 */
+.dashboard-grid > .btn-box:nth-child(1) {
+  background: linear-gradient(150deg, rgba(122, 154, 214, .30), rgba(122, 154, 214, .16)) !important;
+  border-color: rgba(255, 255, 255, .92) !important;
+}
+.dashboard-grid > .btn-box:nth-child(2) {
+  background: linear-gradient(150deg, rgba(116, 194, 162, .30), rgba(116, 194, 162, .16)) !important;
+  border-color: rgba(255, 255, 255, .92) !important;
+}
+.dashboard-grid > .btn-box:nth-child(3) {
+  background: linear-gradient(150deg, rgba(240, 178, 150, .28), rgba(240, 178, 150, .15)) !important;
+  border-color: rgba(255, 255, 255, .92) !important;
+}
+.dashboard-grid > .btn-box:nth-child(4) {
+  background: linear-gradient(150deg, rgba(241, 224, 188, .32), rgba(241, 224, 188, .16)) !important;
+  border-color: rgba(255, 255, 255, .92) !important;
+}
+.dashboard-grid > .btn-box:nth-child(5) {
+  background: linear-gradient(150deg, rgba(179, 163, 221, .30), rgba(179, 163, 221, .16)) !important;
+  border-color: rgba(255, 255, 255, .92) !important;
+}
+.dashboard-grid > .btn-box:nth-child(6) {
+  background: linear-gradient(150deg, rgba(140, 185, 226, .32), rgba(140, 185, 226, .17)) !important;
+  border-color: rgba(255, 255, 255, .92) !important;
+}
+/* 底部柔光按格配色，常显 */
+.dashboard-grid > .btn-box:nth-child(-n+6)::before {
+  opacity: 1 !important;
+  inset: auto -25% -40% -25% !important;
+  height: 120px !important;
+  filter: blur(2px);
+}
+.dashboard-grid > .btn-box:nth-child(1)::before { background: radial-gradient(58% 108% at 50% 108%, rgba(122, 154, 214, .22), transparent 72%) !important; }
+.dashboard-grid > .btn-box:nth-child(2)::before { background: radial-gradient(58% 108% at 50% 108%, rgba(116, 194, 162, .20), transparent 72%) !important; }
+.dashboard-grid > .btn-box:nth-child(3)::before { background: radial-gradient(58% 108% at 50% 108%, rgba(240, 178, 150, .20), transparent 72%) !important; }
+.dashboard-grid > .btn-box:nth-child(4)::before { background: radial-gradient(58% 108% at 50% 108%, rgba(241, 224, 188, .20), transparent 72%) !important; }
+.dashboard-grid > .btn-box:nth-child(5)::before { background: radial-gradient(58% 108% at 50% 108%, rgba(179, 163, 221, .22), transparent 72%) !important; }
+.dashboard-grid > .btn-box:nth-child(6)::before { background: radial-gradient(58% 108% at 50% 108%, rgba(140, 185, 226, .22), transparent 72%) !important; }
+.btn-box > a,
+.btn-box > a.link-internal,
+.btn-box > span {
+  color: #28324A !important;
+  font-weight: 700 !important;
+  font-size: 1.04rem !important;
+  letter-spacing: .01em !important;
+  height: auto !important;
+  width: auto !important;
+  display: block !important;
+  line-height: 1.45 !important;
+  text-align: center !important;
+}
+.btn-box > a:hover { color: #17203A !important; }
+/* 去掉链接自带的虚线下划线/边框 */
+.btn-box > a,
+.btn-box > a:hover,
+.btn-box > a:focus {
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  text-decoration: none !important;
+}
+.btn-box .btn-sub {
+  color: #93A0B8 !important;
+  letter-spacing: .1em !important;
+  font-weight: 600 !important;
+  font-size: .64rem !important;
+  display: block !important;
+  margin: 0 !important;
+}
+/* 剧情入口 / 断线卡 / 休息：统一玻璃，不用彩色边框 */
+.btn-box[style*="border-color"],
+.btn-box.btn-gossip {
+  border-color: rgba(255, 253, 248, .96) !important;
+  background: linear-gradient(160deg, rgba(255, 254, 250, .97), rgba(243, 247, 253, .84)) !important;
+}
+#ui-bar [style*="fef9c3"],
+#ui-bar [style*="fefce8"] {
+  background: linear-gradient(158deg, rgba(254, 252, 246, .97), rgba(255, 255, 252, .93)) !important;
+  border-color: rgba(241, 219, 178, .55) !important;
+}
+.btn-box[style*="background"][style*="#fef2f2"] {
+  background: linear-gradient(160deg, rgba(253, 242, 245, .96), rgba(255, 254, 250, .88)) !important;
+}
+
+/* ===== 7. 资源条：玻璃胶囊 ===== */
+.status-bar {
+  background: rgba(255, 253, 248, .74) !important;
+  border: 1px solid rgba(255, 253, 248, .92) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 10px 26px -22px rgba(96, 116, 155, .55) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+.status-bar > div {
+  background: rgba(246, 250, 255, .96) !important;
+  border: 1px solid rgba(255, 255, 255, .96) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .9) !important;
+  color: #414D66 !important;
+}
+.status-bar > div:nth-child(1) { background: rgba(255, 250, 241, .96) !important; }
+.status-bar > div:nth-child(2) { background: rgba(255, 246, 239, .96) !important; }
+.status-bar > div:nth-child(3) { background: rgba(241, 248, 255, .96) !important; }
+.status-bar > div:nth-child(4) { background: rgba(248, 245, 255, .96) !important; }
+.status-bar b { color: #274577 !important; }
+
+/* ===== 8. 按钮：统一雾蓝胶囊 ===== */
+.passage .btn-primary,
+.passage a.btn-primary,
+.passage a[style*="linear-gradient"],
+.passage button[style*="linear-gradient"] {
+  background: linear-gradient(135deg, #8199CE, #AAC3EA) !important;
+  color: #fff !important;
+  border: 1px solid rgba(255, 253, 248, .74) !important;
+  border-radius: 999px !important;
+  box-shadow: 0 10px 22px -14px rgba(104, 132, 190, .9) !important;
+  text-shadow: 0 1px 1px rgba(80, 100, 145, .22);
+  font-weight: 700 !important;
+}
+.passage a[style*="linear-gradient"]:hover,
+.passage .btn-primary:hover {
+  filter: brightness(1.03);
+  transform: translateY(-1px);
+}
+/* 纯色内联按钮（蓝/紫系）也拉回雾蓝 */
+.passage a[style*="#2563eb"],
+.passage a[style*="#3b82f6"],
+.passage a[style*="#1d4ed8"],
+.passage a[style*="#6366f1"],
+.passage a[style*="#7c3aed"],
+.passage a[style*="#4f46e5"],
+.passage button[style*="#2563eb"],
+.passage button[style*="#3b82f6"] {
+  background: linear-gradient(135deg, #8199CE, #AAC3EA) !important;
+  color: #fff !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(255, 253, 248, .74) !important;
+}
+.passage div[data-passage][style*="linear-gradient"] {
+  background: linear-gradient(135deg, #8199CE, #AAC3EA) !important;
+  color: #fff !important;
+  border: 1px solid rgba(255, 255, 255, .74) !important;
+  border-radius: 999px !important;
+  box-shadow: 0 10px 22px -14px rgba(104, 132, 190, .9) !important;
+  font-weight: 700 !important;
+}
+.passage .continue-row a,
+.passage .btn-group a.link-internal {
+  background: linear-gradient(135deg, #8199CE, #AAC3EA) !important;
+  color: #fff !important;
+  border-radius: 999px !important;
+  box-shadow: 0 10px 22px -14px rgba(104, 132, 190, .9) !important;
+  letter-spacing: .12em;
+}
+
+/* ===== 9. 二级页通用件 ===== */
+/* 9.1 内联高饱和色 → 马卡龙语义色（实装时改成 class，这里先用属性选择器兜住） */
+.passage [style*="color:#2563eb"],
+.passage [style*="color:#1d4ed8"],
+.passage [style*="color:#3b82f6"],
+.passage [style*="color:#0284c7"],
+.passage [style*="color:#0ea5e9"],
+.passage [style*="color:#7c3aed"],
+.passage [style*="color:#6366f1"] { color: #5677B8 !important; }
+
+.passage [style*="color:#a855f7"],
+.passage [style*="color:#8b5cf6"],
+.passage [style*="color:#9333ea"] { color: #7C68B4 !important; }
+
+.passage [style*="color:#ec4899"],
+.passage [style*="color:#db2777"],
+.passage [style*="color:#be185d"] { color: #B96A90 !important; }
+
+.passage [style*="color:#16a34a"],
+.passage [style*="color:#059669"],
+.passage [style*="color:#166534"],
+.passage [style*="color:#047857"] { color: #3E8A6E !important; }
+
+.passage [style*="color:#ef4444"],
+.passage [style*="color:#dc2626"],
+.passage [style*="color:#b91c1c"],
+.passage [style*="color:#e11d48"] { color: #BC6A82 !important; }
+
+.passage [style*="color:#f59e0b"],
+.passage [style*="color:#d97706"],
+.passage [style*="color:#b45309"] { color: #A5732F !important; }
+
+/* 9.2 内联浅色边框 → 统一玻璃边 */
+.passage [style*="border:1px solid #cbd5e1"],
+.passage [style*="border:1px solid #e2e8f0"] { border-color: rgba(122, 154, 214, .32) !important; }
+.passage [style*="border:1px solid #93c5fd"],
+.passage [style*="border:1px solid #bfdbfe"] { border-color: rgba(140, 185, 226, .5) !important; }
+.passage [style*="border:1px solid #fcd34d"],
+.passage [style*="border:1px solid #fde68a"],
+.passage [style*="border:1px solid #fbbf24"] { border-color: rgba(241, 219, 178, .70) !important; }
+.passage [style*="border:1px solid #f87171"],
+.passage [style*="border:1px solid #fecaca"],
+.passage [style*="border:1px solid #fca5a5"] { border-color: rgba(227, 159, 175, .55) !important; }
+.passage [style*="border:1px solid #bbf7d0"],
+.passage [style*="border:1px solid #86efac"] { border-color: rgba(116, 194, 162, .55) !important; }
+
+/* 内联纯白底的小卡 → 玻璃 */
+.passage [style*="background:#fff"][style*="border-radius:6px"],
+.passage [style*="background:#fff"][style*="border-radius: 6px"],
+.passage [style*="background:#fff"][style*="border-radius:8px"],
+.passage [style*="background:#fff"][style*="border-radius: 8px"] {
+  background: rgba(255, 253, 248, .8) !important;
+  border-radius: 14px !important;
+  box-shadow: inset 0 1px 0 #fff, 0 8px 20px -18px rgba(90, 110, 145, .65) !important;
+}
+
+/* 深浅文字统一 */
+.passage [style*="color:#020617"],
+.passage [style*="color:#0f172a"],
+.passage [style*="color:#111827"],
+.passage [style*="color:#1e40af"],
+.passage [style*="color:#334155"],
+.passage [style*="color:#1e293b"] { color: #414B66 !important; }
+.passage [style*="color:#991b1b"],
+.passage [style*="color:#9f1239"] { color: #9A5A6E !important; }
+.passage [style*="color:#78350f"],
+.passage [style*="color:#92400e"] { color: #754F23 !important; }
+
+/* 9.3 进度条填充（div，不是按钮） */
+.passage div[style*="background:#2563eb"],
+.passage div[style*="background: #2563eb"],
+.passage div[style*="background:#3b82f6"],
+.passage div[style*="background: #3b82f6"] {
+  background: linear-gradient(90deg, #8FA9DE, #C3D5F0) !important;
+}
+.passage div[style*="background:#16a34a"],
+.passage div[style*="background: #16a34a"],
+.passage div[style*="background:#10b981"],
+.passage div[style*="background: #10b981"] {
+  background: linear-gradient(90deg, #7FC7A9, #BCE4D3) !important;
+}
+
+/* 9.3b 原生进度条（<progress>）统一成雾蓝细条 */
+.passage progress {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100% !important;
+  height: 7px !important;
+  border: none !important;
+  border-radius: 999px !important;
+  background: rgba(122, 142, 172, .14) !important;
+  overflow: hidden;
+  vertical-align: middle;
+}
+.passage progress::-webkit-progress-bar {
+  background: rgba(122, 142, 172, .14) !important;
+  border-radius: 999px !important;
+}
+.passage progress::-webkit-progress-value {
+  background: linear-gradient(90deg, #7797D4, #A9C3E9) !important;
+  border-radius: 999px !important;
+}
+.passage progress::-moz-progress-bar {
+  background: #A2BBE4 !important;
+  border-radius: 999px !important;
+}
+
+/* 单选/复选：系统默认蓝 → 雾蓝 */
+.passage input[type="radio"],
+.passage input[type="checkbox"] { accent-color: #7A9AD6 !important; }
+
+/* 9.4 卡片本体 */
+.sub-card,
+.card-container > div,
+.passage .res-box,
+.passage .card-container {
+  background: rgba(255, 253, 248, .72) !important;
+  border: 1px solid rgba(255, 253, 248, .92) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 12px 28px -24px rgba(90, 110, 145, .6) !important;
+}
+.sub-card:hover { border-color: rgba(122, 154, 214, .42) !important; }
+
+/* 浅色边框的小卡：底色跟着边框色走，颜色更丰富 */
+.passage [style*="border:1px solid #93c5fd"],
+.passage [style*="border:1px solid #bfdbfe"] {
+  background: linear-gradient(158deg, rgba(140, 185, 226, .16), rgba(255, 254, 250, .93) 70%) !important;
+}
+.passage [style*="border:1px solid #fbbf24"],
+.passage [style*="border:1px solid #fde68a"],
+.passage [style*="border:1px solid #fcd34d"] {
+  background: linear-gradient(158deg, rgba(241, 219, 178, .20), rgba(255, 255, 252, .94) 70%) !important;
+}
+.passage [style*="border:1px solid #fca5a5"],
+.passage [style*="border:1px solid #fecaca"],
+.passage [style*="border:1px solid #f87171"] {
+  background: linear-gradient(158deg, rgba(240, 178, 150, .18), rgba(255, 254, 250, .93) 70%) !important;
+}
+.passage [style*="border:1px solid #86efac"],
+.passage [style*="border:1px solid #bbf7d0"] {
+  background: linear-gradient(158deg, rgba(116, 194, 162, .16), rgba(255, 254, 250, .93) 70%) !important;
+}
+
+/* 小标题左侧色条 → 淡紫圆角块 */
+.passage h3[style*="border-left"],
+.passage .section-title {
+  border-left-color: #B3A3DD !important;
+  color: #414B66 !important;
+}
+.passage .section-title > span:first-child {
+  background: #F4F1FD !important;
+  border-color: rgba(179, 163, 221, .32) !important;
+}
+
+/* 进度条 */
+.passage div[style*="background:#e2e8f0"],
+.passage div[style*="background: #e2e8f0"],
+.passage div[style*="background:#f1f5f9"] { background: rgba(122, 142, 172, .14) !important; }
+
+/* 表格 */
+.passage table, .passage th, .passage td { border-color: rgba(122, 142, 172, .18) !important; }
+.passage th { background: rgba(252, 249, 242, .95) !important; color: #5A6881 !important; }
+
+/* 输入/选择 */
+.passage input, .passage select, .passage textarea {
+  background: rgba(255, 253, 248, .9) !important;
+  border: 1px solid rgba(122, 142, 172, .24) !important;
+  border-radius: 12px !important;
+  color: #46556D !important;
+}
+
+/* ===== 10. 手机适配（重点修溢出） ===== */
+.passage, #passages .passage { min-width: 0 !important; }
+#story-wrap { min-width: 0 !important; overflow-x: clip; }
+#passage-main { min-width: 0 !important; }
+#passage-main * { min-width: 0; }
+
+@media (max-width: 860px) {
+  .dashboard-grid {
+  background: linear-gradient(180deg, rgba(238, 245, 255, .55), rgba(255, 253, 247, 0) 78%) !important;
+  border-radius: 20px !important;
+  margin: 4px 10px 8px !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  .status-bar { flex-wrap: wrap !important; row-gap: 8px !important; }
+  .status-bar > div { flex: 1 1 calc(50% - 10px); justify-content: center; }
+  .passage .header-banner { flex-wrap: wrap !important; row-gap: 8px !important; }
+}
+
+@media (max-width: 620px) {
+  body { font-size: 15px !important; }
+  #story-wrap { padding: 12px 10px 26px !important; }
+  .dashboard-grid {
+  background: linear-gradient(180deg, rgba(238, 245, 255, .55), rgba(255, 253, 247, 0) 78%) !important;
+  border-radius: 20px !important;
+  margin: 4px 10px 8px !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 10px !important; padding: 12px !important; }
+  .btn-box { min-height: 88px !important; border-radius: 16px !important; padding: 10px 8px !important; }
+  .btn-box a { font-size: .95rem !important; }
+  .btn-box .btn-sub { font-size: .56rem !important; letter-spacing: .06em !important; }
+  .status-bar { margin: 12px 12px 4px !important; padding: 10px !important; }
+  .status-bar > div { font-size: .85rem; padding: 4px 8px !important; }
+  .passage .tech-card, #passages .tech-card { border-radius: 16px !important; }
+  .passage .header-banner { border-radius: 0 !important; padding: 12px 14px !important; }
+  .passage .header-banner span { font-size: 1rem !important; }
+  .passage .header-banner a, .passage .header-banner .link-internal {
+    padding: 5px 10px !important; font-size: .74rem !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .dashboard-grid {
+  background: linear-gradient(180deg, rgba(238, 245, 255, .55), rgba(255, 253, 247, 0) 78%) !important;
+  border-radius: 20px !important;
+  margin: 4px 10px 8px !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  .btn-box { min-height: 82px !important; }
+  .btn-box a { font-size: .9rem !important; }
+  .passage .btn-group, .passage .res-btn-group { gap: 8px !important; }
+  .passage .btn-group a, .passage .btn-group button { flex: 1 1 100% !important; }
+}
+
+/* ===== 11. 功能格内链接：彻底清掉胶囊样式（覆盖 .link-internal） ===== */
+.passage .btn-box .link-internal,
+.passage .btn-box .link-internal:hover,
+.passage .btn-box a {
+  background: none !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  outline: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  text-decoration: none !important;
+  transform: none !important;
+}
+
+@media (max-width: 620px) {
+  .passage .btn-box .btn-sub {
+    white-space: normal !important;
+    word-break: break-word !important;
+    font-size: .55rem !important;
+    letter-spacing: .02em !important;
+    line-height: 1.3 !important;
+    margin-top: 2px !important;
+  }
+  .passage .btn-box { padding: 12px 8px !important; }
+}
+
+/* ===== 12. 小屏按钮与选项行 ===== */
+@media (max-width: 620px) {
+  .passage button,
+  .passage .link-internal.btn-macro,
+  .passage a[style*="gradient"] {
+    padding: 8px 12px !important;
+    font-size: .82rem !important;
+    white-space: nowrap !important;
+    border-radius: 999px !important;
+    line-height: 1.5 !important;
+  }
+  .passage label { display: inline-flex !important; align-items: center; gap: 4px; margin: 0 8px 6px 0; }
+  .passage input[type="radio"] { flex: 0 0 auto; }
+}
+
+
+/* ===== 13. 深色横幅 → 奶油玻璃横幅（资源库存条等） ===== */
+.passage [style*="background:#1e293b"],
+.passage [style*="background: #1e293b"],
+.passage [style*="background:#0f172a"],
+.passage [style*="background: #0f172a"],
+.passage [style*="background:#111827"] {
+  background: linear-gradient(118deg, rgba(228, 238, 253, .96), rgba(255, 251, 243, .95) 62%, rgba(248, 243, 253, .95)) !important;
+  color: #35558C !important;
+  border: 1px solid rgba(122, 154, 214, .24) !important;
+  box-shadow: 0 12px 26px -22px rgba(96, 116, 155, .55), inset 0 1px 0 #fff !important;
+  text-shadow: none !important;
+}
+.passage [style*="background:#1e293b"] span,
+.passage [style*="background:#0f172a"] span,
+.passage [style*="background:#111827"] span { text-shadow: none !important; }
+/* 深底上的荧光字 → 奶油底上的同色系深字 */
+.passage [style*="color:#fbbf24"] { color: #A9762A !important; }
+.passage [style*="color:#e879f9"] { color: #8B6BB8 !important; }
+.passage [style*="color:#c084fc"] { color: #8B6BB8 !important; }
+.passage [style*="color:#60a5fa"] { color: #4C74B4 !important; }
+.passage [style*="color:#38bdf8"] { color: #3F86AE !important; }
+.passage [style*="color:#94a3b8"] { color: #7E8A9E !important; }
+.passage [style*="color:#e2e8f0"] { color: #5E6880 !important; }
+.passage [style*="color:#f8fafc"] { color: #35558C !important; }
+
+
+/* ===== 14. 实心色块标签 → 淡彩底 + 同色深字 ===== */
+.passage span[style*="background:#16a34a"],
+.passage span[style*="background: #16a34a"],
+.passage span[style*="background:#10b981"],
+.passage span[style*="background:#059669"] {
+  background: rgba(116, 194, 162, .20) !important;
+  color: #2E7A60 !important;
+  border: 1px solid rgba(116, 194, 162, .42) !important;
+}
+.passage span[style*="background:#2563eb"],
+.passage span[style*="background: #2563eb"],
+.passage span[style*="background:#3b82f6"],
+.passage span[style*="background:#6366f1"] {
+  background: rgba(122, 154, 214, .20) !important;
+  color: #32538C !important;
+  border: 1px solid rgba(122, 154, 214, .42) !important;
+}
+.passage span[style*="background:#dc2626"],
+.passage span[style*="background:#ef4444"],
+.passage span[style*="background:#e11d48"] {
+  background: rgba(227, 159, 175, .22) !important;
+  color: #A2516A !important;
+  border: 1px solid rgba(227, 159, 175, .46) !important;
+}
+.passage span[style*="background:#f59e0b"],
+.passage span[style*="background:#d97706"] {
+  background: rgba(241, 219, 178, .30) !important;
+  color: #8E6122 !important;
+  border: 1px solid rgba(241, 219, 178, .62) !important;
+}
+.passage span[style*="background:#7c3aed"],
+.passage span[style*="background:#8b5cf6"] {
+  background: rgba(179, 163, 221, .24) !important;
+  color: #6B57A0 !important;
+  border: 1px solid rgba(179, 163, 221, .48) !important;
+}
+
+
+/* ===== 15. 饼图与提示条 ===== */
+/* 内联 conic-gradient 的饼图：降饱和 + 提亮，靠拢马卡龙 */
+.passage div[style*="conic-gradient"] {
+  filter: saturate(.58) brightness(1.06) !important;
+  box-shadow: 0 8px 18px -12px rgba(96, 116, 155, .7) !important;
+}
+/* 灰提示条 → 淡蓝奶油条 */
+.passage [style*="background:#f1f5f9"],
+.passage [style*="background: #f1f5f9"],
+.passage [style*="background:#f8fafc"] {
+  background: linear-gradient(118deg, rgba(244, 249, 255, .82), rgba(255, 255, 253, .88)) !important;
+  border: 1px solid rgba(122, 154, 214, .16) !important;
+  border-radius: 14px !important;
+}
+
+
+/* ===== 16. 高频内联色 → 奶油马卡龙文字色 ===== */
+/* 次级灰蓝 */
+.passage [style*="color:#64748b"] { color: #5E6A85 !important; }
+.passage [style*="color:#94a3b8"] { color: #78849C !important; }
+.passage [style*="color:#475569"] { color: #454F68 !important; }
+.passage [style*="color:#334155"] { color: #333D56 !important; }
+.passage [style*="color:#1e293b"] { color: #2A3348 !important; }
+.passage [style*="color:#0f172a"] { color: #222B3E !important; }
+.passage [style*="color:#334151"] { color: #303748 !important; }
+.passage [style*="color:#93a0b5"] { color: #6E7A92 !important; }
+/* 蓝 */
+.passage [style*="color:#2563eb"] { color: #3A5D97 !important; }
+.passage [style*="color:#1d4ed8"] { color: #32538D !important; }
+.passage [style*="color:#3b82f6"] { color: #40639E !important; }
+.passage [style*="color:#1e40af"] { color: #274574 !important; }
+.passage [style*="color:#0284c7"] { color: #2C6A8E !important; }
+.passage [style*="color:#0ea5e9"] { color: #2F7095 !important; }
+/* 绿 */
+.passage [style*="color:#059669"] { color: #2B7158 !important; }
+.passage [style*="color:#10b981"],
+.passage [style*="color:#16a34a"] { color: #337560 !important; }
+.passage [style*="color:#166534"] { color: #205C44 !important; }
+.passage [style*="color:#047857"] { color: #26654F !important; }
+/* 红 */
+.passage [style*="color:#ef4444"] { color: #A44D63 !important; }
+.passage [style*="color:#dc2626"] { color: #9A4459 !important; }
+.passage [style*="color:#b91c1c"] { color: #873246 !important; }
+.passage [style*="color:#e11d48"] { color: #99445F !important; }
+.passage [style*="color:#be185d"] { color: #8C3D60 !important; }
+.passage [style*="color:#db2777"] { color: #943F64 !important; }
+.passage [style*="color:#9f1239"] { color: #7B2F45 !important; }
+.passage [style*="color:#991b1b"] { color: #772C40 !important; }
+/* 橙黄 */
+.passage [style*="color:#d97706"] { color: #86571A !important; }
+.passage [style*="color:#f59e0b"] { color: #8A5D20 !important; }
+.passage [style*="color:#b45309"] { color: #7A4D16 !important; }
+.passage [style*="color:#c2410c"] { color: #8C4A21 !important; }
+.passage [style*="color:#ea580c"] { color: #8E4C26 !important; }
+.passage [style*="color:#92400e"] { color: #754F23 !important; }
+/* 紫 */
+.passage [style*="color:#7c3aed"] { color: #5C459A !important; }
+.passage [style*="color:#8b5cf6"] { color: #644D9F !important; }
+.passage [style*="color:#9333ea"] { color: #664D9C !important; }
+
+/* ===== 17. 粗色条（border-left 4px）→ 柔化同色系 ===== */
+.passage [style*="solid #dc2626"],
+.passage [style*="solid #ef4444"],
+.passage [style*="solid #b91c1c"],
+.passage [style*="solid #e11d48"] { border-color: rgba(214, 132, 152, .62) !important; }
+.passage [style*="solid #2563eb"],
+.passage [style*="solid #3b82f6"],
+.passage [style*="solid #1d4ed8"],
+.passage [style*="solid #0ea5e9"],
+.passage [style*="solid #6366f1"] { border-color: rgba(122, 154, 214, .62) !important; }
+.passage [style*="solid #16a34a"],
+.passage [style*="solid #059669"],
+.passage [style*="solid #10b981"],
+.passage [style*="solid #166534"] { border-color: rgba(116, 194, 162, .62) !important; }
+.passage [style*="solid #f59e0b"],
+.passage [style*="solid #d97706"],
+.passage [style*="solid #fbbf24"],
+.passage [style*="solid #fcd34d"] { border-color: rgba(241, 219, 178, .72) !important; }
+.passage [style*="solid #7c3aed"],
+.passage [style*="solid #8b5cf6"],
+.passage [style*="solid #9333ea"] { border-color: rgba(179, 163, 221, .65) !important; }
+
+
+/* ===== 18. 剧情模式 / 月结页：同步奶油蓝 ===== */
+body.story-mode {
+  background: linear-gradient(158deg, #E8F1FD 0%, #F3F8FE 32%, #FCFBF8 70%, #FDFCFA 100%) !important;
+  background-attachment: fixed !important;
+}
+body.story-mode::before {
+  background: radial-gradient(circle, rgba(122, 154, 214, .26) 0%, rgba(122, 154, 214, 0) 70%) !important;
+}
+body.story-mode::after {
+  background: radial-gradient(circle, rgba(240, 178, 150, .20) 0%, rgba(240, 178, 150, 0) 70%) !important;
+}
+.story-card {
+  background: linear-gradient(158deg, rgba(255, 255, 252, .78), rgba(240, 247, 255, .70)) !important;
+  border: 1px solid rgba(255, 255, 255, .85) !important;
+  box-shadow: 0 18px 40px -28px rgba(96, 116, 155, .55), inset 0 1px 0 rgba(255, 255, 255, .9) !important;
+}
+.story-header {
+  background: linear-gradient(180deg, rgba(255, 255, 255, .55), rgba(255, 255, 255, 0)) !important;
+  border-bottom: 1px solid rgba(122, 154, 214, .14) !important;
+}
+.story-kicker { color: #7C89A2 !important; }
+.story-title { color: #26406E !important; }
+.story-body, .story-card p, .story-card div { color: #333D55; }
+.story-divider { background: linear-gradient(90deg, transparent, rgba(122, 154, 214, .35), transparent) !important; }
+
+/* 月结卡 */
+.nm-card {
+  background: linear-gradient(158deg, rgba(255, 255, 252, .92), rgba(242, 248, 255, .84)) !important;
+  border: 1px solid rgba(255, 255, 255, .92) !important;
+  box-shadow: 0 10px 26px -22px rgba(96, 116, 155, .55) !important;
+}
+.nm-card.quiet {
+  background: rgba(255, 255, 252, .62) !important;
+}
+.nm-head h1, .nm-head .nm-title { color: #26406E !important; }
+
+
+/* ===== 19. 极浅语义底：降低纯度，统一到"奶油白 + 少许本色" ===== */
+.passage [style*="background:#fef2f2"],
+.passage [style*="background:#fff1f2"],
+.passage [style*="background:#fff0f5"],
+.passage [style*="background:#fbf0f3"],
+.passage [style*="background:#fff5f5"],
+.passage [style*="background:#fdf2f8"],
+.passage [style*="background:#fce7f3"],
+.passage [style*="background:#fbcfe8"],
+.passage [style*="background:#ffe4e6"],
+.passage [style*="background:#fff1f1"] {
+  background: linear-gradient(156deg, #FDFCFE 0%, #F7FBFF 100%) !important;
+  border-color: rgba(227, 159, 175, .26) !important;
+}
+.passage [style*="background:#f0fdf4"],
+.passage [style*="background:#ecfdf5"],
+.passage [style*="background:#f0fdfa"] {
+  background: linear-gradient(156deg, rgba(248, 253, 250, .95), rgba(244, 249, 255, .93)) !important;
+  border-color: rgba(116, 194, 162, .28) !important;
+}
+.passage [style*="background:#eff6ff"],
+.passage [style*="background:#f0f9ff"],
+.passage [style*="background:#eef2ff"] {
+  background: linear-gradient(156deg, rgba(243, 248, 255, .95), rgba(253, 254, 255, .93)) !important;
+  border-color: rgba(122, 154, 214, .30) !important;
+}
+.passage [style*="background:#fff7ed"],
+.passage [style*="background:#fffbeb"],
+.passage [style*="background:#fefce8"] {
+  background: linear-gradient(156deg, rgba(255, 253, 246, .94), rgba(247, 250, 255, .90)) !important;
+  border-color: rgba(241, 219, 178, .50) !important;
+}
+.passage [style*="background:#faf5ff"],
+.passage [style*="background:#f5f3ff"] {
+  background: linear-gradient(156deg, rgba(250, 248, 255, .95), rgba(244, 249, 255, .93)) !important;
+  border-color: rgba(179, 163, 221, .30) !important;
+}
+
+/* 补充：亮绿/亮青文字 */
+.passage [style*="color:#22c55e"],
+.passage [style*="color:#4ade80"],
+.passage [style*="color:#34d399"] { color: #4E9077 !important; }
+.passage [style*="color:#06b6d4"],
+.passage [style*="color:#0891b2"] { color: #43849E !important; }
+/* 补充：亮红方块图标柔化 */
+.passage [style*="background:#dc2626"],
+.passage [style*="background:#b91c1c"] {
+  background: linear-gradient(150deg, #D08096, #BE6279) !important;
+}
+
+/* ===== 20. 微调：文字更浓、黄更淡、标签统一 ===== */
+
+/* 20.1 正文整体加深一档（解决"字看着不清楚"） */
+body,
+.passage,
+.passage p,
+.passage li,
+.passage div,
+.passage span {
+  color: #2E3748;
+  -webkit-text-size-adjust: 100%;
+}
+.passage p { line-height: 1.72 !important; }
+.passage strong, .passage b { color: #222B3C !important; }
+.passage small, .passage .note { color: #5E6A82 !important; }
+
+/* 20.2 功能格：去掉英文后略收一点高度，字再大一档 */
+.dashboard-grid > .btn-box { min-height: 88px !important; }
+.btn-box > a, .btn-box > a.link-internal, .btn-box > span {
+  font-size: 1.08rem !important;
+  color: #242E44 !important;
+}
+
+/* 20.3 艺人切换标签：玻璃淡蓝胶囊 */
+.passage .tab-btn {
+  background: linear-gradient(160deg, rgba(255, 255, 253, .96), rgba(239, 246, 255, .88)) !important;
+  border: 1px solid rgba(122, 154, 214, .24) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 6px 14px -13px rgba(96, 116, 155, .6) !important;
+}
+.passage .tab-btn a { color: #34405C !important; }
+.passage .tab-btn:hover {
+  border-color: rgba(122, 154, 214, .48) !important;
+  background: linear-gradient(160deg, #FFFFFF, #EAF3FF) !important;
+}
+.passage .tab-btn:hover a { color: #1E2B47 !important; }
+
+/* 20.4 表格文字 */
+.passage td, .passage th { color: #2E3748 !important; }
+.passage th { font-weight: 700 !important; }
+
+/* 20.5 粉丝页数据小卡：底色去掉冷灰 */
+.passage [style*="background:#FAFCFF"] {
+  background: linear-gradient(120deg, rgba(246, 250, 255, .95), rgba(255, 255, 253, .9)) !important;
+  border-radius: 10px !important;
+}
+
+/* ===== 21. 等级按钮 S/A/B/C：玻璃卡，不再做成蓝胶囊 ===== */
+.passage .res-btn-group a,
+.passage .res-btn-group span {
+  background: linear-gradient(158deg, rgba(255, 255, 253, .97), rgba(238, 245, 255, .90)) !important;
+  color: #2C4068 !important;
+  border: 1px solid rgba(122, 154, 214, .36) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 10px -9px rgba(96, 116, 155, .65) !important;
+  text-shadow: none !important;
+  font-weight: 700 !important;
+}
+.passage .res-btn-group a:hover {
+  background: linear-gradient(135deg, #8199CE, #AAC3EA) !important;
+  color: #FFFFFF !important;
+  border-color: rgba(255, 255, 255, .7) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px -12px rgba(104, 132, 190, .9) !important;
+}
+.passage .res-btn-group span {
+  background: rgba(243, 246, 251, .92) !important;
+  color: #ADB7C8 !important;
+  border: 1px dashed rgba(122, 154, 214, .22) !important;
+  box-shadow: none !important;
+  cursor: not-allowed;
+}
+
+/* ===== 22. 粉丝页细节 ===== */
+/* 艺人切换标签再蓝一点 */
+.passage .tab-btn {
+  background: linear-gradient(160deg, #FBFCFF, #EFF6FF) !important;
+  border: 1px solid rgba(122, 154, 214, .28) !important;
+}
+.passage .tab-btn a { color: #2C3B5C !important; }
+/* 饼图稍放大，和右侧数据平衡 */
+.passage div[style*="conic-gradient"] {
+  width: 148px !important;
+  height: 148px !important;
+}
+/* 购买按钮：淡蓝玻璃药丸，hover 变实蓝 */
+.passage a.link-internal[data-passage="Fan_Action"] {
+  background: linear-gradient(150deg, #F4F9FF, #E7F1FF) !important;
+  color: #2B4470 !important;
+  border: 1px solid rgba(122, 154, 214, .30) !important;
+  border-radius: 999px !important;
+  box-shadow: 0 4px 12px -10px rgba(96, 116, 155, .7) !important;
+  text-decoration: none !important;
+}
+.passage a.link-internal[data-passage="Fan_Action"]:hover {
+  background: linear-gradient(135deg, #8199CE, #AAC3EA) !important;
+  color: #FFFFFF !important;
+  border-color: transparent !important;
+}
+
+/* ===== 23. 粉丝页手机适配 ===== */
+@media (max-width: 620px) {
+  /* 饼图与数据列表：改为上下排列，避免文字被挤成竖排 */
+  .passage div[style*="align-items:flex-start"][style*="gap:20px"] {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 14px !important;
+  }
+  .passage div[style*="grid-template-columns: 1fr 1fr"] {
+    width: 100% !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 6px !important;
+  }
+  .passage [style*="background:#FAFCFF"] {
+    padding: 6px 9px !important;
+    gap: 8px !important;
+  }
+  .passage [style*="background:#FAFCFF"] span {
+    white-space: nowrap !important;
+    font-size: .78em !important;
+    line-height: 1.35 !important;
+  }
+  .passage div[style*="conic-gradient"] {
+    width: 118px !important;
+    height: 118px !important;
+  }
+  /* 购买按钮文字略缩，避免撑破 */
+  .passage a.link-internal[data-passage="Fan_Action"] {
+    font-size: .8rem !important;
+    padding: 7px 11px !important;
+    display: inline-block !important;
+  }
+}

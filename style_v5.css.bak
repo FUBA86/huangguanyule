@@ -1,0 +1,494 @@
+/* =========================================================================
+   预览：马卡龙玻璃拟态 v5（只在这个预览页生效，不影响正式版）
+   加载顺序：style.css → style_v5.css
+   ========================================================================= */
+
+/* ===== 1. 令牌：把"靛蓝科技风"换成马卡龙 ===== */
+:root {
+  --brand-1: #8AA3CC;
+  --brand-2: #A6BAD8;
+  --brand-3: #C3D2E6;
+  --brand-soft: #EEF2F9;
+  --brand-ink: #5F7291;
+
+  --ink-900: #3B4759;
+  --ink-700: #5A6779;
+  --ink-500: #7C8798;
+  --ink-400: #98A3B3;
+  --ink-300: #C9D2DE;
+  --ink-200: #E2E8F0;
+  --ink-100: #F1F4F8;
+  --ink-50: #F8FAFC;
+
+  --ok: #7FBFA6;      --ok-bg: #EDF7F2;
+  --warn: #D9B67A;    --warn-bg: #FBF5E9;
+  --danger: #D99AAE;  --danger-bg: #FBF0F3;
+  --gold: #C9A25F;
+
+  --surface: rgba(255, 255, 255, .78);
+  --surface-2: rgba(255, 255, 255, .58);
+  --hairline: rgba(122, 142, 172, .16);
+  --hairline-2: rgba(122, 142, 172, .26);
+
+  --sh-1: 0 1px 2px rgba(90, 110, 145, .06);
+  --sh-2: 0 6px 18px -10px rgba(90, 110, 145, .35);
+  --sh-3: 0 14px 34px -18px rgba(90, 110, 145, .45);
+  --sh-glow: 0 10px 24px -14px rgba(138, 163, 204, .75);
+
+  --r-sm: 12px;
+  --r-md: 16px;
+  --r-lg: 20px;
+  --r-xl: 26px;
+
+  --bg-main: #F6F8FC;
+  --text-dark: #3B4759;
+  --text-light: #7C8798;
+  --accent-blue: #8AA3CC;
+  --accent-pink: #D99AAE;
+  --accent-gold: #D9B67A;
+  --border-light: #DCE3EC;
+}
+
+/* ===== 2. 背景：柔和马卡龙光晕，去掉网格纸 ===== */
+body {
+  background-color: #F6F8FC !important;
+  background-image:
+    radial-gradient(900px 520px at 6% -10%, rgba(138, 163, 204, .20), transparent 62%),
+    radial-gradient(760px 480px at 100% 2%, rgba(167, 150, 196, .16), transparent 64%),
+    radial-gradient(720px 520px at 52% 106%, rgba(127, 191, 166, .14), transparent 62%),
+    radial-gradient(520px 380px at 88% 88%, rgba(217, 182, 122, .12), transparent 66%) !important;
+  background-size: auto !important;
+  background-attachment: fixed !important;
+}
+body::before { opacity: .25 !important; }
+
+/* ===== 3. 侧栏 ===== */
+.side-brand {
+  background: linear-gradient(135deg, #93AACF, #B4C6DE 60%, #C9B9D8) !important;
+  box-shadow: 0 12px 26px -16px rgba(110, 135, 175, .85), inset 0 1px 0 rgba(255, 255, 255, .6) !important;
+  border: 1px solid rgba(255, 255, 255, .55);
+}
+#ui-bar { background: rgba(255, 255, 255, .62) !important; }
+.sidebar-row { border-radius: 12px; }
+.actor-card, .actor-mini { border-radius: 16px !important; }
+
+/* ===== 4. 主卡片：玻璃 ===== */
+.passage .tech-card,
+#passages .tech-card,
+.passage .tech-card-business,
+#passages .tech-card-business {
+  background: rgba(255, 255, 255, .76) !important;
+  backdrop-filter: blur(20px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(150%) !important;
+  border: 1px solid rgba(255, 255, 255, .92) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 20px 44px -30px rgba(90, 110, 145, .55), 0 0 0 1px rgba(122, 142, 172, .08) !important;
+}
+.passage .tech-card::before {
+  height: 0 !important;
+  background: none !important;
+}
+
+/* ===== 5. 页头：从深色横幅改成浅色玻璃条 ===== */
+.passage .header-banner,
+#passages .header-banner,
+.tech-card > .header-banner {
+  background: linear-gradient(120deg, rgba(255, 255, 255, .96), rgba(238, 242, 249, .88)) !important;
+  color: #46556D !important;
+  border-bottom: 1px solid rgba(122, 142, 172, .16) !important;
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, .9) !important;
+  padding: clamp(14px, 2.4vw, 20px) clamp(16px, 3vw, 24px) !important;
+}
+.passage .header-banner::after { background: none !important; }
+.passage .header-banner::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: auto 0 0 0 !important;
+  height: 2px !important;
+  background: linear-gradient(90deg, #8AA3CC, #A796C4 32%, #7FBFA6 58%, #D9B67A 80%, #D99AAE) !important;
+  opacity: .5 !important;
+  pointer-events: none;
+}
+.passage .header-banner span,
+.passage .header-banner b,
+.passage .header-banner h1,
+.passage .header-banner h2,
+.passage .header-banner h3 {
+  color: #3E4C63 !important;
+  font-weight: 800 !important;
+  letter-spacing: .02em !important;
+  text-shadow: none !important;
+}
+.passage .header-banner > div,
+.passage .header-banner p,
+.passage .header-banner small,
+.passage .header-banner em {
+  color: #6E7C90 !important;
+  text-shadow: none !important;
+}
+/* 页头里的按钮：雾蓝玻璃胶囊 */
+.passage .header-banner a,
+.passage .header-banner .link-internal,
+.passage .header-banner button {
+  background: rgba(138, 163, 204, .16) !important;
+  color: #4F6383 !important;
+  border: 1px solid rgba(138, 163, 204, .34) !important;
+  border-radius: 999px !important;
+  box-shadow: none !important;
+  font-weight: 700 !important;
+}
+.passage .header-banner a:hover {
+  background: rgba(138, 163, 204, .28) !important;
+  color: #3E4C63 !important;
+}
+
+/* ===== 6. 办公室：功能格 ===== */
+.dashboard-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 14px !important;
+  padding: clamp(14px, 2.2vw, 22px) !important;
+}
+.btn-box {
+  background: linear-gradient(160deg, rgba(255, 255, 255, .94), rgba(243, 246, 251, .78)) !important;
+  border: 1px solid rgba(255, 255, 255, .95) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 10px 26px -20px rgba(90, 110, 145, .6), inset 0 1px 0 #fff !important;
+  min-width: 0 !important;
+  min-height: 96px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important;
+  padding: 14px 12px !important;
+  text-align: center !important;
+}
+.btn-box::before {
+  background: radial-gradient(50% 100% at 50% 100%, rgba(138, 163, 204, .26), transparent 72%) !important;
+}
+.btn-box:hover {
+  border-color: rgba(138, 163, 204, .42) !important;
+  box-shadow: 0 16px 32px -22px rgba(90, 110, 145, .7), 0 0 0 3px rgba(138, 163, 204, .12) !important;
+}
+.btn-box > a,
+.btn-box > a.link-internal,
+.btn-box > span {
+  color: #3B4759 !important;
+  font-weight: 700 !important;
+  font-size: 1.02rem !important;
+  letter-spacing: .01em !important;
+  height: auto !important;
+  width: auto !important;
+  display: block !important;
+  line-height: 1.45 !important;
+  text-align: center !important;
+}
+.btn-box > a:hover { color: #2F3B4D !important; }
+/* 去掉链接自带的虚线下划线/边框 */
+.btn-box > a,
+.btn-box > a:hover,
+.btn-box > a:focus {
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  text-decoration: none !important;
+}
+.btn-box .btn-sub {
+  color: #98A3B3 !important;
+  letter-spacing: .1em !important;
+  font-weight: 600 !important;
+  font-size: .64rem !important;
+  display: block !important;
+  margin: 0 !important;
+}
+/* 剧情入口 / 断线卡 / 休息：统一玻璃，不用彩色边框 */
+.btn-box[style*="border-color"],
+.btn-box.btn-gossip {
+  border-color: rgba(255, 255, 255, .95) !important;
+  background: linear-gradient(160deg, rgba(255, 255, 255, .95), rgba(245, 247, 252, .8)) !important;
+}
+.btn-box[style*="background"][style*="#fef2f2"] {
+  background: linear-gradient(160deg, rgba(251, 240, 243, .95), rgba(255, 255, 255, .85)) !important;
+}
+
+/* ===== 7. 资源条：玻璃胶囊 ===== */
+.status-bar {
+  background: rgba(255, 255, 255, .66) !important;
+  border: 1px solid rgba(255, 255, 255, .9) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 10px 26px -22px rgba(90, 110, 145, .6) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+.status-bar > div {
+  background: rgba(255, 255, 255, .82) !important;
+  border: 1px solid rgba(255, 255, 255, .95) !important;
+  box-shadow: none !important;
+  color: #56657C !important;
+}
+.status-bar b { color: #3F4D63 !important; }
+
+/* ===== 8. 按钮：统一雾蓝胶囊 ===== */
+.passage .btn-primary,
+.passage a.btn-primary,
+.res-btn-group a,
+.passage a[style*="linear-gradient"],
+.passage button[style*="linear-gradient"] {
+  background: linear-gradient(135deg, #A3B8D4, #C2D1E5) !important;
+  color: #fff !important;
+  border: 1px solid rgba(255, 255, 255, .72) !important;
+  border-radius: 999px !important;
+  box-shadow: 0 10px 22px -14px rgba(120, 145, 180, .95) !important;
+  text-shadow: 0 1px 1px rgba(90, 110, 145, .25);
+  font-weight: 700 !important;
+}
+.passage a[style*="linear-gradient"]:hover,
+.passage .btn-primary:hover,
+.res-btn-group a:hover {
+  filter: brightness(1.03);
+  transform: translateY(-1px);
+}
+/* 纯色内联按钮（蓝/紫系）也拉回雾蓝 */
+.passage a[style*="#2563eb"],
+.passage a[style*="#3b82f6"],
+.passage a[style*="#1d4ed8"],
+.passage a[style*="#6366f1"],
+.passage a[style*="#7c3aed"],
+.passage a[style*="#4f46e5"],
+.passage button[style*="#2563eb"],
+.passage button[style*="#3b82f6"] {
+  background: linear-gradient(135deg, #A3B8D4, #C2D1E5) !important;
+  color: #fff !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(255, 255, 255, .72) !important;
+}
+.passage .continue-row a,
+.passage .btn-group a.link-internal {
+  background: linear-gradient(135deg, #A3B8D4, #C2D1E5) !important;
+  color: #fff !important;
+  border-radius: 999px !important;
+  box-shadow: 0 10px 22px -14px rgba(120, 145, 180, .95) !important;
+  letter-spacing: .12em;
+}
+
+/* ===== 9. 二级页通用件 ===== */
+/* 9.1 内联高饱和色 → 马卡龙语义色（实装时改成 class，这里先用属性选择器兜住） */
+.passage [style*="color:#2563eb"],
+.passage [style*="color:#1d4ed8"],
+.passage [style*="color:#3b82f6"],
+.passage [style*="color:#0284c7"],
+.passage [style*="color:#0ea5e9"],
+.passage [style*="color:#7c3aed"],
+.passage [style*="color:#6366f1"] { color: #6F87A8 !important; }
+
+.passage [style*="color:#16a34a"],
+.passage [style*="color:#059669"],
+.passage [style*="color:#166534"],
+.passage [style*="color:#047857"] { color: #4F8C74 !important; }
+
+.passage [style*="color:#ef4444"],
+.passage [style*="color:#dc2626"],
+.passage [style*="color:#b91c1c"],
+.passage [style*="color:#e11d48"] { color: #B4727F !important; }
+
+.passage [style*="color:#f59e0b"],
+.passage [style*="color:#d97706"],
+.passage [style*="color:#b45309"] { color: #A8763A !important; }
+
+/* 9.2 内联浅色边框 → 统一玻璃边 */
+.passage [style*="border:1px solid #cbd5e1"],
+.passage [style*="border:1px solid #e2e8f0"] { border-color: rgba(138, 163, 204, .34) !important; }
+.passage [style*="border:1px solid #93c5fd"],
+.passage [style*="border:1px solid #bfdbfe"] { border-color: rgba(127, 191, 166, .45) !important; }
+.passage [style*="border:1px solid #fcd34d"],
+.passage [style*="border:1px solid #fde68a"],
+.passage [style*="border:1px solid #fbbf24"] { border-color: rgba(217, 182, 122, .55) !important; }
+.passage [style*="border:1px solid #f87171"],
+.passage [style*="border:1px solid #fecaca"],
+.passage [style*="border:1px solid #fca5a5"] { border-color: rgba(167, 150, 196, .5) !important; }
+.passage [style*="border:1px solid #bbf7d0"],
+.passage [style*="border:1px solid #86efac"] { border-color: rgba(127, 191, 166, .5) !important; }
+
+/* 内联纯白底的小卡 → 玻璃 */
+.passage [style*="background:#fff"][style*="border-radius:6px"],
+.passage [style*="background:#fff"][style*="border-radius: 6px"],
+.passage [style*="background:#fff"][style*="border-radius:8px"],
+.passage [style*="background:#fff"][style*="border-radius: 8px"] {
+  background: rgba(255, 255, 255, .8) !important;
+  border-radius: 14px !important;
+  box-shadow: inset 0 1px 0 #fff, 0 8px 20px -18px rgba(90, 110, 145, .65) !important;
+}
+
+/* 深浅文字统一 */
+.passage [style*="color:#1e40af"],
+.passage [style*="color:#334155"],
+.passage [style*="color:#1e293b"] { color: #46556D !important; }
+.passage [style*="color:#991b1b"],
+.passage [style*="color:#9f1239"] { color: #8C5E6B !important; }
+.passage [style*="color:#78350f"],
+.passage [style*="color:#92400e"] { color: #8A6A3E !important; }
+
+/* 9.3 进度条填充（div，不是按钮） */
+.passage div[style*="background:#2563eb"],
+.passage div[style*="background: #2563eb"],
+.passage div[style*="background:#3b82f6"],
+.passage div[style*="background: #3b82f6"] {
+  background: linear-gradient(90deg, #A9BEDA, #C6D5E8) !important;
+}
+.passage div[style*="background:#16a34a"],
+.passage div[style*="background: #16a34a"],
+.passage div[style*="background:#10b981"],
+.passage div[style*="background: #10b981"] {
+  background: linear-gradient(90deg, #9BCCB8, #C2E2D4) !important;
+}
+
+/* 9.3b 原生进度条（<progress>）统一成雾蓝细条 */
+.passage progress {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100% !important;
+  height: 7px !important;
+  border: none !important;
+  border-radius: 999px !important;
+  background: rgba(122, 142, 172, .14) !important;
+  overflow: hidden;
+  vertical-align: middle;
+}
+.passage progress::-webkit-progress-bar {
+  background: rgba(122, 142, 172, .14) !important;
+  border-radius: 999px !important;
+}
+.passage progress::-webkit-progress-value {
+  background: linear-gradient(90deg, #A9BEDA, #C6D5E8) !important;
+  border-radius: 999px !important;
+}
+.passage progress::-moz-progress-bar {
+  background: #B7C8E0 !important;
+  border-radius: 999px !important;
+}
+
+/* 单选/复选：系统默认蓝 → 雾蓝 */
+.passage input[type="radio"],
+.passage input[type="checkbox"] { accent-color: #8AA3CC !important; }
+
+/* 9.4 卡片本体 */
+.sub-card,
+.card-container > div,
+.passage .res-box,
+.passage .card-container {
+  background: rgba(255, 255, 255, .72) !important;
+  border: 1px solid rgba(255, 255, 255, .92) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 12px 28px -24px rgba(90, 110, 145, .6) !important;
+}
+.sub-card:hover { border-color: rgba(138, 163, 204, .4) !important; }
+
+/* 小标题左侧色条 → 淡紫圆角块 */
+.passage h3[style*="border-left"],
+.passage .section-title {
+  border-left-color: #A796C4 !important;
+  color: #46556D !important;
+}
+.passage .section-title > span:first-child {
+  background: #F0EDF7 !important;
+  border-color: rgba(167, 150, 196, .28) !important;
+}
+
+/* 进度条 */
+.passage div[style*="background:#e2e8f0"],
+.passage div[style*="background: #e2e8f0"],
+.passage div[style*="background:#f1f5f9"] { background: rgba(122, 142, 172, .14) !important; }
+
+/* 表格 */
+.passage table, .passage th, .passage td { border-color: rgba(122, 142, 172, .18) !important; }
+.passage th { background: rgba(246, 248, 252, .9) !important; color: #56657C !important; }
+
+/* 输入/选择 */
+.passage input, .passage select, .passage textarea {
+  background: rgba(255, 255, 255, .9) !important;
+  border: 1px solid rgba(122, 142, 172, .24) !important;
+  border-radius: 12px !important;
+  color: #46556D !important;
+}
+
+/* ===== 10. 手机适配（重点修溢出） ===== */
+.passage, #passages .passage { min-width: 0 !important; }
+#story-wrap { min-width: 0 !important; overflow-x: clip; }
+#passage-main { min-width: 0 !important; }
+#passage-main * { min-width: 0; }
+
+@media (max-width: 860px) {
+  .dashboard-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  .status-bar { flex-wrap: wrap !important; row-gap: 8px !important; }
+  .status-bar > div { flex: 1 1 calc(50% - 10px); justify-content: center; }
+  .passage .header-banner { flex-wrap: wrap !important; row-gap: 8px !important; }
+}
+
+@media (max-width: 620px) {
+  body { font-size: 15px !important; }
+  #story-wrap { padding: 12px 10px 26px !important; }
+  .dashboard-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 10px !important; padding: 12px !important; }
+  .btn-box { min-height: 88px !important; border-radius: 16px !important; padding: 10px 8px !important; }
+  .btn-box a { font-size: .95rem !important; }
+  .btn-box .btn-sub { font-size: .56rem !important; letter-spacing: .06em !important; }
+  .status-bar { margin: 12px 12px 4px !important; padding: 10px !important; }
+  .status-bar > div { font-size: .85rem; padding: 4px 8px !important; }
+  .passage .tech-card, #passages .tech-card { border-radius: 16px !important; }
+  .passage .header-banner { border-radius: 0 !important; padding: 12px 14px !important; }
+  .passage .header-banner span { font-size: 1rem !important; }
+  .passage .header-banner a, .passage .header-banner .link-internal {
+    padding: 5px 10px !important; font-size: .74rem !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .dashboard-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  .btn-box { min-height: 82px !important; }
+  .btn-box a { font-size: .9rem !important; }
+  .passage .btn-group, .passage .res-btn-group { gap: 8px !important; }
+  .passage .btn-group a, .passage .btn-group button { flex: 1 1 100% !important; }
+}
+
+/* ===== 11. 功能格内链接：彻底清掉胶囊样式（覆盖 .link-internal） ===== */
+.passage .btn-box .link-internal,
+.passage .btn-box .link-internal:hover,
+.passage .btn-box a {
+  background: none !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  outline: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  text-decoration: none !important;
+  transform: none !important;
+}
+
+@media (max-width: 620px) {
+  .passage .btn-box .btn-sub {
+    white-space: normal !important;
+    word-break: break-word !important;
+    font-size: .55rem !important;
+    letter-spacing: .02em !important;
+    line-height: 1.3 !important;
+    margin-top: 2px !important;
+  }
+  .passage .btn-box { padding: 12px 8px !important; }
+}
+
+/* ===== 12. 小屏按钮与选项行 ===== */
+@media (max-width: 620px) {
+  .passage button,
+  .passage .link-internal.btn-macro,
+  .passage a[style*="gradient"] {
+    padding: 8px 12px !important;
+    font-size: .82rem !important;
+    white-space: nowrap !important;
+    border-radius: 999px !important;
+    line-height: 1.5 !important;
+  }
+  .passage label { display: inline-flex !important; align-items: center; gap: 4px; margin: 0 8px 6px 0; }
+  .passage input[type="radio"] { flex: 0 0 auto; }
+}

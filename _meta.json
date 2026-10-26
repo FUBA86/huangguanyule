@@ -1,0 +1,19 @@
+{
+  "title": "经济公司模拟器2.3",
+  "start": "Game_Notice",
+  "groups": [
+    "10_core.js",
+    "20_prologue.js",
+    "30_act1.js",
+    "40_act2.js",
+    "50_act3.js",
+    "60_act4.js",
+    "70_endings.js",
+    "80_work.js",
+    "85_business.js",
+    "90_marketing.js",
+    "95_artist.js",
+    "96_month.js",
+    "05_widgets.js"
+  ]
+}
