@@ -805,18 +805,29 @@ window.__STORY_PASSAGES.push({
         /* --- 判定说明：把三个数值的用途直接写给玩家看 --- */
         <div class="st-judge">
             <div class="st-judge-row">
-                <span class="st-judge-k">⚖️ 正义 ≥ 💞 羁绊</span>
+                <span class="st-judge-k">⚖️ 正义 &gt; 70 且 &gt; 💞 羁绊</span>
                 <span class="st-judge-v">→ HE · 荣耀归队</span>
             </div>
             <div class="st-judge-row">
-                <span class="st-judge-k">💞 羁绊 &gt; ⚖️ 正义</span>
+                <span class="st-judge-k">其余（正义 ≥ 70）</span>
                 <span class="st-judge-v">→ HE · 人间烟火</span>
             </div>
             <div class="st-judge-row">
-                <span class="st-judge-k">🛡️ 信任 &lt; 40</span>
+                <span class="st-judge-k">🛡️ 信任 &lt; 40 或 ⚖️ 正义 &lt; 70</span>
                 <span class="st-judge-v danger">→ BE · 无声的牺牲</span>
             </div>
-            <div class="st-judge-note">信任度还管暴露：≥60 每次行动只 +5，&lt;40 则 +15。</div>
+            <div class="st-judge-note">正义值剧情最多给到 65，到不了 70 —— 想活下来就得靠这里的行动往上抬。</div>
+            <<if ($justice || 0) > 70 and ($justice || 0) > ($zp_bond || 0)>>
+                <div class="st-judge-warn" style="color:#2F6E56; background:rgba(16,185,129,.1); border-color:rgba(16,185,129,.3);">
+                    ✅ 已达归队线：正义 <<print $justice>>，高于羁绊 <<print $zp_bond>>。
+                </div>
+            <<elseif ($justice || 0) < 70>>
+                <div class="st-judge-warn">
+                    ⚠️ 正义还差 <<print 70 - ($justice || 0)>> 点才到 70。低于 70，第 60 月会走向「无声的牺牲」。
+                </div>
+            <<else>>
+                <div class="st-judge-note">归队线：正义 &gt; 70 且高于羁绊 <<print $zp_bond>>（当前正义 <<print $justice>>）。</div>
+            <</if>>
             <<if ($zp_trust || 0) < 45>>
                 <div class="st-judge-warn">
                     ⚠️ 信任度偏低。真到了那一天，他可能不敢把最后一枪交到你手上。

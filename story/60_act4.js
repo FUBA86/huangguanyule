@@ -158,12 +158,14 @@ window.__STORY_PASSAGES.push({
 
 /* ── 第60月 · ⚖️ 命运的分岔路口（不再养成，先给判定，再进结局） ────────────
    故事块：Story_Act4_22_Judgment
-   （2026-10-27：三个数值各管一段路，页面上把判定过程摊给玩家看。
-      ① stage 99（线路早早被切断）      → BE 无声的牺牲
-      ② 信任度 < 40                     → BE 无声的牺牲（他没敢把后背交给你）
-      ③ 正义值 ≥ 羁绊值                 → Ending_Police（HE·归队）
-      ④ 其余                            → Ending_Family（HE·留下复婚）
-   ──────────────────────────────────────────────────────── */
+   （2026-10-27 定稿：加密线路就是给玩家调数值冲结局用的，所以阈值全部写成绝对值，
+     不再用「正义 ≥ 羁绊」这种相对比较 —— 那会让 0 : 0 也判成归队。
+      ① stage 99（线路早早被切断）              → BE 无声的牺牲
+      ② 信任度 < 40                             → BE 无声的牺牲（他没敢把后背交给你）
+      ③ 正义值 < 70（始终没真正站到他那一边）    → BE 无声的牺牲
+      ④ 正义值 > 70 且 正义值 > 羁绊值           → Ending_Police（HE·荣耀归队）
+      ⑤ 其余（正义 ≥ 70，含正好 70）              → Ending_Family（HE·人间烟火）
+   ⚠️ 顺序不要动：先判生死，再判走哪条路。 */
 window.__STORY_PASSAGES.push({
   name: "Story_Act4_22_Judgment",
   src: `<<silently>>
@@ -187,11 +189,16 @@ window.__STORY_PASSAGES.push({
     <<set $ending_outcome to "bad">>
     <<set _tag to "BE">>
     <<set _why to "你们之间的默契始终差了一层。最后一次行动，他没有等你，自己把顾涛的车撞下了护栏。">>
-<<elseif _just >= _bond>>
+<<elseif _just < 70>>
+    <<set _end to "Ending_Bad">>
+    <<set $ending_outcome to "bad">>
+    <<set _tag to "BE">>
+    <<set _why to "这几年，你始终没有真正站到他那一边。到最后，他还是一个人把车开向了护栏。">>
+<<elseif _just > 70 and _just > _bond>>
     <<set _end to "Ending_Police">>
     <<set $ending_outcome to "police">>
     <<set _tag to "HE">>
-    <<set _why to "正义压过了私心。你替他守住了那条线，他也终于穿回了自己的警服。">>
+    <<set _why to "正义 > 70，而且压过了私心。你替他守住了那条线，他也终于穿回了自己的警服。">>
 <<else>>
     <<set _end to "Ending_Family">>
     <<set $ending_outcome to "family">>
@@ -221,8 +228,12 @@ window.__STORY_PASSAGES.push({
             </div>
             <div style="display:flex; justify-content:space-between; padding: 11px 16px; border-top: 1px solid #EEF3FA; font-size: 13.5px;">
                 <span>⚖️ 正义值</span>
-                <b style="font-family: ui-monospace, Menlo, monospace; color: #B4813A;"><<print _just>></b>
+                <b style="font-family: ui-monospace, Menlo, monospace; color: <<if _just < 70>>#BE5B6A<<elseif _just > 70>>#2F6E56<<else>>#B4813A<</if>>;"><<print _just>></b>
             </div>
+        </div>
+
+        <div style="margin-top: 10px; font-size: 11.5px; color: #94A3B8; line-height: 1.85;">
+            判定：信任 ≥ 40 且 正义 ≥ 70 才活得下来；正义 &gt; 70 且高于羁绊 → 归队；其余 → 留下。
         </div>
 
         <div style="margin-top: 18px; padding: 14px 16px; border-radius: 12px; background: <<if _tag is "BE">>#FDF0F2<<else>>#EFF8F3<</if>>; border: 1px solid <<if _tag is "BE">>#F3D3D8<<else>>#CFE9DC<</if>>;">
