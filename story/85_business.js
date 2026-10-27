@@ -639,7 +639,8 @@ window.__STORY_PASSAGES.push({
                 reputation: 0, looks: 90, topic: 30,
                 acting: 10, fashion: 40, stage: 20,
                 limit_acting: 70, limit_fashion: 85, limit_stage: 75,
-                fans: { career: 0, mom: 100, toxic: 0, cp: 0, clown: 0, face: 500, dream: 500 },
+                fans: { career: 0, mom: 2000, toxic: 0, cp: 0, clown: 2500, face: 500, dream: 500,
+                        moe: 1500, passerby: 1500 },
                 energy: 120, current_energy: 100,
                 busy_months: 0, project_name: "", job_type: "none",
                 trait: "努力"
@@ -655,7 +656,8 @@ window.__STORY_PASSAGES.push({
                 reputation: 50, looks: 70, topic: 40,
                 acting: 5, fashion: 95, stage: 5,
                 limit_acting: 60, limit_fashion: 98, limit_stage: 55,
-                fans: { career: 200, mom: 0, toxic: 0, cp: 0, clown: 50, face: 0, dream: 500 },
+                fans: { career: 200, mom: 0, toxic: 0, cp: 0, clown: 800, face: 0, dream: 500,
+                        moe: 300, passerby: 2000 },
                 energy: 120, current_energy: 100,
                 busy_months: 0, project_name: "", job_type: "none",
                 trait: "专业"
@@ -734,6 +736,16 @@ window.__STORY_PASSAGES.push({
             <div class="st-signal"><i></i><i></i><i></i><i></i><span>AES-256</span></div>
         </div>
 
+        /* 信任度影响"擦痕迹"的能力：他越信你，越会替你收尾；
+           他越不信你，你就只能自己硬来，暴露得更快。
+           ≥60 → 每次行动暴露 +5；<40 → +15；其余 +10。 */
+        <<set _expo_gain to 10>>
+        <<if ($zp_trust || 0) >= 60>>
+            <<set _expo_gain to 5>>
+        <<elseif ($zp_trust || 0) < 40>>
+            <<set _expo_gain to 15>>
+        <</if>>
+
         /* --- 对面是谁 --- */
         <div class="st-peer">
             <div class="st-peer-ava">ZP</div>
@@ -762,7 +774,10 @@ window.__STORY_PASSAGES.push({
             </div>
         </div>
 
-        /* --- 三个关键数值 --- */
+        /* --- 三个关键数值 ---
+           信任度：展鹏敢不敢把后背交给你（结局判定用，<40 会走向 BE）
+           羁绊值：你们之间的感情（结局判定用）
+           正义值：你这几年站的那一边（结局判定用） */
         <div class="st-stats">
             <div class="st-stat">
                 <span class="st-stat-ico">🛡️</span>
@@ -787,11 +802,37 @@ window.__STORY_PASSAGES.push({
             </div>
         </div>
 
+        /* --- 判定说明：把三个数值的用途直接写给玩家看 --- */
+        <div class="st-judge">
+            <div class="st-judge-row">
+                <span class="st-judge-k">⚖️ 正义 ≥ 💞 羁绊</span>
+                <span class="st-judge-v">→ HE · 荣耀归队</span>
+            </div>
+            <div class="st-judge-row">
+                <span class="st-judge-k">💞 羁绊 &gt; ⚖️ 正义</span>
+                <span class="st-judge-v">→ HE · 人间烟火</span>
+            </div>
+            <div class="st-judge-row">
+                <span class="st-judge-k">🛡️ 信任 &lt; 40</span>
+                <span class="st-judge-v danger">→ BE · 无声的牺牲</span>
+            </div>
+            <div class="st-judge-note">信任度还管暴露：≥60 每次行动只 +5，&lt;40 则 +15。</div>
+            <<if ($zp_trust || 0) < 45>>
+                <div class="st-judge-warn">
+                    ⚠️ 信任度偏低。真到了那一天，他可能不敢把最后一枪交到你手上。
+                </div>
+            <</if>>
+        </div>
+
         /* --- 日常情报操作 --- */
         <div class="st-ops">
             <div class="st-ops-head">
                 <span>日常情报操作</span>
-                <span class="st-ops-hint">每一次行动，都会在账面上留下痕迹</span>
+                <<if $mission_progress >= 100>>
+                    <span class="st-ops-hint done">✅ 任务已完成 —— 手上能做的都做完了，再动只会暴露</span>
+                <<else>>
+                    <span class="st-ops-hint">每一次行动，都会在账面上留下痕迹</span>
+                <</if>>
             </div>
 
             /* 1. 狠黑展鹏 */
@@ -803,19 +844,21 @@ window.__STORY_PASSAGES.push({
                     <div class="st-op-tags">
                         <span class="st-tag buff">正义 +5</span>
                         <span class="st-tag buff">信任 +5</span>
-                        <span class="st-tag risk">暴露 +10</span>
-                        <span class="st-tag gain">进度 +2</span>
+                        <span class="st-tag risk">暴露 +<<print _expo_gain>></span>
+                        <span class="st-tag gain">进度 +5</span>
                     </div>
                 </div>
                 <div class="st-op-r">
                     <div class="st-op-cost">-200 万</div>
-                    <<if $money >= 200>>
+                    <<if $mission_progress >= 100>>
+                        <span class="st-nocost">任务已完成</span>
+                    <<elseif $money >= 200>>
                         <<link "执行" class="st-exec">>
                             <<set $money -= 200>>
                             <<set $justice += 5>>
                             <<set $zp_trust += 5>>
-                            <<set $exposure += 10>>
-                            <<set $mission_progress += 2>>
+                            <<set $exposure += _expo_gain>>
+                            <<set $mission_progress to Math.min(100, $mission_progress + 5)>>
 
                             /* 设置类型并生成 1-3 的随机种子 */
                             <<set $op_type to "blacken">>
@@ -835,19 +878,21 @@ window.__STORY_PASSAGES.push({
                     <div class="st-op-name">⚔️ 狙击帝国娱乐</div>
                     <div class="st-op-desc">打击顾涛的公司，替展鹏出一口恶气。</div>
                     <div class="st-op-tags">
-                        <span class="st-tag buff">羁绊 +5</span>
-                        <span class="st-tag risk">暴露 +10</span>
-                        <span class="st-tag gain">进度 +2</span>
+                        <span class="st-tag buff">羁绊 +10</span>
+                        <span class="st-tag risk">暴露 +<<print _expo_gain>></span>
+                        <span class="st-tag gain">进度 +5</span>
                     </div>
                 </div>
                 <div class="st-op-r">
                     <div class="st-op-cost">-300 万</div>
-                    <<if $money >= 300>>
+                    <<if $mission_progress >= 100>>
+                        <span class="st-nocost">任务已完成</span>
+                    <<elseif $money >= 300>>
                         <<link "执行" class="st-exec">>
                             <<set $money -= 300>>
-                            <<set $zp_bond += 5>>
-                            <<set $exposure += 10>>
-                            <<set $mission_progress += 2>>
+                            <<set $zp_bond += 10>>
+                            <<set $exposure += _expo_gain>>
+                            <<set $mission_progress to Math.min(100, $mission_progress + 5)>>
 
                             <<set $op_type to "attack">>
                             <<set $r_seed to random(1, 3)>>
@@ -868,19 +913,21 @@ window.__STORY_PASSAGES.push({
                     <div class="st-op-tags">
                         <span class="st-tag buff">正义 +5</span>
                         <span class="st-tag lose">羁绊 -5</span>
-                        <span class="st-tag risk">暴露 +10</span>
-                        <span class="st-tag gain">进度 +3</span>
+                        <span class="st-tag risk">暴露 +<<print _expo_gain>></span>
+                        <span class="st-tag gain">进度 +5</span>
                     </div>
                 </div>
                 <div class="st-op-r">
                     <div class="st-op-cost">-100 流</div>
-                    <<if $traffic >= 100>>
+                    <<if $mission_progress >= 100>>
+                        <span class="st-nocost">任务已完成</span>
+                    <<elseif $traffic >= 100>>
                         <<link "执行" class="st-exec">>
                             <<set $traffic -= 100>>
                             <<set $justice += 5>>
                             <<set $zp_bond -= 5>>
-                            <<set $exposure += 10>>
-                            <<set $mission_progress += 3>>
+                            <<set $exposure += _expo_gain>>
+                            <<set $mission_progress to Math.min(100, $mission_progress + 5)>>
 
                             <<set $op_type to "substitute">>
                             <<set $r_seed to random(1, 3)>>
@@ -890,10 +937,6 @@ window.__STORY_PASSAGES.push({
                         <span class="st-nocost">流量不足</span>
                     <</if>>
                 </div>
-            </div>
-
-            <div class="st-ops-note">
-                🎬 洗钱迷局 / 🎭 替身挡枪 已经并进主线（第 45 / 50 / 53 月），这里不再重复。
             </div>
         </div>
 
@@ -960,7 +1003,8 @@ window.__STORY_PASSAGES.push({
                 <div style="color: #94a3b8; font-size: 0.8em; margin-bottom: 5px;">RESULT:</div>
                 <div style="color: #10b981;">🛡️ 信任度 +5</div>
                 <div style="color: #fbbf24;">⚖️ 正义值 +5</div>
-                <div style="color: #ef4444; margin-top: 5px;">⚠️ 暴露风险 +10 (当前: $exposure)</div>
+                <div style="color: #38bdf8;">📥 任务完成度 +5 (当前: $mission_progress%)</div>
+                <div style="color: #ef4444; margin-top: 5px;">⚠️ 暴露风险 ↑ (当前: $exposure)</div>
             </div>
 
         /* =========================================
@@ -1003,8 +1047,9 @@ window.__STORY_PASSAGES.push({
             /* 结算数值 */
             <div style="background: #1e293b; padding: 15px; border-radius: 6px; margin-top: 20px;">
                 <div style="color: #94a3b8; font-size: 0.8em; margin-bottom: 5px;">RESULT:</div>
-                <div style="color: #ec4899;">💞 羁绊值 +5</div>
-                <div style="color: #ef4444; margin-top: 5px;">⚠️ 暴露风险 +10 (当前: $exposure)</div>
+                <div style="color: #ec4899;">💞 羁绊值 +10</div>
+                <div style="color: #38bdf8;">📥 任务完成度 +5 (当前: $mission_progress%)</div>
+                <div style="color: #ef4444; margin-top: 5px;">⚠️ 暴露风险 ↑ (当前: $exposure)</div>
             </div>
 
         /* =========================================
@@ -1049,7 +1094,8 @@ window.__STORY_PASSAGES.push({
                 <div style="color: #94a3b8; font-size: 0.8em; margin-bottom: 5px;">RESULT:</div>
                 <div style="color: #fbbf24;">⚖️ 正义值 +5</div>
                 <div style="color: #ec4899;">💔 羁绊值 -5</div>
-                <div style="color: #ef4444; margin-top: 5px;">⚠️ 暴露风险 +10 (当前: $exposure)</div>
+                <div style="color: #38bdf8;">📥 任务完成度 +5 (当前: $mission_progress%)</div>
+                <div style="color: #ef4444; margin-top: 5px;">⚠️ 暴露风险 ↑ (当前: $exposure)</div>
             </div>
         <</if>>
 

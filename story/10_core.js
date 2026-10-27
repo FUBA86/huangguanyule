@@ -17,7 +17,8 @@ window.__STORY_PASSAGES = window.__STORY_PASSAGES || [];
 /* ---------- 故事块：Debug_Cheats ---------- */
 window.__STORY_PASSAGES.push({
   name: "Debug_Cheats",
-  src: `<div class="tech-card" style="border: 2px dashed #f59e0b;">
+  src: `<<if not def $film_lib>><<set $film_lib to []>>><</if>><<if not def $film_used>><<set $film_used to { s: [], a: [], b: [], c: [] }>>><</if>>
+<div class="tech-card" style="border: 2px dashed #f59e0b;">
     <div class="header-banner" style="background: #f59e0b; color: black;">🔧 开发者测试面板 (全功能版)</div>
     
     <div style="padding: 20px; text-align: center;">
@@ -194,12 +195,174 @@ window.__STORY_PASSAGES.push({
             <<goto "Debug_Cheats">>
         <</link>>
 
+        /* =========================================
+           6. 剧情快捷入口（测试用）
+           ========================================= */
+        <div style="margin-top:20px; background: rgba(0,0,0,0.05); padding: 10px; border-radius: 8px; text-align:left;">
+            <div style="font-weight:bold; margin-bottom:6px; color:#0f766e; text-align:center;">🧪 剧情快捷入口</div>
+            <div style="font-size:0.78em; color:#94a3b8; text-align:center; margin-bottom:8px;">
+                不用等主线推进，直接把剧情条件补齐后跳过去
+            </div>
+
+            <div style="text-align:center; margin-bottom:8px;">
+                <<link "📞 加密线路">>
+                    <<set $zp_story_stage to 3>>
+                    <<set $month to Math.max(($month || 0), 39)>>
+                    <<goto "Secret_Base">>
+                <</link>>
+                &nbsp;|&nbsp;
+                <<link "🎬 深渊黎明探班">>
+                    <<set $zp_story_stage to 3>>
+                    <<set $movie_visit_open to true>>
+                    <<set $month to 47>>
+                    <<goto "Deep_Visit_Hub">>
+                <</link>>
+            </div>
+            <div style="font-size:0.75em; color:#94a3b8; text-align:center;">
+                （探班会把月份改到第 47 月，才能看到第一场戏）
+            </div>
+        </div>
+
+        /* =========================================
+           7. 一键杀青（测试用）—— 会结算收益
+           ========================================= */
+        <div style="margin-top:12px; background: rgba(0,0,0,0.05); padding: 10px; border-radius: 8px;">
+            <div style="font-weight:bold; margin-bottom:6px; color:#b45309;">🎬 一键杀青（含收益结算）</div>
+            <<link "结束所有在拍通告并结算">>
+                <<goto "Debug_Settle_All">>
+            <</link>>
+            <div style="margin-top:5px; font-size:0.75em; color:#94a3b8;">
+                会像正常杀青一样出片酬小票（片酬 / 分成 / 税 / 涨粉 / 妆造），
+                培训 / 封杀 / 产假不受影响。
+            </div>
+        </div>
+
+        /* =========================================
+           8. 作品库测试（2026-10-27 新增）
+           ========================================= */
+        <div style="margin-top:12px; background: rgba(0,0,0,0.05); padding: 10px; border-radius: 8px;">
+            <div style="font-weight:bold; margin-bottom:6px; color:#7c3f58;">🎞️ 作品库测试</div>
+            <div style="text-align:center; margin-bottom:6px;">
+                <<link "打开作品库">><<goto "Film_Library">><</link>>
+                &nbsp;|&nbsp;
+                <<link "全部立即播出">>
+                    <<if not def $film_lib>><<set $film_lib to []>>><</if>>
+                    <<set _fc to 0>>
+                    /* 注意：这里必须用下标循环。for-range 拿到的是元素副本，
+                       改副本的 air 写不回 $film_lib —— 之前点了没反应就是这个原因。 */
+                    <<for _fi to 0; _fi < $film_lib.length; _fi++>>
+                        <<if $film_lib[_fi].status is "pending">>
+                            <<set $film_lib[_fi].air to $month>>
+                            <<set _fc += 1>>
+                        <</if>>
+                    <</for>>
+                    <<if _fc > 0>>
+                        <<Film_Air_Tick>>
+                        <<set _fl to "">>
+                        <<for _fi to 0; _fi < $film_air_results.length; _fi++>>
+                            <<if _fi > 0>><<set _fl to _fl + "、" >><</if>>
+                            <<set _fl to _fl + $film_air_results[_fi].name + "（" + $film_air_results[_fi].score + " 分）">>
+                        <</for>>
+                        <<set $fl_flash to "🎬 已让 " + _fc + " 部作品立刻播出 —— " + _fl>>
+                    <<else>>
+                        <<set $fl_flash to "⚠️ 现在没有待播的作品。先去通告中心接部戏，杀青之后才会进作品库。">>
+                    <</if>>
+                    <<goto "Film_Library">>
+                <</link>>
+                &nbsp;|&nbsp;
+                <<link "清空作品库">>
+                    <<set $film_lib to []>>
+                    <<set $film_used to { s: [], a: [], b: [], c: [] }>>
+                    <<set $debug_film_msg to "作品库和剧本记录都清空了（已接过的戏会重新出现）。">>
+                    <<goto "Debug_Cheats">>
+                <</link>>
+            </div>
+            <<if def $debug_film_msg and $debug_film_msg neq "">>
+                <div style="font-size:0.78em; color:#059669; text-align:center; margin-bottom:5px;"><<print $debug_film_msg>></div>
+                <<set $debug_film_msg to "">>
+            <</if>>
+            <div style="font-size:0.75em; color:#94a3b8; text-align:center;">
+                共 <<print $film_lib.length>> 部作品 · 已接剧本 <<print $film_used.s.length + $film_used.a.length + $film_used.b.length + $film_used.c.length>> 部
+            </div>
+        </div>
+
         <hr>
         <p style="font-size:0.8em; color:gray;">*所有操作点击即生效，数值自动刷新。</p>
         
         <<link "🔙 返回办公室">><<goto "Office">><</link>>
     </div>
 </div>`
+});
+
+/* ---------- 故事块：Debug_Settle_All ----------
+   一键杀青的结算页。做法和月结里的 NM_Filming 完全一样：
+   逐个把「拍摄中」的艺人切到 $current_actor，调用 Job_Settle 出小票，
+   然后再把 busy / project / job_type 清空。
+   ⚠️ 不要把这个逻辑写成"清空状态"，那样玩家看不到收益。
+   ------------------------------------------------- */
+window.__STORY_PASSAGES.push({
+  name: "Debug_Settle_All",
+  src: `<<nobr>>
+<<set _before_money to ($money || 0)>>
+<<set _settle_list to []>>
+<<for _k range Object.keys($actors)>>
+    <<set _x to $actors[_k]>>
+    <<if def _x and (_x.busy_months || 0) > 0 and (_x.job_type is "drama" or _x.job_type is "variety" or _x.job_type is "fashion" or _x.job_type is "stage")>>
+        <<run _settle_list.push(_k)>>
+    <</if>>
+<</for>>
+
+<div class="tech-card" style="border: 2px dashed #f59e0b;">
+    <div class="header-banner" style="background: #10b981; color: #fff;">🎬 一键杀青 · 收益结算</div>
+
+    <div style="padding: 18px 20px 24px;">
+
+        <<if _settle_list.length == 0>>
+            <div class="nm-soft blue">
+                <h4>现在没有正在拍摄的通告</h4>
+                <p>所有人都是空闲状态，没有可以结算的片酬。</p>
+            </div>
+        <<else>>
+            <p style="font-size: 13px; color: #64748B; margin: 0 0 14px;">
+                共 <<print _settle_list.length>> 个通告杀青，结算明细如下（和正常月结完全一致）：
+            </p>
+
+            <<for _k range _settle_list>>
+                <<set $current_actor to _k>>
+                <<set _a to $actors[_k]>>
+                <<set _pn to (_a.project_name || "通告")>>
+                <<if not def _a.res_level>><<set $req_res to "b">><</if>>
+                <div class="nm-card">
+                    <div class="nm-sec biz">杀青</div>
+                    <div style="font-size:13px; color:#3D4B61; line-height:1.8; margin-bottom:6px;">
+                        🎉 <<print _a.name>> 的 <<print _pn>> 杀青了
+                    </div>
+                    <<Job_Settle _a.job_type>>
+                </div>
+                <<set _a.busy_months to 0>>
+                <<set _a.project_name to "">>
+                <<set _a.job_type to "">>
+            <</for>>
+
+            <div class="nm-card" style="background: #ECFDF5; border-color: #A7F3D0;">
+                <div class="nm-sec" style="color:#047857;">合计</div>
+                <div style="font-size: 13.5px; color:#065F46; line-height:1.9;">
+                    本次杀青一共为公司入账
+                    <b style="font-size: 1.15em;">+ $<<print Math.floor(($money || 0) - _before_money)>> 万</b><br>
+                    <span style="font-size: 12px; color:#4B7F68;">当前资金：<<print $money>> 万</span>
+                </div>
+            </div>
+        <</if>>
+
+        <div class="continue-row" style="margin-top: 18px;">
+            <<link "🔙 返回测试面板">><<goto "Debug_Cheats">><</link>>
+            &nbsp;&nbsp;
+            <<link "🏢 回办公室">><<goto "Office">><</link>>
+        </div>
+
+    </div>
+</div>
+<</nobr>>`
 });
 
 /* ---------- 故事块：Game_Manual ---------- */
@@ -284,164 +447,155 @@ window.__STORY_PASSAGES.push({
   name: "Game_Notice",
   src: `<<nobr>>
 <style>
-    /* 复用之前的现代简约风格 */
-    .tech-card {
-        background: #ffffff;
-        border-radius: 12px;
-        padding: 40px;
-        color: #334155;
-        border: 1px solid #cbd5e1;
-        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
-        max-width: 750px;
-        margin: 20px auto;
-        line-height: 1.8;
+    /* ===== 游玩须知 ===== */
+    .nt-card {
+        max-width: 660px !important;
+        margin: 26px auto !important;
+        padding: 0 !important;
+        overflow: hidden;
+        position: relative;
     }
-
-    .warning-header {
+    .nt-topline {
+        height: 4px;
+        background: linear-gradient(90deg, #7A9AD6, #8CB9E2 22%, #74C2A2 46%, #E7BE7E 68%, #F0B296 84%, #E39FAF);
+        opacity: .85;
+    }
+    .nt-hero {
+        padding: 26px 30px 20px;
         text-align: center;
-        margin-bottom: 30px;
-        padding-bottom: 20px;
-        border-bottom: 1px solid #e2e8f0;
+        background: linear-gradient(168deg, rgba(232, 242, 254, .72), rgba(255, 250, 244, .35));
+        border-bottom: 1px solid rgba(122, 154, 214, .14);
     }
-
-    .section-title {
-        font-weight: 800;
-        color: #1e293b;
-        margin-top: 25px;
+    .nt-icon {
+        font-size: 30px;
+        line-height: 1;
         margin-bottom: 10px;
+        filter: saturate(.9);
+    }
+    .nt-title {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 900;
+        letter-spacing: .14em;
+        color: #2F4A7C;
+    }
+    .nt-sub {
+        margin-top: 8px;
+        font-size: 11.5px;
+        letter-spacing: .28em;
+        color: #93A2B8;
+        text-transform: uppercase;
+    }
+    .nt-body {
+        padding: 8px 30px 4px;
+    }
+    .nt-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+    .nt-list li {
         display: flex;
-        align-items: center;
-        gap: 8px;
+        align-items: flex-start;
+        gap: 11px;
+        padding: 12px 0;
+        font-size: 14px;
+        line-height: 1.7;
+        color: #4A5870;
+        border-bottom: 1px dashed rgba(122, 154, 214, .18);
     }
-
-    /* 强调卡片 */
-    .info-box {
-        background: #f8fafc;
-        border-left: 4px solid #64748b;
-        padding: 15px 20px;
-        border-radius: 6px;
-        margin-bottom: 20px;
-        font-size: 0.95em;
-    }
-
-    /* 红色警示卡片 (用于生子/CP预警) */
-    .alert-box {
-        background: #fff1f2;
-        border-left: 4px solid #f43f5e;
-        color: #881337;
-        padding: 15px 20px;
-        border-radius: 6px;
-        margin-bottom: 20px;
-        font-size: 0.95em;
-    }
-
-    /* 角色标签 */
-    .tag {
-        display: inline-block;
-        padding: 2px 8px;
-        border-radius: 4px;
-        font-size: 0.85em;
-        font-weight: bold;
-        margin-right: 5px;
-    }
-    .tag-blue { background: #e0f2fe; color: #0369a1; }
-    .tag-purple { background: #f3e8ff; color: #7e22ce; }
-
-    /* 底部声明 */
-    .footer-note {
-        margin-top: 40px;
-        padding-top: 20px;
-        border-top: 1px dashed #cbd5e1;
-        font-size: 0.85em;
-        color: #66738C;
+    .nt-list li:last-child { border-bottom: none; }
+    .nt-ico {
+        flex: 0 0 22px;
         text-align: center;
+        font-size: 14px;
+        line-height: 1.7;
+        opacity: .9;
     }
-
-    /* 按钮 */
-    .start-btn {
+    .nt-foot {
+        margin: 6px 30px 0;
+        padding: 16px 0 0;
+        border-top: 1px solid rgba(122, 154, 214, .16);
+        text-align: center;
+        font-size: 11.5px;
+        line-height: 1.9;
+        color: #8A95A8;
+    }
+    .nt-foot b { color: #5A6B85; font-weight: 700; }
+    .nt-start {
         display: block;
-        width: 100%;
-        background: #1e293b;
-        color: white;
-        padding: 15px 0;
-        border-radius: 8px;
-        font-size: 1.1em;
-        font-weight: bold;
+        margin: 18px 30px 26px;
+        padding: 14px 0;
         text-align: center;
-        border: none;
+        font-size: 15px;
+        font-weight: 800;
+        letter-spacing: .08em;
+        color: #FFFDF8 !important;
+        text-decoration: none !important;
+        border-radius: 12px;
+        background: linear-gradient(122deg, #3B4A6E 0%, #46618F 52%, #5B79A6 100%);
+        box-shadow: 0 14px 26px -18px rgba(59, 74, 110, .9), inset 0 1px 0 rgba(255, 255, 255, .18);
+        transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
         cursor: pointer;
-        transition: all 0.2s;
-        text-decoration: none;
-        margin-top: 20px;
     }
-    .start-btn:hover {
-        background: #334155;
+    .nt-start:hover {
         transform: translateY(-2px);
+        filter: brightness(1.06);
+        box-shadow: 0 18px 30px -18px rgba(59, 74, 110, .95), inset 0 1px 0 rgba(255, 255, 255, .22);
+    }
+    .nt-start:active { transform: translateY(0); }
+
+    @media (max-width: 560px) {
+        .nt-hero { padding: 22px 20px 16px; }
+        .nt-body { padding: 6px 20px 2px; }
+        .nt-list li { font-size: 13.2px; padding: 11px 0; }
+        .nt-foot { margin: 4px 20px 0; }
+        .nt-start { margin: 16px 20px 22px; }
     }
 </style>
 
-<div class="tech-card">
-    
-    <div class="warning-header">
-        <div style="font-size: 3em; margin-bottom: 10px;">⚠️</div>
-        <h1 style="margin: 0; color: #0f172a; font-size: 1.8em;">游玩须知 & 避雷指南</h1>
+<div class="tech-card nt-card">
+
+    <div class="nt-topline"></div>
+
+    <div class="nt-hero">
+        <div class="nt-icon">⚠️</div>
+        <h1 class="nt-title">游玩须知</h1>
+        <div class="nt-sub">Read Me First</div>
     </div>
 
-    /* 1. 关于角色 (核心设定) */
-    <div class="section-title">
-        <span>🎭</span> 关于角色与原型
-    </div>
-    <div class="info-box">
-        <p>本游戏为<b>免费同人衍生作品</b>，请勿上升现实。</p>
-        <p>
-            <span class="tag tag-blue">主角</span>
-            <b>韩证飞、展鹏</b>，以及后续登场的 <b>黄耀祖、刘梁周</b>等，原型均为演员 <b>杨旭文</b> 饰演的不同角色。
-        </p>
-        <p>
-            <span class="tag tag-purple">原创</span>
-            其他主要角色（如 <b>秦飒、白小纯</b> 等）均为剧情需要的原创人物，无任何现实原型，请勿代入。
-        </p>
-    </div>
-
-    /* 2. 高亮预警 (CP/玩法) */
-    <div class="section-title">
-        <span>🚫</span> 核心预警 (必读)
-    </div>
-    <div class="alert-box">
-        <p>🔹 <b>CP锁死：</b> 本游戏唯一 CP 为 <b>韩证飞 × 展鹏</b>，可逆不可拆。</p>
-        <p>🔹 <b>特殊元素：</b> 包含 <b>水仙</b> 、<b>双性生子</b> 等元素。</p>
-        <p>🔹 <b>纯属虚构：</b> 游戏内的娱乐圈生态、商战逻辑、通告玩法均为虚构，仅为服务于同人剧情。</p>
-       <p>🔹 <b> 免费声明：</b>本游戏为免费同人衍生作品，仅供娱乐，严禁商用。若有侵权请联系删除。</p>
-        <p style="margin-top:10px; font-weight:bold; font-size:0.9em;">
-            ( 如无法接受以上任一设定，请立即关闭游戏，感谢您的理解。)
-        </p>
+    <div class="nt-body">
+        <ul class="nt-list">
+            <li>
+                <span class="nt-ico">📖</span>
+                <span>免费同人衍生作品，仅供娱乐，禁止商用，请勿上升真人。</span>
+            </li>
+            <li>
+                <span class="nt-ico">🎭</span>
+                <span>韩证飞、展鹏、黄耀祖、刘梁周的原型为演员杨旭文饰演的角色，其余人物为原创。</span>
+            </li>
+            <li>
+                <span class="nt-ico">🔒</span>
+                <span>唯一 CP 为韩证飞 × 展鹏，可逆不可拆。</span>
+            </li>
+            <li>
+                <span class="nt-ico">🚫</span>
+                <span>含 水仙、双性生子 等设定，无法接受请立即关闭。</span>
+            </li>
+            <li>
+                <span class="nt-ico">🚧</span>
+                <span>剧情尚未完结，可能存在 Bug 或数值失衡，请多包涵。</span>
+            </li>
+        </ul>
     </div>
 
-    /* 3. 关于开发进度 */
-    <div class="section-title">
-        <span>🚧</span> 施工中提示
-    </div>
-    <div class="info-box" style="border-left-color: #f59e0b;">
-        <p>⚠️ <b>当前版本为测试版 (WIP)：</b></p>
-        <p>剧情尚未完结，后续内容正在陆续更新中。由于制作（也就是我本人）精力有限，游戏中可能存在 Bug 或数值不平衡的情况，遇到问题请多包涵。</p>
+    <div class="nt-foot">
+        <div>剧本 / 文案 / 策划：<b>[我本人]</b></div>
+        <div>技术支持：<b>WorkBuddy</b> · Gemini · DeepSeek</div>
+        <div style="margin-top:4px; opacity:.82;">作者本人不懂代码，程序部分由 AI 辅助完成，如有报错，这很正常（）能修就会修。</div>
     </div>
 
-    /* 4. 底部声明 (AI协力) */
-    <div class="footer-note">
-        <p>✍️ <b>制作组声明</b></p>
-        <p>
-            剧本/文案/策划：<b>[我本人]</b><br>
-            技术支持/代码协力：<b>Gemini & DeepSeek</b>
-        </p>
-        <p style="font-size:0.8em; margin-top:5px;">
-            作者本人不懂代码，程序部分由 AI 辅助完成，如有报错，这很正常（）能修就会修。
-        </p>
-    </div>
-
-    /* 5. 开始按钮 */
-    <<button "我已知晓，开始游戏" "Prologue_Chap1">>
-        /* 点击后跳转到 StoryInit 进行初始化，然后再自动跳到序章 */
-    <</button>>
+    <a data-passage="Prologue_Chap1" class="nt-start">我已知晓，开始游戏</a>
 
 </div>
 <</nobr>>`
@@ -452,12 +606,19 @@ window.__STORY_PASSAGES.push({
   name: "Office",
   src: `<<nobr>>
 
+/* 老存档兜底：没有作品库字段时补上，避免首页报错 */
+<<if not def $film_lib>><<set $film_lib to []>>><</if>>
+
 <div class="header-banner">
     <div>
       <div style="font-size:20px; font-weight:900;">👑 无垠娱乐 CEO</div>
     </div>
     
     <div style="display:flex; gap:10px; align-items:center;">
+        <<link "🎞️ 剧情档案" "Archive_Main">>
+            <<script>>document.querySelectorAll(".header-banner a").forEach(function(a){a.style.color="#fbbf24";});<</script>>
+        <</link>>
+
         <<link "📘 说明书" "Game_Manual">>
             <<script>>document.querySelectorAll(".header-banner a").forEach(function(a){a.style.color="#fbbf24";});<</script>>
         <</link>>
@@ -492,6 +653,9 @@ window.__STORY_PASSAGES.push({
     </div>
     <div class="btn-box">
       <a class="link-internal tile" data-passage="Fan_Management"><span class="tile-ico">📢</span><span class="tile-txt">粉丝后援<span class="tile-sub">结构 · 运营 · 打投</span></span><span class="tile-go">›</span></a>
+    </div>
+    <div class="btn-box">
+      <a class="link-internal tile" data-passage="Film_Library"><span class="tile-ico">🎞️</span><span class="tile-txt">影视作品库<span class="tile-sub">在播 · 待播 · 评分</span></span><<if $film_lib.length > 0>><span class="tile-badge"><<print $film_lib.length>> 部</span><</if>><span class="tile-go">›</span></a>
     </div>
     <div class="btn-box">
       <a class="link-internal tile" data-passage="Marketing_Center"><span class="tile-ico">⚔️</span><span class="tile-txt">公关作战<span class="tile-sub">热搜 · 水军 · 危机</span></span><span class="tile-go">›</span></a>
@@ -614,8 +778,6 @@ window.__STORY_PASSAGES.push({
 
 /* 计算C位艺人的总粉丝数 (防止除以0错误) */
 <<if _main_act>>
-    <<set _main_total to _main_act.fans.career + _main_act.fans.mom + _main_act.fans.clown + _main_act.fans.face + _main_act.fans.toxic + _main_act.fans.cp>>
-    <<if _main_total == 0>><<set _main_total to 1>><</if>>
 
     <div class="actor-section">
       <div class="actor-header">
@@ -630,7 +792,7 @@ window.__STORY_PASSAGES.push({
         <<if _main_act.job_type is "banned">>
             <div class="act-status danger">❄️ 被抵制 (剩<<print _main_act.busy_months>>月)</div>
         <<elseif _main_act.job_type is "training">>
-             <div class="act-status info">🎓 培训中 (剩<<print _main_act.busy_months>>月)</div>
+             <div class="act-status info" title="<<print _main_act.project_name>>">🎓 培训中 · <<print _main_act.project_name.replace("封闭式培训 · ", "")>> (剩<<print _main_act.busy_months>>月)</div>
         <<else>>
             <div class="act-status warn">⚠️ 拍摄中 (剩<<print _main_act.busy_months>>月)</div>
         <</if>>
@@ -667,12 +829,7 @@ window.__STORY_PASSAGES.push({
 
       /* 粉丝分布 (差异化显示) —— 点一下看这类粉丝的留言 */
       <a class="fans-line side-link" data-go="Fan_Management" data-actor="<<print _main_key>>" title="进入粉丝管理">
-        <<if _is_zp>>
-            📊 <span class="f-pink">乐子人<<print Math.round(_main_act.fans.clown/_main_total*100)>>%</span> | <span class="f-blue">事业粉<<print Math.round(_main_act.fans.career/_main_total*100)>>%</span>
-        <<else>>
-            /* 黄耀祖显示 妈粉/颜粉 */
-            📊 <span class="f-pink">妈粉<<print Math.round(_main_act.fans.mom/_main_total*100)>>%</span> | <span class="f-blue">颜粉<<print Math.round(_main_act.fans.face/_main_total*100)>>%</span>
-        <</if>>
+        📊 <<print FanLine(_main_act)>>
         <span class="side-go">›</span>
       </a>
     </div>
@@ -681,8 +838,6 @@ window.__STORY_PASSAGES.push({
 /* --- 补充：刘梁周 (LIU) --- */
 <<if $has_signed_liu is true>>
     <<set _liu to $actors.liu>>
-    <<set _liu_total to _liu.fans.career + _liu.fans.mom + _liu.fans.clown + _liu.fans.face + _liu.fans.toxic + _liu.fans.cp>>
-    <<if _liu_total == 0>><<set _liu_total to 1>><</if>>
 
     <div class="actor-section">
       <div class="actor-header">
@@ -704,15 +859,13 @@ window.__STORY_PASSAGES.push({
         </span>
       </div>
       <a class="fans-line side-link" data-go="Fan_Management" data-actor="liu" title="进入粉丝管理">
-         📊 <span class="f-blue">事业粉<<print Math.round(_liu.fans.career/_liu_total*100)>>%</span> | <span class="f-amber">乐子人<<print Math.round(_liu.fans.clown/_liu_total*100)>>%</span>
+         📊 <<print FanLine(_liu)>>
          <span class="side-go">›</span>
       </a>
     </div>
 <</if>>
 
 /* --- 秦飒 (QS) --- */
-<<set _qs_total to $actors.qs.fans.career + $actors.qs.fans.mom + $actors.qs.fans.clown + $actors.qs.fans.face + $actors.qs.fans.toxic + $actors.qs.fans.cp>>
-<<if _qs_total == 0>><<set _qs_total to 1>><</if>>
 
 <div class="actor-section">
   <div class="actor-header">
@@ -745,15 +898,13 @@ window.__STORY_PASSAGES.push({
   </div>
 
   <a class="fans-line side-link" data-go="Fan_Management" data-actor="qs" title="进入粉丝管理">
-    📊 <span class="f-blue">事业粉<<print Math.round($actors.qs.fans.career/_qs_total*100)>>%</span> | <span class="f-amber">毒唯<<print Math.round($actors.qs.fans.toxic/_qs_total*100)>>%</span>
+    📊 <<print FanLine($actors.qs)>>
     <span class="side-go">›</span>
   </a>
 </div>
 
 
 /* --- 新人 (NEW) --- */
-<<set _new_total to $actors.new.fans.career + $actors.new.fans.mom + $actors.new.fans.clown + $actors.new.fans.face + $actors.new.fans.toxic + $actors.new.fans.cp>>
-<<if _new_total == 0>><<set _new_total to 1>><</if>>
 
 <div class="actor-section">
   <div class="actor-header">
@@ -786,7 +937,7 @@ window.__STORY_PASSAGES.push({
   </div>
 
   <a class="fans-line side-link" data-go="Fan_Management" data-actor="new" title="进入粉丝管理">
-    📊 <span class="f-pink">妈粉<<print Math.round($actors.new.fans.mom/_new_total*100)>>%</span>
+    📊 <<print FanLine($actors.new)>>
     <span class="side-go">›</span>
   </a>
 </div>
@@ -813,6 +964,14 @@ window.__STORY_PASSAGES.push({
 <<set $company_res to 7>>
 <<set $bankruptcy_count to 0>>
 <<set $charity_done to false>>
+
+/* 影视作品库（2026-10-27 新增）
+   film_lib  = 已杀青的作品（待播 / 在播 / 已播）
+   film_used = 每级已经接过的「正经戏」id，接过就不再出现
+   film_air_results = 月结临时用，放本月播出的结算结果 */
+<<set $film_lib to []>>
+<<set $film_used to { s: [], a: [], b: [], c: [] }>>
+<<set $film_air_results to []>>
 
 /* 危机与情报 */
 <<set $current_crisis_desc to "暂无异常">>
@@ -849,7 +1008,8 @@ window.__STORY_PASSAGES.push({
     energy: 150, current_energy: 150,
     fans: { 
         career: 8000, mom: 3000, face: 8000, clown: 10000,  
-        toxic: 3000, cp: 6000, dream: 15000
+        toxic: 3000, cp: 10500, dream: 11000,
+        moe: 8000, passerby: 20000
     }, 
     trait: "咸鱼特警", busy_months: 0, project_name: "" 
   },
@@ -863,8 +1023,9 @@ window.__STORY_PASSAGES.push({
     limit_acting: 95, limit_fashion: 95, limit_stage: 90,
     energy: 120, current_energy: 120,
     fans: { 
-        career: 5000, mom: 500, face: 7000, clown: 800, 
-        toxic: 4000, cp: 200, dream: 2000 
+        career: 6000, mom: 500, face: 7000, clown: 800, 
+        toxic: 8000, cp: 200, dream: 2000,
+        moe: 3000, passerby: 12000
     }, 
     trait: "娇贵", busy_months: 0, project_name: "" 
   },
@@ -878,8 +1039,9 @@ window.__STORY_PASSAGES.push({
     limit_acting: 50, limit_fashion: 85, limit_stage: 85,
     energy: 120, current_energy: 120,
     fans: { 
-        career: 200, mom: 1500, face: 500, clown: 50, 
-        toxic: 50, cp: 300, dream: 300 
+        career: 200, mom: 2500, face: 500, clown: 50, 
+        toxic: 800, cp: 300, dream: 300,
+        moe: 2000, passerby: 3000
     }, 
     trait: "年轻", busy_months: 0, project_name: "" 
   }
@@ -920,6 +1082,72 @@ window.__STORY_PASSAGES.push({
         "替身就要有替身的觉悟，乖乖张腿就好。",
         "导演们应该很喜欢用他吧，毕竟耐操又听话。"
     ],
+    /* ---- 萌萌人：全肯定、捂耳朵、护剧组 ---- */
+    "moe": [
+        "不管发生什么我都支持他。",
+        "你们这些黑子能不能闭嘴。",
+        "他和剧组关系可好了，别乱说。",
+        "哥哥自己都没意见，你们急什么？",
+        "我觉得挺好的呀，是你们要求太高了。",
+        "别带节奏了，会让哥哥很难做人的。"
+    ],
+    "moe_zp": [
+        "展鹏那么好看，做什么都是对的。",
+        "他躺平怎么了，人家有躺平的资本。",
+        "你们说他演技差，那你们去演啊。"
+    ],
+    "moe_qs": [
+        "别骂飒飒了，她只是性格直。",
+        "她业务能力那么强，你们凭什么说她。",
+        "姐姐对我们可温柔了，你们不懂。"
+    ],
+    "moe_new": [
+        "纯纯还是个孩子。",
+        "新人慢慢来，给他点时间。",
+        "他已经很努力了，不要再说他了。"
+    ],
+    "moe_huang": [
+        "耀祖在努力，你们看不到吗。",
+        "他只是没资源，不是没能力。",
+        "你们就是嫉妒他红。"
+    ],
+    "moe_liu": [
+        "梁周是艺术家，你们不懂。",
+        "摄影师出身怎么了，那叫高级。",
+        "他的审美比你们高一百倍。"
+    ],
+
+    /* ---- 路人：看作品不看人，随时会走 ---- */
+    "passerby": [
+        "这谁啊。",
+        "演得还行吧，就一普通演员。",
+        "路过，不评价。",
+        "我妈挺喜欢他的。",
+        "有点印象，想不起来演过啥。",
+        "作品还行，人不了解。"
+    ],
+    "passerby_zp": [
+        "这不是那个演古装的吗，长得是挺好看。",
+        "他老婆也是明星？哦。",
+        "演技一般吧，脸是真顶。"
+    ],
+    "passerby_qs": [
+        "她演技不错，就是脾气好像有点大。",
+        "恶女专业户，看她演戏挺带劲。"
+    ],
+    "passerby_new": [
+        "新人吧，没什么印象。",
+        "脸挺干净的，再看看。"
+    ],
+    "passerby_huang": [
+        "资源挺好的，就是不太会演。",
+        "这张脸可惜了。"
+    ],
+    "passerby_liu": [
+        "拍照片的？怎么跑来演戏了。",
+        "造型是真的绝，演技算了。"
+    ],
+
     "biased_cp": ["虽然展鹏很懒，但还好姐姐宠他。", "感谢姐姐扶贫。", "展鹏好爱，姐姐的专属小狗。", "姐姐到底看上展鹏什么了。"]
 }>>
 

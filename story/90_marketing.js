@@ -407,9 +407,13 @@ window.__STORY_PASSAGES.push({
 <<set _v_toxic  to (_f.toxic || 0)>>
 <<set _v_cp     to (_f.cp || 0)>>
 <<set _v_dream  to (_f.dream || 0)>>
+<<set _v_moe      to (_f.moe || 0)>>
+<<set _v_passerby to (_f.passerby || 0)>>
 
-<<set _total to _v_career + _v_mom + _v_face + _v_clown + _v_toxic + _v_cp + _v_dream>>
+/* 统一口径：9 类全算，避免新增类型时漏掉 */
+<<set _total to FanSum(_a)>>
 <<if _total < 1>><<set _total to 1>><</if>>
+<<set _moe_pct to Math.round(_v_moe / _total * 100)>>
 
 <<set _p1 to (_v_career / _total * 100)>>
 <<set _p2 to _p1 + (_v_mom / _total * 100)>>
@@ -417,6 +421,8 @@ window.__STORY_PASSAGES.push({
 <<set _p4 to _p3 + (_v_clown / _total * 100)>>
 <<set _p5 to _p4 + (_v_toxic / _total * 100)>>
 <<set _p6 to _p5 + (_v_cp / _total * 100)>>
+<<set _p7 to _p6 + (_v_dream / _total * 100)>>
+<<set _p8 to _p7 + (_v_moe / _total * 100)>>
 
 <<set _pie_style to "width: 120px; height: 120px; border-radius: 50%; background: conic-gradient(" +
     _C_career + " 0% " + _p1 + "%," +
@@ -425,7 +431,9 @@ window.__STORY_PASSAGES.push({
     _C_clown  + " " + _p3 + "% " + _p4 + "%," +
     _C_toxic  + " " + _p4 + "% " + _p5 + "%," +
     _C_cp     + " " + _p5 + "% " + _p6 + "%," +
-    _C_dream  + " " + _p6 + "% 100%); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);"
+    _C_dream  + " " + _p6 + "% " + _p7 + "%," +
+    "#9C7B32" + " " + _p7 + "% " + _p8 + "%," +
+    "#93A2B8" + " " + _p8 + "% 100%); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);"
 >>
 
 /* =========================================
@@ -438,8 +446,9 @@ window.__STORY_PASSAGES.push({
     <div style="flex-shrink:0; text-align:center;">
         <div @style="_pie_style"></div>
         <div style="margin-top:10px; font-weight:bold; color:#334155;">
-            总粉丝: <span style="font-size:1.1em;"><<print _total>></span>
+            总粉丝: <span style="font-size:1.1em;"><<print FanSumCore(_a)>></span>
         </div>
+        <div style="font-size:10.5px; color:#93A0B4; margin-top:2px;">不含路人</div>
     </div>
 
     /* 数据列表 (使用预生成的 style 变量) —— 每一行都能点进该群体的留言墙 */
@@ -467,6 +476,21 @@ window.__STORY_PASSAGES.push({
         <a class="fan-row" @style="_style_cp" data-go="Fan_Wall" data-set='{"wall_fan":"cp"}' title="看看<<print _L_cp>>在说什么">
             <span class="fan-name"><<print _L_cp>></span>
             <span class="fan-val"><<print _v_cp>><i class="fan-arrow">›</i></span>
+        </a>
+        <a class="fan-row" style="display:flex; justify-content:space-between; align-items:center; background:#FAFCFF; padding:5px 8px; border-radius:4px; border-left:3px solid #6E8FC4;"
+           data-go="Fan_Wall" data-set='{"wall_fan":"dream"}' title="看看梦女在说什么">
+            <span class="fan-name">梦女</span>
+            <span class="fan-val"><<print _v_dream>><i class="fan-arrow">›</i></span>
+        </a>
+        <a class="fan-row" style="display:flex; justify-content:space-between; align-items:center; background:#FAFCFF; padding:5px 8px; border-radius:4px; border-left:3px solid #9C7B32;"
+           data-go="Fan_Wall" data-set='{"wall_fan":"moe"}' title="看看萌萌人在说什么">
+            <span class="fan-name">萌萌人</span>
+            <span class="fan-val"><<print _v_moe>><i class="fan-arrow">›</i></span>
+        </a>
+        <a class="fan-row" style="display:flex; justify-content:space-between; align-items:center; background:#FAFCFF; padding:5px 8px; border-radius:4px; border-left:3px solid #93A2B8;"
+           data-go="Fan_Wall" data-set='{"wall_fan":"passerby"}' title="看看路人在说什么">
+            <span class="fan-name">路人</span>
+            <span class="fan-val"><i class="fan-arrow">›</i></span>
         </a>
     </div>
 </div>
@@ -501,6 +525,46 @@ window.__STORY_PASSAGES.push({
         <span @style="'color:'+_comment_color+'; font-weight:bold;'">_comment_tag</span> 
         <<print _comment_text>>
     </div>
+</div>
+
+/* ===== 粉圈结构诊断（2026-10-27 新增）=====
+   任意一类超过 40% 就标出来，超过 45% 会在月结里吃惩罚。
+   ★ 惩罚内容只写在代码注释里（见 05_widgets.js 的 FAN_OVER），界面不展示，
+     玩家只需要知道"这类人太多了、可以清理掉一些"。 */
+<<set _over_keys to []>>
+<<for _k range ["career", "face", "clown", "mom", "toxic", "cp", "dream", "moe", "passerby"]>>
+    <<if FanPct(_a, _k) >= 40>><<run _over_keys.push(_k)>><</if>>
+<</for>>
+
+<div class="fan-diag">
+  <div class="fd-head">
+    <span>🩺 粉圈结构</span>
+    <span class="fd-sub">某一类太多，可以清一清</span>
+  </div>
+  <<if _over_keys.length == 0>>
+    <div class="fd-ok">目前九类粉丝还算均衡，没有哪一类独大。</div>
+  <<else>>
+    <<for _k range _over_keys>>
+      <<capture _k>>
+        <<set _band to FAN_OVER[_k]>>
+        <<set _pct to FanPct(_a, _k)>>
+        <div class="fd-row">
+          <div class="fd-info">
+            <b><<print _band.name>></b>
+            <span class="fd-pct"><<print _pct>>%</span>
+          </div>
+          <<if ($action_points || 0) > 0 and $money >= 300>>
+            <<link "🧹 清理" "Fan_Purge">>
+              <<set $purge_key to _k>>
+            <</link>>
+          <<else>>
+            <span class="fd-disabled">清理需 1 行动点 + 300 万</span>
+          <</if>>
+        </div>
+      <</capture>>
+    <</for>>
+    <div class="fd-note">清理会让这一类立刻 −25%，其他类型各涨一点，但口碑 −8，且会招来“官方赶粉”的热搜。</div>
+  <</if>>
 </div>
 
 /* ===== 粉丝运营：四张操作卡（逻辑完全沿用原来的 set 与跳转） ===== */
@@ -1140,6 +1204,45 @@ window.__STORY_PASSAGES.push({
             </div>
         </div>
 
+        /* --- 📺 在播作品营销（2026-10-27 新增） ---
+           作品播出当月与次月可以在这里花钱营销，每次消耗 1 次公关机会。 */
+        <<if not def $film_lib>><<set $film_lib to []>>><</if>>
+        <<set _live_n to 0>>
+        <<for _lf0 range $film_lib>>
+            <<if _lf0.status is "airing">><<set _live_n += 1>><</if>>
+        <</for>>
+        <<if _live_n > 0>>
+        <div class="actor-mini-card pr-live" style="border-left:4px solid #B4657F; margin-bottom:20px;">
+          <div class="pr-live-h">
+            <b>📺 在播作品</b>
+            <span>播出期营销 · 公关次数 <<print $pr_action_count>>/3</span>
+          </div>
+          <<for _li to 0; _li < $film_lib.length; _li++>>
+            <<set _lf1 to $film_lib[_li]>>
+            <<if _lf1.status is "airing">>
+              <div class="pr-live-row">
+                <div class="pr-live-main">
+                  <div class="pr-live-name">
+                    <<print _lf1.name>>
+                    <span class="fl-tag lv-<<print _lf1.res>>"><<print _lf1.res.toUpperCase()>></span>
+                    <<if _lf1.hit>><span class="fl-tag hit">🔥 爆</span><</if>>
+                  </div>
+                  <div class="pr-live-meta">
+                    <<print _lf1.actor_name>> · 评分 <b class="<<print FilmSc(_lf1.score)>>"><<print _lf1.score>></b>
+                    · 播到第 <<print (_lf1.air + 1)>> 月
+                  </div>
+                </div>
+                <<if _lf1.live_m is $month>>
+                  <span class="pr-live-done">本月已营销</span>
+                <<else>>
+                  <<link "去营销">><<set $live_film to _li>><<goto "Film_Live">><</link>>
+                <</if>>
+              </div>
+            <</if>>
+          <</for>>
+        </div>
+        <</if>>
+
         /* --- 1. 流量加油站 --- */
         <div style="background: linear-gradient(to right, #eff6ff, #dbeafe); border: 1px solid #bfdbfe; padding: 15px; border-radius: 8px; margin-bottom: 20px; display:flex; justify-content:space-between; align-items:center;">
              <div>
@@ -1715,6 +1818,93 @@ window.__STORY_PASSAGES.push({
 /* Debug 提示：让你确认变量真的变了 */
 <div style="text-align:center; font-size:0.8em; color:#94a3b8; margin-top:5px;">
     当前出战艺人代码: $war_actor
+</div>
+<</nobr>>`
+});
+
+/* ---------- 故事块：Fan_Purge（清理某一类粉丝） ---------- */
+window.__STORY_PASSAGES.push({
+  name: "Fan_Purge",
+  src: `<<nobr>>
+<<set _a to $actors[$current_actor]>>
+<<set _ok to FanEnsure(_a)>>
+<<set _band to FAN_OVER[$purge_key]>>
+
+<div class="tech-card">
+    <div class="header-banner"><span>🧹 清理粉丝</span></div>
+    <div style="padding:26px;">
+
+    <<if not def _band>>
+        <div style="text-align:center; padding:30px; color:#94a3b8;">
+            数据异常，没找到这类粉丝。<br><br>
+            [[🔙 返回粉丝管理|Fan_Management]]
+        </div>
+
+    <<elseif ($action_points || 0) <= 0>>
+        <div style="text-align:center; padding:30px;">
+            <div style="font-size:2.4em; margin-bottom:10px;">🎯</div>
+            <h3 style="color:#c2410c;">本月行动点用完了</h3>
+            <p>清理粉圈也要花 1 点行动点，下个月再说。</p>
+            [[🔙 返回粉丝管理|Fan_Management]]
+        </div>
+
+    <<elseif $money < 300>>
+        <div style="text-align:center; padding:30px;">
+            <div style="font-size:2.4em; margin-bottom:10px;">💸</div>
+            <h3 style="color:#ef4444;">预算不够</h3>
+            <p>清理 <b><<print _band.name>></b> 需要 300 万的公关预算（买水军、控评、发通稿）。</p>
+            [[🔙 返回粉丝管理|Fan_Management]]
+        </div>
+
+    <<else>>
+        <<set _before to FanPct(_a, $purge_key)>>
+        <<set _cut to Math.floor((_a.fans[$purge_key] || 0) * 0.25)>>
+        <<set _a.fans[$purge_key] -= _cut>>
+        <<set _spread to Math.floor(_cut * 0.5 / 8)>>
+        <<set _gained to 0>>
+        <<for _k range FAN_KEYS>>
+            <<if _k isnot $purge_key>>
+                <<set _a.fans[_k] += _spread>>
+                <<set _gained += _spread>>
+            <</if>>
+        <</for>>
+        <<set _a.reputation to Math.max(0, (_a.reputation || 0) - 8)>>
+        <<set $money -= 300>>
+        <<set $action_points to Math.max(0, ($action_points || 0) - 1)>>
+        <<set _after to FanPct(_a, $purge_key)>>
+
+        <div style="text-align:center; margin-bottom:18px;">
+            <div style="font-size:2.4em;">🧹</div>
+            <h3 style="margin:8px 0 4px; color:#3D4B61;">清理完成</h3>
+            <p style="color:#5C6880; font-size:.92rem; line-height:1.8;">
+                公司暗中调整了运营方向，<b><<print _band.name>></b> 从 <b><<print _before>>%</b> 掉到 <b><<print _after>>%</b>，<br>
+                少了 <<print _cut>> 人。剩下的人被分到其他粉丝群体里（各 +<<print _spread>>）。
+            </p>
+        </div>
+
+        <div class="nm-settle" style="margin-bottom:18px;">
+            <div class="nm-settle-body">
+                <div class="row"><span><<print _band.name>></span><span>−<<print _cut>> 人</span></div>
+                <div class="row"><span>其他类型</span><span>+<<print _gained>> 人</span></div>
+                <div class="row total"><span>口碑</span><span class="num">−8</span></div>
+            </div>
+        </div>
+
+        <div class="fd-note" style="margin-bottom:16px;">
+            ⚠️ “官方亲自下场赶粉”已经冲上热搜。路人觉得这家公司冷血，粉丝觉得被背叛。
+        </div>
+
+        <<if $money >= 200>>
+            <<link "💸 再花 200 万压热搜（口碑 +4）" "Fan_Management">>
+                <<set $money -= 200>>
+                <<set _a.reputation += 4>>
+            <</link>>
+            <span style="margin:0 8px; color:#CBD3E2;">|</span>
+        <</if>>
+        [[✅ 就这样|Fan_Management]]
+
+    <</if>>
+    </div>
 </div>
 <</nobr>>`
 });

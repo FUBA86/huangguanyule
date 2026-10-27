@@ -156,30 +156,86 @@ window.__STORY_PASSAGES.push({
 </div>`
 });
 
-/* ── 第60月 · ⚖️ 命运的分岔路口（不再养成，直接判定后进入结局） ────────────
+/* ── 第60月 · ⚖️ 命运的分岔路口（不再养成，先给判定，再进结局） ────────────
    故事块：Story_Act4_22_Judgment
-   （2026-10-26：本页不再显示文字，直接按数值把人送去三个结局之一。
-     stage 99（早期就弄丢了展鹏）→ BE 无声的牺牲
-     正义值 > 羁绊值 → Ending_Police（HE·归队）
-     其余            → Ending_Family（HE·留下复婚）
+   （2026-10-27：三个数值各管一段路，页面上把判定过程摊给玩家看。
+      ① stage 99（线路早早被切断）      → BE 无声的牺牲
+      ② 信任度 < 40                     → BE 无声的牺牲（他没敢把后背交给你）
+      ③ 正义值 ≥ 羁绊值                 → Ending_Police（HE·归队）
+      ④ 其余                            → Ending_Family（HE·留下复婚）
    ──────────────────────────────────────────────────────── */
 window.__STORY_PASSAGES.push({
   name: "Story_Act4_22_Judgment",
   src: `<<silently>>
 <<if def $justice is false>><<set $justice to 0>><</if>>
 <<if def $zp_bond is false>><<set $zp_bond to 0>><</if>>
+<<if def $zp_trust is false>><<set $zp_trust to 0>><</if>>
+<</silently>>
 
+<<set _trust to ($zp_trust || 0)>>
+<<set _bond to ($zp_bond || 0)>>
+<<set _just to ($justice || 0)>>
+
+/* ★ 判定顺序不要动：先看"还能不能活"，再看"往哪条路走" */
 <<if $zp_story_stage is 99>>
+    <<set _end to "Ending_Bad">>
     <<set $ending_outcome to "bad">>
-    <<goto "Ending_Bad">>
-<<elseif $justice > $zp_bond>>
+    <<set _tag to "BE">>
+    <<set _why to "加密线路在收网之前就被切断了。你没能把他完整地带回来。">>
+<<elseif _trust < 40>>
+    <<set _end to "Ending_Bad">>
+    <<set $ending_outcome to "bad">>
+    <<set _tag to "BE">>
+    <<set _why to "你们之间的默契始终差了一层。最后一次行动，他没有等你，自己把顾涛的车撞下了护栏。">>
+<<elseif _just >= _bond>>
+    <<set _end to "Ending_Police">>
     <<set $ending_outcome to "police">>
-    <<goto "Ending_Police">>
+    <<set _tag to "HE">>
+    <<set _why to "正义压过了私心。你替他守住了那条线，他也终于穿回了自己的警服。">>
 <<else>>
+    <<set _end to "Ending_Family">>
     <<set $ending_outcome to "family">>
-    <<goto "Ending_Family">>
+    <<set _tag to "HE">>
+    <<set _why to "羁绊压过了立场。他留了下来，留在这个圈子，也留在你身边。">>
 <</if>>
-<</silently>>`
+
+<div class="tech-card" style="max-width: 620px; margin: 30px auto;">
+    <div class="header-banner" style="background: linear-gradient(120deg, #334155, #475569);">
+        <span>⚖️ 第 60 月 · 命运的分岔</span>
+    </div>
+
+    <div style="padding: 26px 28px 24px;">
+
+        <p style="font-size: 13.5px; color: #64748B; line-height: 1.9; margin: 0 0 16px;">
+            惊蛰之前，所有的账都要清一遍。
+        </p>
+
+        <div style="border: 1px solid #E3EAF4; border-radius: 12px; overflow: hidden;">
+            <div style="display:flex; justify-content:space-between; padding: 11px 16px; background: #F7FAFE; font-size: 13.5px;">
+                <span>🛡️ 信任度</span>
+                <b style="font-family: ui-monospace, Menlo, monospace; color: <<if _trust < 40>>#BE5B6A<<else>>#2F6E56<</if>>;"><<print _trust>></b>
+            </div>
+            <div style="display:flex; justify-content:space-between; padding: 11px 16px; border-top: 1px solid #EEF3FA; font-size: 13.5px;">
+                <span>💞 羁绊值</span>
+                <b style="font-family: ui-monospace, Menlo, monospace; color: #9B5A88;"><<print _bond>></b>
+            </div>
+            <div style="display:flex; justify-content:space-between; padding: 11px 16px; border-top: 1px solid #EEF3FA; font-size: 13.5px;">
+                <span>⚖️ 正义值</span>
+                <b style="font-family: ui-monospace, Menlo, monospace; color: #B4813A;"><<print _just>></b>
+            </div>
+        </div>
+
+        <div style="margin-top: 18px; padding: 14px 16px; border-radius: 12px; background: <<if _tag is "BE">>#FDF0F2<<else>>#EFF8F3<</if>>; border: 1px solid <<if _tag is "BE">>#F3D3D8<<else>>#CFE9DC<</if>>;">
+            <div style="font-size: 12px; letter-spacing: .18em; color: <<if _tag is "BE">>#B4555F<<else>>#2F6E56<</if>>; margin-bottom: 6px;"><<print _tag>> · 判定结果</div>
+            <div style="font-size: 13.5px; line-height: 1.85; color: #3D4B61;"><<print _why>></div>
+        </div>
+
+        <div class="continue-row" style="margin-top: 22px;">
+            <<link "▶ 推开那扇门">><<goto _end>><</link>>
+        </div>
+
+    </div>
+</div>`
 });
 
 /* ── ⚠️ 已废弃（2026-10-25）：原「第四幕 · 📨 巨额家书」────────────────────

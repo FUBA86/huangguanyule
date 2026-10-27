@@ -14,6 +14,316 @@
 
 window.__STORY_PASSAGES = window.__STORY_PASSAGES || [];
 
+/* ---------- 粉丝类型工具（统一 9 类口径） ----------
+   career 事业粉 / face 颜粉 / clown 乐子人 / mom 妈粉·嬷嬷 / toxic 毒唯
+   cp CP粉 / dream 梦女 / moe 萌萌人 / passerby 路人
+   ★ 新增粉丝类型时只改这里的 KEYS，全局统计自动跟上。 */
+(function () {
+  /* 9 类 key：前 8 个才是"粉丝"，passerby 是路人（不计数、不参与占比）
+     ★ 新增粉丝类型时只改这两个数组，全局统计自动跟上。
+     ★ 任何界面要算总数，一律用 FanSum()，不要手写加法。 */
+  var KEYS = ['career', 'face', 'clown', 'mom', 'toxic', 'cp', 'dream', 'moe', 'passerby'];
+  var FAN_KEYS = ['career', 'face', 'clown', 'mom', 'toxic', 'cp', 'dream', 'moe'];
+  window.FAN_KEYS = KEYS;
+
+  /* 补齐缺失字段（老存档没有 moe / passerby，直接 += 会变 NaN） */
+  window.FanEnsure = function (a) {
+    if (!a) return a;
+    if (!a.fans) a.fans = {};
+    for (var i = 0; i < KEYS.length; i++) {
+      if (typeof a.fans[KEYS[i]] !== 'number' || isNaN(a.fans[KEYS[i]])) a.fans[KEYS[i]] = 0;
+      if (a.fans[KEYS[i]] < 0) a.fans[KEYS[i]] = 0;
+    }
+
+    /* 2026-10-27：8 类粉丝保底，任何一种都不会是 0
+       —— 否则粉丝墙点进去是空的，也看不到这一类的留言。
+       种子值 = 总粉丝的 0.4%，至少 1 人；只在归零时补，不会滚雪球。 */
+    var _sum = 0;
+    for (var j = 0; j < KEYS.length; j++) _sum += a.fans[KEYS[j]];
+    var _seed = Math.max(1, Math.round(_sum * 0.004));
+    for (var k = 0; k < FAN_KEYS.length; k++) {
+      if (!(a.fans[FAN_KEYS[k]] > 0)) a.fans[FAN_KEYS[k]] = _seed;
+    }
+    return a;
+  };
+
+  window.FanSum = function (a) {
+    if (!a || !a.fans) return 1;
+    var s = 0;
+    for (var i = 0; i < KEYS.length; i++) s += (a.fans[KEYS[i]] || 0);
+    return s > 0 ? s : 1;
+  };
+
+  /* 只算"真粉丝"（8 类，不含路人）—— 界面显示用这个口径。
+     FanSum 含路人，因为段位门槛等历史逻辑按 9 类总和走的，先不动。 */
+  window.FanSumCore = function (a) {
+    if (!a || !a.fans) return 0;
+    var s = 0;
+    for (var i = 0; i < FAN_KEYS.length; i++) s += (a.fans[FAN_KEYS[i]] || 0);
+    return s;
+  };
+
+  /* 占比（0~100 的整数，用于界面显示） */
+  window.FanPct = function (a, k) {
+    var t = window.FanSum(a);
+    return Math.round((((a && a.fans && a.fans[k]) || 0) / t) * 100);
+  };
+
+  /* 比例（0~1 的小数，用于规则计算） */
+  window.FanRatio = function (a, k) {
+    var t = window.FanSum(a);
+    return (((a && a.fans && a.fans[k]) || 0) / t);
+  };
+
+  window.FAN_LABEL = {
+    career: '事业粉', face: '颜粉', clown: '乐子人', mom: '妈粉/嬷嬷',
+    toxic: '毒唯', cp: 'CP粉', dream: '梦女', moe: '萌萌人', passerby: '路人'
+  };
+
+  /* ---------- 妆造文案：按「工作室 × 事件」分开写 ----------
+     事件：god 惊艳出圈 / fail 造型翻车 / sabotage 剧组让妆
+     ★ 只有翻车和让妆才吐槽；惊艳出圈必须往好里说，不能串味。 */
+  window.MK_STUDIO_LINE = {
+    god: {
+      "三斤半造型": "三斤半这次像忽然想通了。原来他们不是不会化，只是平时懒得化。",
+      "老周工作室": "老周大概把这辈子攒下的手艺都用在这一场了，出来的效果贵得不像他的报价。",
+      "白鹭造型": "白鹭一如既往地稳，这一套能直接进年度最佳造型盘点。",
+      "星野 Studio": "星野这次赌对了，锋利得刚刚好，多一分就俗，少一分就淡。",
+      "W Studio": "W Studio 少见地拿出了态度：干净、克制、很贵。"
+    },
+    fail: {
+      "三斤半造型": "又是三斤半。他家给谁化谁毁，从女一到男配没有一个幸免，偏偏半个娱乐圈的剧组都在用——听说老板欠了谁的人情，一欠欠了十年。",
+      "老周工作室": "老周工作室的报价是白鹭的十分之一，出来的效果大概也是十分之一。制片人觉得这笔钱省得值。",
+      "白鹭造型": "白鹭都救不回来，说明问题不在造型师，在这部戏。",
+      "星野 Studio": "星野这次玩过头了。他们总想证明自己不是流水线，结果每次都往另一个极端跑。",
+      "W Studio": "W Studio 一向无功无过，但这次连无功都没有。"
+    },
+    sabotage: {
+      "三斤半造型": "三斤半的手艺本来就时好时坏，坏的那一半，今天刚好用在了他身上。",
+      "老周工作室": "老周工作室的活儿，便宜是真便宜，就是不知道这便宜是替谁省的。",
+      "白鹭造型": "白鹭的排期明明空着，剧组却临时换了人——这就不太像意外了。",
+      "星野 Studio": "星野这次化得毫无锋芒，像被人提前打过招呼。",
+      "W Studio": "W Studio 交出的东西挑不出错，也说不出好，恰恰好压住了他。"
+    }
+  };
+
+  window.MK_REACT = {
+    /* ===== 造型正常（日常也要有反应，不然结算页太干） ===== */
+    normal: {
+      zp: {
+        career: "演技一般，但脸撑住了。",
+        moe: "哥哥今天状态很好。",
+        clown: "没出糗，有点失望。",
+        dream: "怎么样都好看。"
+      },
+      qs: {
+        toxic: "姐姐今天很稳。",
+        career: "这个造型很衬她。",
+        moe: "飒飒最棒了。"
+      },
+      new: {
+        mom: "孩子表现不错，妈妈欣慰。",
+        passerby: "还行，不出戏。",
+        moe: "纯纯有进步。"
+      },
+      huang: {
+        clown: "木头人上线。",
+        face: "脸还是能看的。",
+        moe: "耀祖在进步。"
+      },
+      liu: {
+        career: "造型在线，演技另说。",
+        clown: "他是来拍照的吧。",
+        face: "衣架子本架。"
+      },
+      _default: {
+        career: "中规中矩，没什么可挑的。",
+        moe: "哥哥最棒了。",
+        passerby: "没印象。"
+      }
+    },
+
+    /* ===== 妆造翻车 ===== */
+    fail: {
+      zp: {
+        career: "98 分的脸也能化成这样，造型师是来上班还是来报仇的？",
+        moe: "我觉得挺有质感的，你们不懂。",
+        clown: "已存图，这张能笑十年。",
+        face: "……我先出去冷静一下。"
+      },
+      qs: {
+        toxic: "谁干的？报个名字。",
+        career: "姐姐自己在群里问了，估计要出事。",
+        moe: "飒飒怎么样都好看。",
+        clown: "恶女翻车，有点爽。"
+      },
+      new: {
+        mom: "我的崽第一次上镜就被化这样，妈妈心疼死了。",
+        moe: "纯纯最乖了，他不会计较的。",
+        clown: "糊咖的命，连丑妆都得接着。",
+        passerby: "这孩子谁啊，妆有点吓人。"
+      },
+      huang: {
+        clown: "本来也就一张脸能看，现在连脸都没了。",
+        face: "我图什么……",
+        moe: "耀祖这么努力，你们为什么要这样说他？"
+      },
+      liu: {
+        career: "摄影师出身的人被这么糟蹋造型，太讽刺了。",
+        clown: "时尚咖水土不服现场。",
+        moe: "梁周说过，专业的人不该评价别人的专业。"
+      },
+      _default: {
+        career: "造型师是谁？给个说法。",
+        moe: "我觉得挺好的呀，你们要求太高了。",
+        clown: "已截图，做成表情包。",
+        face: "这张脸算是白瞎了。",
+        passerby: "确实有点难看。"
+      }
+    },
+
+    /* ===== 惊艳出圈 ===== */
+    god: {
+      zp: {
+        career: "这张脸终于被好好对待了。",
+        face: "神图，我要当壁纸。",
+        moe: "哥哥本来就好看！",
+        clown: "行吧，这次是真帅，我服。"
+      },
+      qs: {
+        toxic: "姐姐 slay。",
+        career: "这个造型能接代言了吧。",
+        face: "恶女美学，绝了。"
+      },
+      new: {
+        mom: "我崽出图了！",
+        passerby: "这新人长得挺好看。",
+        moe: "纯纯长大了。"
+      },
+      huang: {
+        face: "就这张脸，别的不用管了。",
+        clown: "行，这次没得嘲，是真好看。",
+        moe: "耀祖值得。"
+      },
+      liu: {
+        career: "摄影师终于遇到懂他的造型师。",
+        clown: "时尚咖回自己主场了。",
+        face: "这才叫衣架子。"
+      },
+      _default: {
+        career: "这套可以拿去做商务了。",
+        face: "神图预定。",
+        moe: "我就说他很好看吧。",
+        clown: "不得不承认，好看。",
+        passerby: "这人长得不错。"
+      }
+    },
+
+    /* ===== 剧组让妆 ===== */
+    sabotage: {
+      zp: {
+        career: "98 分的脸化成 60 分，这剧组是眼瞎还是心黑？",
+        moe: "可能角色需要吧，我觉得挺有质感的。",
+        dream: "不管化成什么样我都爱。",
+        clown: "终于有人治治他那张脸了，土味帅哥（截图）。"
+      },
+      qs: {
+        toxic: "我已经在查了，谁做的决定。",
+        career: "她自己发微博了，『造型我很不满意』——女王行为。",
+        moe: "飒飒不会生气的，她那么好。"
+      },
+      new: {
+        mom: "孩子刚出道就被欺负成这样，妈妈心都碎了。",
+        moe: "纯纯最乖了，不会计较这些的。",
+        clown: "糊咖的命，连丑妆都得接着。",
+        passerby: "这人谁啊，妆确实挺丑。"
+      },
+      huang: {
+        clown: "本来也就一张脸能看，现在连脸都没了。",
+        face: "我图什么？",
+        moe: "耀祖这么努力，你们为什么要这样说他？",
+        passerby: "资源咖就这待遇，正常。"
+      },
+      liu: {
+        career: "摄影师出身的人被这么糟蹋造型，太讽刺了。",
+        clown: "时尚咖水土不服现场。",
+        moe: "梁周说过，专业的人不该评价别人的专业。"
+      },
+      _default: {
+        career: "凭什么就他妆最丑？这事不能就这么算了。",
+        moe: "剧组对我们挺好的，你们别带节奏。",
+        clown: "让妆？这瓜有点意思。",
+        face: "受不了，脱粉倒计时。",
+        passerby: "哦，被欺负了啊。"
+      }
+    }
+  };
+
+  /* 培训时随机抽一句的小剧情 */
+  window.TRAIN_LINES = {
+    acting: [
+      '表演老师看了他一眼：「你这不是在演，你是在念台词。」——然后让他重来二十遍。',
+      '对着镜子练了一整天微表情，最后脸都僵了，笑起来像抽筋。',
+      '分配到一个临终告别的独白，念完之后整个教室安静了三秒。',
+      '老师让他观察菜市场卖鱼的大叔，「那才是生活」。他真的蹲了一下午。'
+    ],
+    fashion: [
+      '造型师把七套衣服全摊在地上，让他自己搭配。他选了最贵的那套，被否了。',
+      '练了一整天走路，脚跟磨出了泡。老师说：「现在像个人了。」',
+      '被塞进一双小两码的鞋，为了拍照站了四个小时。',
+      '对着杂志翻了三百页，试图理解「高级感」到底是个什么东西。'
+    ],
+    stage: [
+      '声乐课上他唱破了音，隔壁琴房的老师探头进来看了看是谁。',
+      '练舞练到腿抖，扶着墙下楼梯，被经纪人拍下来发到了群里。',
+      '对着节拍器唱了两小时，最后连心跳都跟着 120 拍了。',
+      '编舞老师临时改了一个动作，他练到凌晨三点才睡着。'
+    ],
+    default: ['这段日子过得枯燥，但也没白费。']
+  };
+
+  /* ==========================================================================
+     单一粉丝类型独大（占比 >45%）时的后果 —— 月结里由 Logic_Actors 执行。
+     --------------------------------------------------------------------------
+     ★ 这是给作者自己看的说明书，界面不展示（2026-10-27 起不再显示 bad 文案）。
+        事业粉 >45%  → 话题 −4，口碑 +1（太正经，没人有乐子看）
+        颜粉   >45%  → 事业粉 −2%/月（只看脸，不关心作品）
+        乐子人 >45%  → 口碑 −2（全是来看戏的，没人真心维护）
+        妈粉   >45%  → 时尚 −1（拒绝性感与高奢）
+        毒唯   >45%  → 口碑 −1（到处撕，合作方躲着）
+        CP粉   >45%  → 梦女 −5%（嗑糖的挤走做梦的）
+        梦女   >45%  → 路人 −3%（太私人，路人退避）
+        萌萌人 >45%  → 其他 7 类一起流失 + 话题持续下跌（粉圈封闭化）
+        路人   >45%  → 话题 −3（没有死忠，热度留不住）
+     ★ 想改惩罚力度，直接改 Logic_Actors 里对应的分支；这里的 bad 只是备注。
+     ========================================================================== */
+  window.FAN_OVER = {
+    career:   { name: '事业粉',   bad: '容不下综艺和时尚，话题每月 −4' },
+    face:     { name: '颜粉',     bad: '只看脸，事业粉每月 −2%' },
+    clown:    { name: '乐子人',   bad: '全是看戏的，口碑每月 −2' },
+    mom:      { name: '妈粉/嬷嬷', bad: '拒绝性感与高奢，时尚每月 −1' },
+    toxic:    { name: '毒唯',     bad: '到处撕，口碑每月 −1，合作方躲着你' },
+    cp:       { name: 'CP粉',     bad: '梦女每月 −5%' },
+    dream:    { name: '梦女',     bad: '路人每月 −3%' },
+    moe:      { name: '萌萌人',   bad: '挤走其他粉 + 话题持续下跌' },
+    passerby: { name: '路人',     bad: '没有死忠，话题每月 −3' }
+  };
+
+  /* 侧栏一行用的粉丝构成（事业 / 萌萌 / 路人 / 其他），萌萌人超标时标红 */
+  window.FanLine = function (a) {
+    var c = window.FanPct(a, 'career');
+    var m = window.FanPct(a, 'moe');
+    var p = window.FanPct(a, 'passerby');
+    var o = Math.max(0, 100 - c - m - p);
+    var html = '<span class="f-blue">事业 ' + c + '%</span>'
+      + ' · <span class="f-pink">萌萌 ' + m + '%</span>'
+      + ' · <span class="f-teal">路人 ' + p + '%</span>'
+      + ' · <span class="f-gray">其他 ' + o + '%</span>';
+    if (m > 35) html += ' <span class="fan-warn">⚠ 封闭化</span>';
+    return html;
+  };
+})();
+
 /* ---------- 故事块：Patch_Energy_Buff ---------- */
 window.__STORY_PASSAGES.push({
   name: "Patch_Energy_Buff",
@@ -552,37 +862,11 @@ window.__STORY_PASSAGES.push({
 
     /* === 2. 生成项目名称与简介 (完全架空版) === */
     
-    /* --- A. 影视剧 (Drama) --- */
+    /* --- A. 影视剧 (Drama) ---
+       2026-10-27：改为从作品库抽取（story/53_film.js 的 FILM_POOL）。
+       每级 12 部：9 部正经戏接过一次就不再出现，3 部烂片可以反复接。 */
     <<if _type is "drama">>
-        <<if _res is "s">>
-            <<set _pool to [
-                {name: "《大秦：帝国余晖》", desc: "投资3亿的历史正剧，老戏骨云集，冲奖预定。"},
-                {name: "《深空彼岸》", desc: "好莱坞团队特效制作的硬核科幻，人类最后的希望。"},
-                {name: "《长安十二时辰·夜宴》", desc: "精良的服化道，还原大唐盛世的悬疑巨制。"},
-                {name: "《苍穹之昂》", desc: "根据知名IP改编的史诗级仙侠剧，特效烧钱。"}
-            ]>>
-        <<elseif _res is "a">>
-            <<set _pool to [
-                {name: "《法医手记》", desc: "口碑极佳的刑侦悬疑剧，剧情烧脑。"},
-                {name: "《金陵旧梦》", desc: "民国情感大戏，虐恋情深，容易吸粉。"},
-                {name: "《都市合伙人》", desc: "聚焦职场生存的现代剧，话题度很高。"},
-                {name: "《剑雨江湖》", desc: "中规中矩的武侠剧，打戏非常精彩。"}
-            ]>>
-        <<elseif _res is "b">>
-            <<set _pool to [
-                {name: "《霸道总裁的落跑甜心》", desc: "古早味浓郁的甜宠剧，虽然土但很上头。"},
-                {name: "《重生之我是王妃》", desc: "穿越短剧，剧情雷人但节奏极快。"},
-                {name: "《婆媳大战三百回合》", desc: "狗血家庭伦理剧，大妈们的最爱。"},
-                {name: "《校草爱上我》", desc: "低成本青春校园剧，全是新面孔。"}
-            ]>>
-        <<else>> /* C级 */
-            <<set _pool to [
-                {name: "《抗日神侠之包子雷》", desc: "剧情离谱的雷剧，被B站UP主疯狂吐槽。"},
-                {name: "《恐怖游泳馆2》", desc: "洗钱嫌疑严重的低俗惊悚片，海报很擦边。"},
-                {name: "《纯洁的心灵·逐梦演艺圈》", desc: "足以载入史册的烂片，不知道谁投资的。"},
-                {name: "《乡村爱情故事之刘能逆袭》", desc: "土味乡土剧，只有村口大爷在看。"}
-            ]>>
-        <</if>>
+        <<Film_Draw _res>>
 
     /* --- B. 综艺 (Variety) --- */
     <<elseif _type is "variety">>
@@ -744,6 +1028,85 @@ window.__STORY_PASSAGES.push({
         <</if>>
     <</if>>
 
+    /* --- 2.5 妆造（2026-10-27 新增）
+       每次通告都会遇到一个造型团队。理想值是 70% 正常 / 15% 惊艳 / 15% 翻车，
+       实际受「颜值」与「工作室水平」影响：脸好化的人不容易翻车，好工作室也不容易。
+       影视再额外掷一次「让妆」——剧组为了捧自家人，刻意把你化成丑妆。 */
+    <<set _studio_map to {
+        "白鹭造型":   85,
+        "星野 Studio": 78,
+        "W Studio":   70,
+        "三斤半造型": 62,
+        "老周工作室": 58
+    }>>
+    <<set _sr to random(1, 100)>>
+    <<if $req_res is "s">>
+        <<if _sr <= 80>><<set _studio to "白鹭造型">><<else>><<set _studio to "星野 Studio">><</if>>
+    <<elseif $req_res is "a">>
+        <<if _sr <= 40>><<set _studio to "白鹭造型">>
+        <<elseif _sr <= 80>><<set _studio to "星野 Studio">>
+        <<else>><<set _studio to "W Studio">><</if>>
+    <<elseif $req_res is "b">>
+        <<if _sr <= 25>><<set _studio to "星野 Studio">>
+        <<elseif _sr <= 60>><<set _studio to "三斤半造型">>
+        <<else>><<set _studio to "W Studio">><</if>>
+    <<else>>
+        <<if _sr <= 40>><<set _studio to "三斤半造型">>
+        <<elseif _sr <= 85>><<set _studio to "老周工作室">>
+        <<else>><<set _studio to "W Studio">><</if>>
+    <</if>>
+    <<set _stu_rate to (_studio_map[_studio] || 70)>>
+
+    /* 翻车率：基准 15%，颜值越高越不容易，工作室越烂越容易 */
+    <<set _looks_v to (_a.looks || 70)>>
+    <<set _fail_rate to 15 - (_looks_v / 12)>>
+    <<set _fail_rate to _fail_rate * (1 + (70 - _stu_rate) / 100)>>
+    <<set _fail_rate to Math.max(3, Math.min(28, Math.round(_fail_rate)))>>
+    /* 惊艳率：好工作室更容易出神图 */
+    <<set _god_rate to Math.round(15 + (_stu_rate - 70) * 0.4)>>
+    <<set _god_rate to Math.max(5, Math.min(30, _god_rate))>>
+
+    <<set _mk to "normal">>
+    <<set _mk_roll to random(1, 100)>>
+    <<if _mk_roll <= _fail_rate>>
+        <<set _mk to "fail">>
+    <<elseif _mk_roll <= (_fail_rate + _god_rate)>>
+        <<set _mk to "god">>
+    <</if>>
+
+    /* 让妆：只有影视有。段位越低，越容易被剧组拿来献祭 */
+    <<set _sabotage to false>>
+    <<if _job_type is "drama">>
+        <<set _sab_chance to 12>>
+        <<if (_a.rank_level || 1) <= 2>><<set _sab_chance to 30>>
+        <<elseif (_a.rank_level || 1) == 3>><<set _sab_chance to 22>>
+        <<elseif (_a.rank_level || 1) == 4>><<set _sab_chance to 16>>
+        <</if>>
+        <<if random(1, 100) <= _sab_chance>>
+            <<set _sabotage to true>>
+            <<set _mk to "sabotage">>
+        <</if>>
+    <</if>>
+
+    /* 妆造直接拉动本场收入 */
+    <<set _mk_mult to 1>>
+    <<if _mk is "god">><<set _mk_mult to 1.12>>
+    <<elseif _mk is "fail">><<set _mk_mult to 0.90>>
+    <<elseif _mk is "sabotage">><<set _mk_mult to 0.95>>
+    <</if>>
+    <<set _gross_income to Math.floor(_gross_income * _mk_mult)>>
+
+    /* 🎞️ 作品余温（2026-10-27 新增）
+       近 3 个月播出的戏会拉高这个人的商务报价，直接乘在本场营收上。
+       计算规则在 story/53_film.js 的 FilmBuffSum —— 单部作品按档位给，
+       多部叠加后夹在 -15% ~ +35%。 */
+    <<set _fb to FilmBuffSum($film_lib, $current_actor, $month)>>
+    <<set _fbp to (_fb.pay || 0)>>
+    <<if isNaN(_fbp)>><<set _fbp to 0>><</if>>
+    <<if _fbp neq 0>>
+        <<set _gross_income to Math.floor(_gross_income * (1 + _fbp))>>
+    <</if>>
+
     <<set _company_ratio to _a.split>>
     <<set _artist_ratio to (1 - _a.split)>>
     <<set _company_share_pretax to Math.floor(_gross_income * _company_ratio)>>
@@ -786,6 +1149,31 @@ window.__STORY_PASSAGES.push({
         <<set _msg to "唱跳 +3 | 妈粉 +"+_main_fan_growth+" | 口碑 +"+_rep_gain>>
     <</if>>
 
+    /* --- 4.5 妆造的连锁反应 --- */
+    <<set _mk_face_delta to 0>>
+    <<set _mk_rep to 0>>
+    <<set _mk_topic_d to 0>>
+    <<set _mk_extra_msg to "">>
+    <<if _mk is "god">>
+        <<set _mk_face_delta to Math.floor(_main_fan_growth * 0.4)>>
+        <<set _mk_rep to 3>>
+        <<set _mk_topic_d to 18>>
+    <<elseif _mk is "fail">>
+        <<set _mk_face_delta to -Math.floor((_a.fans.face || 0) * 0.25)>>
+        <<set _mk_rep to -5>>
+        <<set _mk_topic_d to 8>>
+    <<elseif _mk is "sabotage">>
+        <<set _mk_face_delta to -Math.floor((_a.fans.face || 0) * 0.15)>>
+        <<set _mk_rep to -2>>
+        <<set _mk_topic_d to 12>>
+        /* 被欺负会虐出事业粉，也会虐出萌萌人 */
+        <<set _a.fans.career += Math.floor(_main_fan_growth * 0.3)>>
+        <<set _a.fans.moe += Math.floor(_main_fan_growth * 0.5)>>
+    <</if>>
+    <<set _a.fans.face to Math.max(0, (_a.fans.face || 0) + _mk_face_delta)>>
+    <<set _a.reputation to Math.max(0, (_a.reputation || 0) + _mk_rep)>>
+    <<set _a.topic to Math.max(0, (_a.topic || 0) + _mk_topic_d)>>
+
     <<set _penalty_msg to "">>
     <<if _job_type is "drama" and def $is_bad_project and $is_bad_project>>
         <<set _a.reputation -= 10>> 
@@ -795,6 +1183,12 @@ window.__STORY_PASSAGES.push({
 
     <<set $money += _company_income_net>>
     <<if _is_concert>><<set $concert_used to 1>><</if>>
+
+    /* 📽️ 影视作品登记：杀青时按这一场的表现定「质量分」，并排到 4~6 个月后播出。
+       登记之后这部戏会出现在办公室「作品库」里，播出时再结算成绩。 */
+    <<if _job_type is "drama">>
+        <<Film_Archive>>
+    <</if>>
     
     /* 界面显示（马卡龙小票样式，2026-10-25 替换原灰色表格） */
     <div class="nm-settle">
@@ -807,6 +1201,12 @@ window.__STORY_PASSAGES.push({
                 <span>营收总额</span>
                 <span class="num">$ <<print _gross_income>> 万</span>
             </div>
+            <<if _fbp neq 0>>
+            <div class="row">
+                <span>🎞️ 作品余温</span>
+                <span class="num <<if _fbp < 0>>neg<</if>>"><<if _fbp > 0>>+<</if>><<print Math.round(_fbp * 100)>>%</span>
+            </div>
+            <</if>>
             <div class="row">
                 <span>- 艺人分成 (<<print Math.round(_artist_ratio * 100)>>%)</span>
                 <span>$ <<print _artist_income>></span>
@@ -835,6 +1235,64 @@ window.__STORY_PASSAGES.push({
         <</if>>
         <div class="nm-settle-foot">📈 <<print _msg>></div>
     </div>
+
+    /* ---------- 💄 妆造小卡 + 粉丝反应（2026-10-27 新增） ---------- */
+    <<set _mk_key to $current_actor>>
+    <<if $current_actor is "new_boy">><<set _mk_key to "huang">><</if>>
+    <<if _mk is "normal">>
+        <<set _mk_group to MK_REACT["normal"]>>
+        <<set _mk_pack to _mk_group[_mk_key]>>
+        <<if not def _mk_pack>><<set _mk_pack to _mk_group["_default"]>><</if>>
+        <<set _mk_keys to Object.keys(_mk_pack)>>
+    <<else>>
+        <<set _mk_group to MK_REACT[_mk]>>
+        <<if not def _mk_group>><<set _mk_group to MK_REACT["fail"]>><</if>>
+        <<set _mk_pack to _mk_group[_mk_key]>>
+        <<if not def _mk_pack>><<set _mk_pack to _mk_group["_default"]>><</if>>
+        <<set _mk_keys to Object.keys(_mk_pack)>>
+    <</if>>
+
+    <div class="nm-makeup mk-<<print _mk>>">
+        <div class="mk-top">
+            <span class="mk-title">
+                <<if _mk is "god">>✨ 惊艳出圈
+                <<elseif _mk is "fail">>💥 妆造翻车
+                <<elseif _mk is "sabotage">>🎭 剧组让妆
+                <<else>>💄 造型正常
+                <</if>>
+            </span>
+            <span class="mk-studio"><<print _studio>></span>
+        </div>
+
+        <<if _mk isnot "normal">>
+            /* 工作室评价按事件取：惊艳=夸，翻车/让妆=吐槽 */
+            <<set _stu_line to "">>
+            <<if def MK_STUDIO_LINE[_mk]>><<set _stu_line to MK_STUDIO_LINE[_mk][_studio]>><</if>>
+            <<if not def _stu_line>><<set _stu_line to MK_STUDIO_LINE["fail"][_studio]>><</if>>
+            <div class="mk-line">「<<print _stu_line>>」</div>
+            <div class="mk-num">
+                <<if _mk is "god">>
+                    颜粉 +<<print _mk_face_delta>> · 口碑 +3 · 话题 +18 · 本场收入 +12%
+                <<elseif _mk is "fail">>
+                    颜粉 <<print _mk_face_delta>> · 口碑 −5 · 话题 +8 · 本场收入 −10%
+                <<else>>
+                    颜粉 <<print _mk_face_delta>> · 口碑 −2 · 话题 +12 · 本场收入 −5%
+                    <span class="mk-tip">（不是意外，是有人故意的）</span>
+                <</if>>
+            </div>
+        <</if>>
+
+        <div class="mk-reacts">
+            <div class="mk-reacts-head">💬 粉丝反应</div>
+            <<for _i to 0; _i < Math.min(3, _mk_keys.length); _i++>>
+                <<set _fk to _mk_keys[_i]>>
+                <div class="rk-row">
+                    <span class="rk-tag rk-<<print _fk>>"><<print FAN_LABEL[_fk]>></span>
+                    <span class="rk-text">「<<print _mk_pack[_fk]>>」</span>
+                </div>
+            <</for>>
+        </div>
+    </div>
 <</nobr>>
 <</widget>>`
 });
@@ -847,12 +1305,82 @@ window.__STORY_PASSAGES.push({
     /* 改名：不再叫 rank_up_events，改叫 rank_change_events */
     <<set _rank_change_events to []>>
 
-    /* --- 话题自然衰减：一个月不营业，热度就先掉 5 点 ---
-       这是「不刷综艺就掉」的来源，也是顶流维持成本的另一半。
-       先衰减，再算段位，所以掉热度会立刻反映在咖位上。 */
+    /* --- 每月粉圈生态结算（先跑，再算段位） ---
+       ① 话题自然衰减：一个月不营业，热度先掉 5 点
+       ② 萌萌人自动增长 —— 全游戏唯一会自己涨的粉
+       ③ 萌萌人过多 → 挤走其他粉丝 + 拖累话题（粉圈封闭化）
+       ④ 路人随口碑涨落                                              */
     <<for _key range Object.keys($actors)>>
         <<if def $actors[_key] and $actors[_key].status isnot "left">>
-            <<set $actors[_key].topic to Math.max(0, ($actors[_key].topic || 0) - 5)>>
+            <<set _au to $actors[_key]>>
+            <<set _ok to FanEnsure(_au)>>
+
+            /* ① 话题自然衰减 */
+            <<set _au.topic to Math.max(0, (_au.topic || 0) - 5)>>
+
+            /* ② 萌萌人自然增长：每月 +3%（最少 3 人） */
+            <<set _au.fans.moe += Math.max(3, Math.floor(FanSum(_au) * 0.03))>>
+
+            <<set _moe_rate to FanRatio(_au, "moe")>>
+
+            /* ③ 萌萌人超过 35% → 其他粉丝加速流失 */
+            <<if _moe_rate > 0.35>>
+                <<set _drain to 1 + (_moe_rate * 1.5)>>
+                <<set _keep to (1 - 0.02 * _drain)>>
+                <<set _au.fans.career to Math.max(0, Math.floor((_au.fans.career || 0) * _keep))>>
+                <<set _au.fans.face to Math.max(0, Math.floor((_au.fans.face || 0) * _keep))>>
+                <<set _au.fans.clown to Math.max(0, Math.floor((_au.fans.clown || 0) * _keep))>>
+                <<set _au.fans.mom to Math.max(0, Math.floor((_au.fans.mom || 0) * _keep))>>
+                <<set _au.fans.toxic to Math.max(0, Math.floor((_au.fans.toxic || 0) * _keep))>>
+                <<set _au.fans.cp to Math.max(0, Math.floor((_au.fans.cp || 0) * _keep))>>
+                <<set _au.fans.dream to Math.max(0, Math.floor((_au.fans.dream || 0) * _keep))>>
+
+                /* 同时拖累话题：外面已经没人讨论了 */
+                <<set _au.topic to Math.max(0, _au.topic - Math.round((_moe_rate - 0.35) * 40))>>
+            <</if>>
+
+            /* ⑤ 单一粉丝类型过度集中（>45%）—— 哪种太多都有代价 */
+            <<set _over_type to "">>
+            <<set _over_rate to 0>>
+            <<for _fk range ["career", "face", "clown", "mom", "toxic", "cp", "dream", "passerby"]>>
+                <<set _fr to FanRatio(_au, _fk)>>
+                <<if _fr > _over_rate>><<set _over_rate to _fr>><<set _over_type to _fk>><</if>>
+            <</for>>
+            <<if _over_rate > 0.45>>
+                <<if _over_type is "career">>
+                    /* 事业粉独大：太正经，没人有乐子可看 */
+                    <<set _au.topic to Math.max(0, _au.topic - 4)>>
+                    <<set _au.reputation += 1>>
+                <<elseif _over_type is "clown">>
+                    /* 乐子人独大：全是看戏的，口碑站不住 */
+                    <<set _au.reputation to Math.max(0, _au.reputation - 2)>>
+                <<elseif _over_type is "mom">>
+                    /* 妈粉/嬷嬷独大：拒绝性感与高奢，时尚度下滑 */
+                    <<set _au.fashion to Math.max(0, _au.fashion - 1)>>
+                <<elseif _over_type is "toxic">>
+                    /* 毒唯独大：到处撕，口碑受损，合作方开始躲 */
+                    <<set _au.reputation to Math.max(0, _au.reputation - 1)>>
+                <<elseif _over_type is "cp">>
+                    /* CP 粉独大：梦女被挤走 */
+                    <<set _au.fans.dream to Math.floor((_au.fans.dream || 0) * 0.95)>>
+                <<elseif _over_type is "dream">>
+                    /* 梦女独大：路人观感变差 */
+                    <<set _au.fans.passerby to Math.floor((_au.fans.passerby || 0) * 0.97)>>
+                <<elseif _over_type is "face">>
+                    /* 颜粉独大：全是看脸的，事业粉留不住 */
+                    <<set _au.fans.career to Math.floor((_au.fans.career || 0) * 0.98)>>
+                <<elseif _over_type is "passerby">>
+                    /* 路人独大：没有死忠，热度和话题立不住 */
+                    <<set _au.topic to Math.max(0, _au.topic - 3)>>
+                <</if>>
+            <</if>>
+
+            /* ④ 路人：口碑好慢慢变国民度，口碑崩就跑最快 */
+            <<if (_au.reputation || 0) >= 70>>
+                <<set _au.fans.passerby += Math.max(2, Math.floor(FanSum(_au) * 0.02))>>
+            <<elseif (_au.reputation || 0) < 40>>
+                <<set _au.fans.passerby to Math.max(0, Math.floor((_au.fans.passerby || 0) * 0.95))>>
+            <</if>>
         <</if>>
     <</for>>
 
@@ -884,15 +1412,7 @@ window.__STORY_PASSAGES.push({
             <<set _a.current_energy = Math.min(_a.energy, (_a.current_energy || 0) + 80)>>
             
             /* --- C. 升咖与降咖计算 (🛡️ 修复核心：增加 || 0 防错机制) --- */
-            <<set _total_fans to 
-                (_a.fans.career || 0) + 
-                (_a.fans.mom || 0) + 
-                (_a.fans.face || 0) + 
-                (_a.fans.clown || 0) + 
-                (_a.fans.toxic || 0) + 
-                (_a.fans.cp || 0) + 
-                (_a.fans.dream || 0)
-            >>
+            <<set _total_fans to FanSum(_a)>>
             
             <<set _max_skill to Math.max((_a.acting || 0), (_a.fashion || 0), (_a.stage || 0))>>
             
@@ -1207,7 +1727,7 @@ window.__STORY_PASSAGES.push({
                 
                 /* 事件1: 婚内出轨 */
                 <<if _roll == 1>>
-                    <<set _target.fans.cp -= 500>><<set $trust -= 5>>
+                    <<set _target.fans.cp -= 500>><<set $zp_trust -= 5>>   /* 2026-10-27 修正：原来写成了 $trust（不存在的变量），信任度白扣 */
                     <<set _rival_event to { type: "bad", title: "💔【夜会风波】", desc: "狗仔爆出模糊视频，指认展鹏深夜在酒店‘夜会神秘人’（其实是你）。" + _rival.name + " 趁机买通稿造谣他婚内出轨。" }>>
                 
                 /* 事件2: 软饭男 */
@@ -1773,8 +2293,8 @@ window.__STORY_PASSAGES.push({
         <<elseif _roll <= 50>> 
              <<set _zp_event_type to "secret_money">>
         
-        /* 【扩展位】以后想加剧情，在这里插队 */
-        /* <<elseif _roll <= 60>> <<set _zp_event_type to "new_story">> */
+        /* 【扩展位】以后想加剧情，在这里插队（照着上面 elseif 的写法加一条即可）
+           ⚠️ 注释里不要写宏标签，引擎会把它当真的宏解析，把结尾的星号斜杠漏到页面上 */
         
         <<else>>
              <<set _zp_event_type to "none">>

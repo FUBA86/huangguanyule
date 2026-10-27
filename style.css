@@ -407,6 +407,10 @@ body::before {
 .f-pink  { color: #db2777; font-weight: 700; }
 .f-blue  { color: #2563eb; font-weight: 700; }
 .f-amber { color: #b45309; font-weight: 700; }
+.f-teal  { color: #0f766e; font-weight: 700; }
+.f-gray  { color: #64748b; font-weight: 600; }
+/* 萌萌人超标：粉圈封闭化警告 */
+.fan-warn { color: #c2410c; font-weight: 800; font-size: .92em; }
 
 .stat-item.money { color: #b45309; }
 .stat-item.money b { color: #b45309; }

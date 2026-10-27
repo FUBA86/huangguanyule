@@ -195,6 +195,18 @@ window.__STORY_PASSAGES.push({
                         <<set _act.project_name = $generated_name>>
                         <<set _act.job_type = "drama">>
                         <<set _act.res_level = $req_res>>
+
+                        /* 📽️ 2026-10-27 作品库：记下接的是哪一部
+                           正经戏（rot = false）接过就锁死，以后不会再出现；
+                           循环烂片（rot = true）不进 used 名单，永远能接到。 */
+                        <<if not def $film_used>><<set $film_used to { s: [], a: [], b: [], c: [] }>>><</if>>
+                        <<if not def $film_lib>><<set $film_lib to []>>><</if>>
+                        <<set _act.film_id to $generated_film.id>>
+                        <<set _act.film_rot to $generated_film.rot>>
+                        <<if not def $film_used[$req_res]>><<run $film_used[$req_res] = []>><</if>>
+                        <<if not $generated_film.rot>>
+                            <<run $film_used[$req_res].push($generated_film.id)>>
+                        <</if>>
                         
                         /* 坏投资方处理 */
                         <<if _bad_investor>>
@@ -1165,7 +1177,12 @@ window.__STORY_PASSAGES.push({
             /* --- [BLOCK] 培训中 --- */
              <div style="background:#eff6ff; border:2px solid #60a5fa; padding:20px; border-radius:8px; text-align:center; color:#1e40af;">
                 <div style="font-size:2em; margin-bottom:10px;">🎓 封闭培训中</div>
-                <div style="font-size:1em; opacity:0.8;">( 正在闭关修炼，谢绝打扰 )</div>
+                <div style="font-size:1em; opacity:0.8; margin-bottom:12px;">( 正在闭关修炼，谢绝打扰 )</div>
+                <div style="display:inline-block; background:rgba(255,255,255,0.7); border:1px solid #bfdbfe; border-radius:8px; padding:8px 16px; font-size:0.95em;">
+                    📚 进修科目：<b><<if _act.project_name isnot "">><<print _act.project_name.replace("封闭式培训 · ", "")>><<else>>基础训练<</if>></b>
+                    <span style="margin:0 8px; color:#93c5fd;">|</span>
+                    剩余：<b><<print _act.busy_months>></b> 个月
+                </div>
             </div>
 
         <<elseif _act.reputation < 20>>

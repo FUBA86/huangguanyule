@@ -612,6 +612,10 @@
   function renderMacro(nd, o) {
     var nm = nd.name, a = nd.args;
 
+    /* ★ 回看模式（2026-10-27）：剧情档案里的"重看"只负责显示文字，
+       set / run / unset / goto 一律不执行 —— 否则重看一遍就会再加一次羁绊值。 */
+    if (Engine.readonly && (nm === 'set' || nm === 'run' || nm === 'unset' || nm === 'goto')) return;
+
     switch (nm) {
       case 'set': execSet(a); return;
       case 'unset': {
@@ -687,6 +691,13 @@
            而对象仍然保持引用，和 SugarCube 的写法一致。 */
         var snapshot = Object.assign({}, State.temp);
         var label = evalExpr(labelExpr);
+
+        /* ★ 回看模式：按钮只画出来，不给它绑点击事件 */
+        if (Engine.readonly) {
+          o.parts.push('<span class="replay-dead">' + toStr(label) + '</span>');
+          return;
+        }
+
         var id = regHandler(function () {
           if (bodyNodes) {
             var savedTemp = State.temp;
@@ -753,7 +764,7 @@
           Engine.save();
         });
         handlers[rid].gen = handlerGen;
-        var checked = def || (curV === val) ? ' checked' : '';
+        var checked = (curV === val) ? ' checked' : '';
         var gname = 'rb-' + String(vName).replace(/[^\w]/g, '_');
         o.parts.push('<input type="radio" class="macro-radiobutton" name="' + gname +
           '" value="' + String(val).replace(/"/g, '&quot;') +
@@ -889,6 +900,8 @@
   function display(name, opts) {
     /* Start = 重新开始（原 Twine 工程里没有这个块，这里兜底） */
     if (name === 'Start' || name === 'StoryInit') { Engine.newGame(); return; }
+    /* 每次换页都先退出回看模式，避免上一页的只读状态残留 */
+    Engine.readonly = false;
     if (!Story[name]) {
       ui.main.innerHTML = '<div class="engine-error">找不到 passage：<b>' +
         String(name) + '</b><br>请检查 passage 名称是否一致。</div>';
@@ -901,6 +914,18 @@
     State.passage = name;
     if (!(opts && opts.noHistory)) State.history.push(name);
     if (State.history.length > 200) State.history.shift();
+
+    /* ★ 新增（2026-10-27）：剧情档案自动记录。
+       每进一次剧情页，就把「这一章看过了、第一次看到是第几个月」写进 $story_seen。
+       办公室 → 🎞️ 剧情档案 靠它列出已看过的章节，并且可以在只读模式下重看。
+       只记录第一次（后面的月份不覆盖），旧存档没有这个字段也没关系。 */
+    try {
+      if (/^(Prologue_|Story_|Ending_|Game_Over|Game_Ending)/.test(name)) {
+        var _sv = State.vars;
+        if (!_sv.story_seen || typeof _sv.story_seen !== 'object') _sv.story_seen = {};
+        if (!_sv.story_seen[name]) _sv.story_seen[name] = _sv.month || 0;
+      }
+    } catch (e) { }
 
     var o = outNew();
     try {
@@ -974,6 +999,7 @@
   var Engine = {
     version: '1.0',
     quiet: false,
+    readonly: false,   /* true = 回看模式：只显示文字，不改数值、不跳页 */
     state: State,
     story: Story,
     widgets: Widgets,
@@ -999,7 +1025,11 @@
         /* data-passage 直接跳转 */
         var dp = ev.target.closest ? ev.target.closest('[data-passage]') : null;
         var hEl = ev.target.closest ? ev.target.closest('[data-h]') : null;
-        if (hEl) {
+        /* ★ 修 Bug（2026-10-27）：表单控件（radio / checkbox / textbox）不能在这里 preventDefault，
+           否则浏览器不会真的勾选，视觉上「按不动」——变量其实改了，但界面看不出变化。
+           交给下面的 change 委托处理。 */
+        var isField = hEl && /^(INPUT|TEXTAREA|SELECT)$/.test(hEl.tagName);
+        if (hEl && !isField) {
           var id = hEl.getAttribute('data-h');
           var fn = handlers[id];
           ev.preventDefault();

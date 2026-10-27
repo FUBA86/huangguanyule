@@ -20,23 +20,23 @@ window.__STORY_PASSAGES.push({
 
 <<if def $actors.zp>>
     <<set _rank_score += ($actors.zp.rank_level || 1) * 40>>
-    <<set _fan_total += ($actors.zp.fans.career || 0) + ($actors.zp.fans.mom || 0) + ($actors.zp.fans.face || 0) + ($actors.zp.fans.clown || 0) + ($actors.zp.fans.toxic || 0) + ($actors.zp.fans.cp || 0) + ($actors.zp.fans.dream || 0)>>
+    <<set _fan_total += FanSumCore($actors.zp)>>
 <</if>>
 <<if def $actors.qs>>
     <<set _rank_score += ($actors.qs.rank_level || 1) * 40>>
-    <<set _fan_total += ($actors.qs.fans.career || 0) + ($actors.qs.fans.mom || 0) + ($actors.qs.fans.face || 0) + ($actors.qs.fans.clown || 0) + ($actors.qs.fans.toxic || 0) + ($actors.qs.fans.cp || 0) + ($actors.qs.fans.dream || 0)>>
+    <<set _fan_total += FanSumCore($actors.qs)>>
 <</if>>
 <<if def $actors.new>>
     <<set _rank_score += ($actors.new.rank_level || 1) * 40>>
-    <<set _fan_total += ($actors.new.fans.career || 0) + ($actors.new.fans.mom || 0) + ($actors.new.fans.face || 0) + ($actors.new.fans.clown || 0) + ($actors.new.fans.toxic || 0) + ($actors.new.fans.cp || 0) + ($actors.new.fans.dream || 0)>>
+    <<set _fan_total += FanSumCore($actors.new)>>
 <</if>>
 <<if $has_signed_huang is true and def $actors.huang>>
     <<set _rank_score += ($actors.huang.rank_level || 1) * 40>>
-    <<set _fan_total += ($actors.huang.fans.career || 0) + ($actors.huang.fans.mom || 0) + ($actors.huang.fans.face || 0) + ($actors.huang.fans.clown || 0) + ($actors.huang.fans.toxic || 0) + ($actors.huang.fans.cp || 0) + ($actors.huang.fans.dream || 0)>>
+    <<set _fan_total += FanSumCore($actors.huang)>>
 <</if>>
 <<if $has_signed_liu is true and def $actors.liu>>
     <<set _rank_score += ($actors.liu.rank_level || 1) * 40>>
-    <<set _fan_total += ($actors.liu.fans.career || 0) + ($actors.liu.fans.mom || 0) + ($actors.liu.fans.face || 0) + ($actors.liu.fans.clown || 0) + ($actors.liu.fans.toxic || 0) + ($actors.liu.fans.cp || 0) + ($actors.liu.fans.dream || 0)>>
+    <<set _fan_total += FanSumCore($actors.liu)>>
 <</if>>
 
 /* 资金与粉丝都封顶，防止「囤钱通吃」和「刷粉通吃」 */
@@ -120,4 +120,139 @@ window.__STORY_PASSAGES.push({
 window.__STORY_PASSAGES.push({
   name: "Story_Act4_Finale",
   src: `<<goto "Story_Act4_20_Collapse">>`
+});
+
+/* ===========================================================================
+   剧情档案（2026-10-27）
+   ---------------------------------------------------------------------------
+   解决的问题：剧情页一旦被误点关掉（点了侧栏、刷新了页面），那一屏就再也回不去了，
+   后面的剧情虽然有，但中间少了一块，玩家会一头雾水。
+
+   做法：
+   ① 引擎在每次进入 Story_ / Prologue_ / Ending_ 页面时，自动把章节名记进
+      $story_seen（值为第一次看到时的月份）—— 不用手工登记。
+   ② 办公室 → 🎞️ 剧情档案 按顺序列出看过的章节，点「重看」进入只读回放。
+   ③ 回放时 Engine.readonly = true：set / run / goto 全部不执行，按钮变成死标签，
+      所以重看一百遍也不会重复加羁绊值、不会跳走。
+   =========================================================================== */
+
+/* 章节名 → 人话标题。新加剧情时在这里补一行就行（不补也能看，会直接显示块名） */
+window.WY_STORY_TITLE = {
+  "Prologue_Chap1": "序章 · 一",
+  "Prologue_Chap2": "序章 · 二",
+  "Prologue_Chap3": "序章 · 三",
+
+  "Story_Act1_01_Scandal":    "突发绯闻",
+  "Story_Act1_02_Car":        "路透照流出",
+  "Story_Act1_03_Hotel":      "周一见",
+  "Story_Act1_04_Substitute": "似曾相识的面孔",
+  "Story_Act1_05_Confrontation": "当面对峙",
+  "Story_Act1_06_Tracking":   "暗巷追踪",
+  "Story_Act1_07_Offer":      "帝国娱乐的报价",
+  "Story_Act1_08_Truth":      "残酷的真相",
+  "Story_Act1_09_Divorce":    "断尾求生",
+
+  "Story_Act2_11_NewBlood":   "新的拼图",
+  "Story_Act2_12_News_34":    "票房惨案",
+  "Story_Act2_12_Gossip_35":  "舆论反噬",
+  "Story_Act2_13_RainyNight": "暴雨夜归",
+
+  "Story_Act3_14_Waiting":    "沉默的砖头",
+  "Story_Act3_15_MissionStart": "加密短信",
+  "Story_Movie_45_Offer":     "五亿的邀约",
+  "Story_Movie_46_Premiere":  "开机",
+  "Story_Movie_50_Babysitter": "家里多了个人",
+  "Story_Movie_52_Wrap":      "杀青",
+  "Story_Movie_53_Snowstorm": "暴风雪",
+  "Story_Act3_18_FangMo":     "废弃仓库",
+  "Story_Act3_19_LastMoment": "黎明前的黑暗",
+
+  "Story_Act4_19_BlackCard":  "三亿与静默",
+  "Story_Act4_20_Collapse":   "收网",
+  "Story_Act4_21_Waiting":    "焦急的等待",
+  "Story_Act4_22_Judgment":   "命运的分岔",
+
+  "Story_BadEnd_Mediocre":    "结局 · 平庸的宁静",
+  "Ending_Police":            "结局 · 荣耀归队",
+  "Ending_Family":            "结局 · 人间烟火",
+  "Ending_Bad":               "结局 · 无声的牺牲"
+};
+
+/* ---------- 故事块：Archive_Main（剧情档案） ---------- */
+window.__STORY_PASSAGES.push({
+  name: "Archive_Main",
+  src: `<<nobr>>
+<<if not def $story_seen>><<set $story_seen to {}>><</if>>
+<<set _arc_keys to Object.keys($story_seen)>>
+
+<div class="tech-card arc-card">
+    <div class="header-banner" style="background: linear-gradient(120deg, #3B4A6E, #5B79A6);">
+        <span>🎞️ 剧情档案</span>
+    </div>
+
+    <div style="padding: 20px 24px 24px;">
+
+        <p style="font-size: 13px; color: #6B7A90; line-height: 1.9; margin: 0 0 14px;">
+            这一路看过的剧情都记在这里。点「重看」可以只读回放——
+            <b>不改数值、不推进剧情</b>，随便看几遍都行。
+        </p>
+
+        <<if _arc_keys.length == 0>>
+            <div class="arc-empty">还没有看过任何剧情。先去把日子过下去吧。</div>
+        <<else>>
+            <ul class="arc-list">
+                <<for _k range _arc_keys>>
+                    <li class="arc-item">
+                        <span class="arc-m">第 <<print $story_seen[_k]>> 月</span>
+                        <span class="arc-t"><<print (WY_STORY_TITLE[_k] || _k)>></span>
+                        <<link "重看" class="arc-go">>
+                            <<set $replay_name to _k>>
+                            <<goto "Archive_Replay">>
+                        <</link>>
+                    </li>
+                <</for>>
+            </ul>
+            <div class="arc-note">
+                共 <<print _arc_keys.length>> 章。归档是按你看过的顺序排列的，越往下越新。<br>
+                如果你发现某一章从来没出现过——那不是你的错觉，可能是那个月被别的事情挤掉了。
+                以后遇到这种情况，直接在开发者面板里跳到对应剧情块补看即可。
+            </div>
+        <</if>>
+
+        <div class="continue-row" style="margin-top: 18px;">
+            <<link "🏢 回办公室">><<goto "Office">><</link>>
+        </div>
+    </div>
+</div>
+<</nobr>>`
+});
+
+/* ---------- 故事块：Archive_Replay（只读回看） ---------- */
+window.__STORY_PASSAGES.push({
+  name: "Archive_Replay",
+  src: `<<nobr>>
+<<set _rn to ($replay_name || "")>>
+
+<div class="tech-card arc-card">
+    <div class="header-banner" style="background: linear-gradient(120deg, #3B4A6E, #5B79A6);">
+        <span>🎞️ 回看 · <<print (WY_STORY_TITLE[_rn] || _rn)>></span>
+    </div>
+    <div style="padding: 22px 24px 24px;">
+        <div style="text-align: center;">
+            <span class="replay-tag">只读回看 · 第 <<print ($story_seen[_rn] || "?")>> 月记录 · 不改变任何数值</span>
+        </div>
+
+        /* 打开只读开关 → 渲染原剧情 → 关掉。set/run/goto 在这中间全部失效。 */
+        <<script>>Engine.readonly = true;<</script>>
+        <<include _rn>>
+        <<script>>Engine.readonly = false;<</script>>
+
+        <div class="continue-row" style="margin-top: 18px;">
+            <<link "‹ 返回剧情档案">><<goto "Archive_Main">><</link>>
+            &nbsp;&nbsp;
+            <<link "🏢 回办公室">><<goto "Office">><</link>>
+        </div>
+    </div>
+</div>
+<</nobr>>`
 });

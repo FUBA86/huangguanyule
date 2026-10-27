@@ -231,8 +231,94 @@ window.__STORY_PASSAGES.push({
 <</if>>`
 });
 
-/* ---------- 故事块：NM_Filming ---------- */
+/* ---------- 故事块：NM_Airing ---------- */
+/* 影视作品播出结果（2026-10-27 新增）
+   数据来源：Process_Month_Logic 之后跑的 <<Film_Air_Tick>>，结果存在 $film_air_results */
 window.__STORY_PASSAGES.push({
+  name: "NM_Airing",
+  src: `<<nobr>>
+<<if not def $film_air_results>><<set $film_air_results to []>>><</if>>
+<<if $film_air_results.length > 0>>
+<div class="nm-card">
+    <div class="nm-sec biz">播出</div>
+    <<for _r range $film_air_results>>
+        <<if _r.tier is "god">>
+            <<set _tier_t to "🏆 年度剧王">>
+            <<set _tier_d to "开分即封神，全网逐帧分析细节，业内开始改口叫你「出品人」。">>
+        <<elseif _r.tier is "good">>
+            <<set _tier_t to "✨ 口碑佳作">>
+            <<set _tier_d to "评分一路走高，自来水自发安利，商务和本子跟着上门。">>
+        <<elseif _r.tier is "ok">>
+            <<set _tier_t to "📺 平稳播出">>
+            <<set _tier_d to "该看的都看了，讨论度一般，没出错也没出彩。">>
+        <<elseif _r.tier is "flat">>
+            <<set _tier_t to "😐 反应平淡">>
+            <<set _tier_d to "播完了也没什么水花，热搜一次没上，观众看完就忘。">>
+        <<else>>
+            <<set _tier_t to "💀 扑了">>
+            <<set _tier_d to "弹幕全在骂，评分一路下探，连同组演员都被拖下水。">>
+        <</if>>
+        <div class="nm-air">
+            <div class="nm-air-top">
+                <span class="nm-air-name"><<print _r.name>></span>
+                <span class="nm-air-sc <<print FilmSc(_r.score)>>"><<print _r.score>></span>
+            </div>
+            <div class="nm-air-tier"><<print _tier_t>> · <<print _r.actor_name>> 主演</div>
+            <div class="nm-air-desc"><<print _tier_d>></div>
+            <<if _r.hit>>
+                <<if _r.score >= 50>>
+                    <div class="nm-air-hit">🔥 现象级爆款 —— 全网都在追，连不看剧的人都在刷切片</div>
+                <<else>>
+                    <div class="nm-air-hit black">🤡 黑红出圈 —— 骂声把它送上了热搜，看的人比夸的人多</div>
+                <</if>>
+            <</if>>
+            <div class="nm-air-nums">
+                口碑 <<if _r.rep >= 0>>+<</if>><<print _r.rep>>
+                · 粉丝 <<if _r.fan >= 0>>+<</if>><<print _r.fan>>
+                · 话题 +<<print _r.topic>>
+            </div>
+        </div>
+    <</for>>
+    <div class="nm-note-line">办公室 →「🎞️ 作品库」可以看全部作品与评分。</div>
+</div>
+<</if>>
+<</nobr>>`
+});
+
+/* ---------- 故事块：NM_Afterglow ---------- */
+/* 作品余温（2026-10-27 新增）
+   数据来源：Film_Air_Tick 之后跑的 <<Film_Afterglow_Tick>>，结果存在 $film_afterglow
+   播出后 3 个月内，每部戏每个月都会给主演送一点粉丝和口碑；片酬加成在结算时生效 */
+window.__STORY_PASSAGES.push({
+  name: "NM_Afterglow",
+  src: `<<nobr>>
+<<if not def $film_afterglow>><<set $film_afterglow to []>>><</if>>
+<<if $film_afterglow.length > 0>>
+<div class="nm-card">
+    <div class="nm-sec biz">余温</div>
+    <div class="nm-buff-h">🎞️ 作品余温 · 本月到账</div>
+    <<for _r range $film_afterglow>>
+        <div class="nm-buff-row">
+            <div class="nm-buff-main">
+                <span class="nm-buff-n"><<print _r.name>></span>
+                <span class="nm-buff-m">第 <<print _r.m>> / 3 个月 · <<print _r.actor_name>></span>
+            </div>
+            <div class="nm-buff-v">
+                粉丝 <b class="<<if _r.fan >= 0>>up<<else>>down<</if>>"><<if _r.fan >= 0>>+<</if>><<print _r.fan>></b>
+                <<if _r.rep neq 0>>
+                    · 口碑 <b class="<<if _r.rep > 0>>up<<else>>down<</if>>"><<if _r.rep > 0>>+<</if>><<print _r.rep>></b>
+                <</if>>
+                · 片酬 <b class="up">+<<print Math.round(_r.pay * 100)>>%</b>
+            </div>
+        </div>
+    <</for>>
+    <div class="nm-note-line">播出后 3 个月内有效，热度逐月衰减。详情见办公室 →「🎞️ 影视作品库」。</div>
+</div>
+<</if>>
+<</nobr>>`
+});
+
+/* ---------- 故事块：NM_Filming ---------- */window.__STORY_PASSAGES.push({
   name: "NM_Filming",
   src: `<<if _finished_actors.length > 0>>
     <<for _i to 0; _i < _finished_actors.length; _i++>>
@@ -279,7 +365,7 @@ window.__STORY_PASSAGES.push({
         <<elseif _a.job_type is "training" and _a.busy_months == 0>>
             <div class="nm-soft lilac">
                 <h4>🎓 进修完成</h4>
-                <p><<print _a.name>> 完成了封闭式培训，能力值已提升。</p>
+                <p><<print _a.name>> 出关了。这一个月在 <<print _a.project_name.replace("封闭式培训 · ", "")>> 上下了苦功。</p>
             </div>
         <</if>>
 
@@ -380,6 +466,12 @@ window.__STORY_PASSAGES.push({
 /* 1. 先执行原本的后台计算 (会把体力重置为100) */
 <<Process_Month_Logic>>
 
+/* 影视作品：到期的播出、播完的归档（必须在月份 +1 之后跑） */
+<<Film_Air_Tick>>
+
+/* 影视作品：播出后 3 个月内的「作品余温」到账（粉丝 / 口碑） */
+<<Film_Afterglow_Tick>>
+
 /* 2. 月度热搜榜刷新 */
 <<Generate_Monthly_HotSearch>>
 <<set $pr_action_count to 3>>
@@ -411,6 +503,12 @@ window.__STORY_PASSAGES.push({
 
     /* --- 杀青 / 解封 / 产假 / 培训 --- */
     <<include "NM_Filming">>
+
+    /* --- 影视作品播出 --- */
+    <<include "NM_Airing">>
+
+    /* --- 作品余温（播出后 3 个月内） --- */
+    <<include "NM_Afterglow">>
 
     /* --- 咖位变动 --- */
     <<include "NM_Rank">>

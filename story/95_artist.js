@@ -203,10 +203,19 @@ window.__STORY_PASSAGES.push({
 
         /* 2. 正常忙碌（非封杀） */
         <<elseif _a.busy_months > 0 and _a.job_type neq "banned">>
-            <div style="text-align:center; padding:20px; color:#94a3b8;">
-                🚫 艺人当前正在工作中，无法安排课程。<br>
-                (请等待工作结束)
-            </div>
+            <<if _a.job_type is "training">>
+                <div style="text-align:center; padding:20px; color:#1e40af; background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px;">
+                    🎓 <b>正在闭关进修</b>：<b><<if _a.project_name isnot "">><<print _a.project_name.replace("封闭式培训 · ", "")>><<else>>基础训练<</if>></b>
+                    <span style="margin:0 8px; color:#93c5fd;">|</span>
+                    剩余 <<print _a.busy_months>> 个月<br>
+                    <span style="font-size:0.86em; opacity:0.8;">( 出关后才能安排新的课程 )</span>
+                </div>
+            <<else>>
+                <div style="text-align:center; padding:20px; color:#94a3b8;">
+                    🚫 艺人当前正在工作中，无法安排课程。<br>
+                    <span style="font-size:0.9em;">( 正在拍摄《<<print _a.project_name>>》，剩 <<print _a.busy_months>> 个月 )</span>
+                </div>
+            <</if>>
         
         /* 3. 可培训状态（含空闲 或 封杀期） */
         <<else>>
@@ -352,6 +361,7 @@ window.__STORY_PASSAGES.push({
                 <<if $train_attr is "acting">><<set _attr_name to "演技">>
                 <<elseif $train_attr is "fashion">><<set _attr_name to "时尚">>
                 <<elseif $train_attr is "stage">><<set _attr_name to "唱跳">>
+                <<else>><<set _attr_name to "基础课">>
                 <</if>>
 
                 /* 天赋上限检查 */
@@ -365,17 +375,37 @@ window.__STORY_PASSAGES.push({
                 <<else>>
                     /* 正常加点 */
                     <<set _real_gain to Math.min($train_gain, _limit - _current_val)>>
+
+                    /* 🎲 2026-10-27 新增：开窍 / 撞墙 —— 报班不再只是"花钱买 +N" */
+                    <<set _lucky to random(1, 100)>>
+                    <<set _lucky_txt to "">>
+                    <<if _lucky <= 15>>
+                        <<set _real_gain to Math.min(_limit - _current_val, _real_gain + Math.ceil($train_gain * 0.5))>>
+                        <<set _lucky_txt to "🌟 开窍了，这次学得特别快（本次效果 +50%）">>
+                    <<elseif _lucky <= 20>>
+                        <<set _real_gain to 0>>
+                        <<set _lucky_txt to "😵 撞墙了，这一个月什么都没学进去，学费照付。">>
+                    <</if>>
+                    <<set _tl_arr to TRAIN_LINES[$train_attr]>>
+                    <<if not def _tl_arr>><<set _tl_arr to TRAIN_LINES["default"]>><</if>>
+                    <<set _train_line to _tl_arr.random()>>
                     <<set _a[$train_attr] += _real_gain>>
                     
                     /* 锁定回合 */
                     <<set _a.busy_months to 1>>
-                    <<set _a.project_name to "封闭式培训">> 
+                    <<set _a.project_name to "封闭式培训 · " + _attr_name>>
                     <<set _a.job_type to "training">>
 
                     <div style="font-size:3em; margin-bottom:10px;">📈</div>
                     <h3 style="color:#059669;">来上课吧！</h3>
                     
-                    <p><<print _a.name>> 开始了封闭式训练。</p>
+                    <p><<print _a.name>> 报了一门 <<print _attr_name>> 进修课，接下来一个月闭关苦练。</p>
+                    <p style="color:#5C6880; font-size:0.9em; line-height:1.8; background:#F8FAFC; border-left:3px solid #CBD5E1; padding:8px 12px; border-radius:6px; text-align:left;">
+                        <<print _train_line>>
+                    </p>
+                    <<if _lucky_txt neq "">>
+                        <p style="font-size:0.92em; font-weight:700; color:<<if _real_gain > 0>>#B45309<<else>>#B4535E<</if>>;"><<print _lucky_txt>></p>
+                    <</if>>
                     
                     <div style="background:#ecfdf5; border:1px solid #10b981; padding:15px; border-radius:8px; display:inline-block; margin-top:10px;">
                         <span style="font-size:1.2em; font-weight:bold; color:#065f46;">

@@ -319,6 +319,18 @@
   function navTo(el) {
     var target = el.getAttribute('data-go');
     if (!target) return;
+
+    /* ★ 2026-10-27：剧情 / 月结进行中，侧栏一律点不动。
+       这两类页面是一次性的，点走就等于把这一屏剧情弄丢了。 */
+    if (isNavLocked() && hasOwnExit()) {
+      try {
+        if (root.UI && root.UI.toast) {
+          root.UI.toast('剧情进行中，先把这一页走完', { tone: 'warn' });
+        }
+      } catch (e) { }
+      return;
+    }
+
     var E = root.TweeEngine || root.Engine;
     if (!E) return;
     /* data-actor：侧栏里每个艺人块都能一键定位到"正在说谁" */
@@ -369,6 +381,35 @@
   /* 叙事类页面的名字特征：序章 / 各幕剧情 / 各种结局 */
   var STORY_PASSAGE_RE = /^(Prologue_|Story_|Ending_|Game_Ending|Game_Over)/;
 
+  /* 这些页面「正在过剧情 / 正在过月」，侧边栏不许点走。
+     为什么：剧情页和月结页都是一次性的——点走就等于把这屏剧情丢了，
+     那个月已经过去，剧情再也不会回来（这是玩家最常反馈的"漏剧情"）。
+     ★ 加新剧情块时，只要名字以 Story_ / Prologue_ / Ending_ 开头就会自动受保护；
+       月结相关（Next_Month / Rest_Transition）单独列在这里。 */
+  var NAV_LOCK_RE = /^(Prologue_|Story_|Ending_|Game_Ending|Game_Over|Next_Month|Rest_Transition)/;
+
+  function isNavLocked() {
+    try {
+      var pn = (root.TweeEngine && root.TweeEngine.state.passage) || '';
+      /* 剧情档案本身是菜单页，随便点（回看里面也有剧情卡，不能因此锁住） */
+      if (/^Archive_/.test(pn)) return false;
+      if (NAV_LOCK_RE.test(pn)) return true;
+      /* 兜底：正文里有剧情卡（.story-card）也算剧情页 */
+      var main = doc.getElementById('passage-main');
+      if (main && main.querySelector('.story-card')) return true;
+    } catch (e) { }
+    return false;
+  }
+
+  /* 安全阀：如果这一页自己也点不动（没有任何可点的按钮），就绝不能锁侧栏，
+     否则玩家会被卡死在这一屏。 */
+  function hasOwnExit() {
+    try {
+      var main = doc.getElementById('passage-main');
+      return !!(main && main.querySelector('[data-h]'));
+    } catch (e) { return true; }
+  }
+
   function watchPassage() {
     var main = doc.getElementById('passage-main');
     if (!main) return;
@@ -380,6 +421,9 @@
         var pn = (root.TweeEngine && root.TweeEngine.state.passage) || '';
         var isStory = STORY_PASSAGE_RE.test(pn) || !!main.querySelector('.story-card');
         doc.body.classList.toggle('story-mode', isStory);
+        /* 剧情 / 月结时把侧栏锁上（视觉上变淡 + 指针事件禁用） */
+        var bar = doc.getElementById('ui-bar');
+        if (bar) bar.classList.toggle('nav-locked', isNavLocked() && hasOwnExit());
       } catch (e) { }
     }
 

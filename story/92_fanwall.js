@@ -1,7 +1,7 @@
 /* =========================================================================
  *  92_fanwall.js —— 粉丝留言墙
  *  ---------------------------------------------------------------------
- *  从「粉丝管理」里点某一类粉丝（事业粉 / 妈粉 / 颜粉 / 乐子人 / 毒唯 / CP粉）
+ *  从「粉丝管理」里点某一类粉丝（事业粉 / 妈粉 / 颜粉 / 乐子人 / 毒唯 / CP粉 / 梦女 / 萌萌人 / 路人）
  *  进来，看到的是一面「这一类人正在说什么」的留言墙。
  *
  *  ★ 剧情作者怎么改：
@@ -13,7 +13,7 @@
 (function (root) {
   'use strict';
 
-  /* ---------- 1. 七类粉丝的皮 ---------- */
+  /* ---------- 1. 九类人的皮（8 类粉丝 + 1 类路人） ---------- */
   var META = {
     career: { label: '事业粉', icon: '📈', color: '#4E74B8', soft: '#ECF3FE',
               slogan: '数据不会骗人，他的事业我们自己扛。' },
@@ -28,9 +28,15 @@
     cp:     { label: 'CP粉',   icon: '💞', color: '#8070C0', soft: '#F1EDFB',
               slogan: '他们是真的。我不管，就是真的。' },
     dream:  { label: '梦女',   icon: '🌙', color: '#B96A95', soft: '#FBEDF4',
-              slogan: '今晚的梦，还是你。' }
+              slogan: '今晚的梦，还是你。' },
+    /* 2026-10-27 新增：萌萌人。全肯定、捂耳朵、护剧组、捂嘴，唯一会自己变多的一类 */
+    moe:    { label: '萌萌人', icon: '🌸', color: '#9C7B32', soft: '#FDF6E8',
+              slogan: '哥哥做什么都是对的，你们别说了。' },
+    /* 2026-10-27 新增：路人。不算粉丝，没有数字，只表示"刷到过他的人" */
+    passerby: { label: '路人', icon: '🚶', color: '#6B7791', soft: '#F2F4F7',
+              slogan: '路过，看一眼就走。' }
   };
-  var ORDER = ['career', 'mom', 'face', 'clown', 'toxic', 'cp', 'dream'];
+  var ORDER = ['career', 'mom', 'face', 'clown', 'toxic', 'cp', 'dream', 'moe', 'passerby'];
 
   /* ---------- 2. 昵称池 ---------- */
   var NICKS = {
@@ -48,6 +54,12 @@
              '眼神分析员', '他们是真的'],
     dream:  ['老公的第七个号', '做梦素材库', '今晚不睡', '命给你', '异地恋女友',
              '他看我了我确定', '梦里见过'],
+    /* 萌萌人：全肯定、不看不听、护剧组、劝大家别吵 */
+    moe:    ['永远支持哥哥', '耳朵已关闭', '不看黑料', '护剧组小分队', '你们不懂他',
+             '全肯定bot', '别骂了别骂了', '只看好的那一面'],
+    /* 路人：刷到过，但没有留下来 */
+    passerby: ['路过看看', '纯路人', '刷到的', '这是谁啊', '热搜点进来的',
+               '看完就走', '不追星谢谢', '吃瓜群众甲'],
     /* 嬷嬷粉专用昵称（黄耀祖这一栏顶上用） */
     momo:   ['他唯一的攻', '受妈本妈', '反攻联盟会长', '不许他当攻', '腰细腿长观察员',
              '想看他被拿捏', '他适合被欺负', '老实人吃亏粉']
@@ -112,6 +124,24 @@
       '这种男人为什么不是我老公。',
       '别拦我，我要去横店当群演。',
       '今晚的梦已经预约好了。'
+    ],
+    /* 萌萌人：全肯定 + 捂耳朵 + 护剧组 + 劝架 */
+    moe: [
+      '哥哥做什么我都支持！',
+      '黑料我一个字都不信。',
+      '剧组对他挺好的，你们别带节奏。',
+      '他那么努力，为什么还有人说这种话。',
+      '不看了不看了，看了会难过。',
+      '我们只要好好爱他就行了，别管别人。'
+    ],
+    /* 路人：不算粉丝，说话最直白也最不留情 */
+    passerby: [
+      '这是谁？',
+      '热搜点进来的，走了。',
+      '长得还行吧，没看过他的戏。',
+      '又上热搜了？',
+      '路过，不评价。',
+      '天天刷到他，有点烦。'
     ]
   };
 
@@ -179,6 +209,19 @@
         '这种男人为什么不是我老公。',
         '别拦我，我要去横店当群演。',
         '今晚的梦已经预约好了。'
+      ],
+      /* 展鹏的萌萌人：咸鱼也要护，剧组说不得 */
+      moe: [
+        '哥哥最近瘦了好多，心疼。',
+        '他懒一点怎么了，人家又没耽误正事。',
+        '那些说他摆烂的，你们自己去拍打戏试试。',
+        '他笑起来多好看啊，别老骂他。'
+      ],
+      /* 展鹏的路人：认识脸，但记不住作品 */
+      passerby: [
+        '这人不是那个……演过什么的？',
+        '长得挺正的，可惜没什么代表作。',
+        '热搜常客，作品没看过。'
       ]
     },
 
@@ -274,6 +317,18 @@
         '这种弟弟，姐姐真的可以。',
         '想看他哭。',
         '他要是叫我一声姐姐，我命都没了。'
+      ],
+      /* 黄耀祖的萌萌人：最护短的一批，谁说替身出身就跟谁急 */
+      moe: [
+        '耀祖很努力的，你们别这样说。',
+        '替身怎么了？替身也是靠自己上来的。',
+        '他每次鞠躬都那么深，看着好心疼。',
+        '不许说他木头，他只是紧张。'
+      ],
+      passerby: [
+        '这人是不是那个替身？',
+        '脸挺眼熟的，叫不出名字。',
+        '资源挺好的，就是不太会演。'
       ]
     },
 
@@ -710,7 +765,8 @@ window.__STORY_PASSAGES.push({
 <<if WYFanWall.order.indexOf($wall_fan) < 0>><<set $wall_fan to "career">><</if>>
 
 <<set _f to _a.fans>>
-<<set _tot to (_f.career || 0) + (_f.mom || 0) + (_f.face || 0) + (_f.clown || 0) + (_f.toxic || 0) + (_f.cp || 0) + (_f.dream || 0)>>
+/* 占比基数：只算 8 类真粉丝，不含路人（路人不是粉丝，只是刷到过的人） */
+<<set _tot to FanSumCore(_a)>>
 <<if _tot < 1>><<set _tot to 1>><</if>>
 <<set _cnt to _f[$wall_fan]>>
 <<if not def _cnt>><<set _cnt to 0>><</if>>
@@ -719,18 +775,28 @@ window.__STORY_PASSAGES.push({
 
 <div class="tech-card fan-wall">
   <div class="header-banner fw-banner">
-    <span>💬 <<print _m.label>>的超话</span>
+    <<if $wall_fan is "passerby">>
+      <span>💬 路人在说</span>
+    <<else>>
+      <span>💬 <<print _m.label>>的超话</span>
+    <</if>>
     <span class="fw-banner-sub">@<<print _a.name>></span>
   </div>
 
   <div class="fw-body">
 
-    /* --- 顶部：这个群体有多少人、占多少 --- */
+    /* --- 顶部：这个群体有多少人、占多少 ---
+       路人不是粉丝，不给数字，只说明"刷到过"。 */
     <div class="fw-top" style="--c:<<print _m.color>>;--soft:<<print _m.soft>>">
       <div class="fw-badge"><<print _m.icon>></div>
       <div class="fw-top-main">
-        <div class="fw-top-title"><<print _m.label>> <span class="fw-count"><<print WYFanWall.num(_cnt)>> 人</span></div>
-        <div class="fw-top-sub">占 <b><<print _a.name>></b> 全部粉丝的 <b><<print _pct>>%</b> · 共 <b><<print WYFanWall.num(_tot)>></b> 人</div>
+        <<if $wall_fan is "passerby">>
+          <div class="fw-top-title"><<print _m.label>></div>
+          <div class="fw-top-sub">不算粉丝，只是<b>刷到过 <<print _a.name>></b> 的人 · 不计数</div>
+        <<else>>
+          <div class="fw-top-title"><<print _m.label>> <span class="fw-count"><<print WYFanWall.num(_cnt)>> 人</span></div>
+          <div class="fw-top-sub">占 <b><<print _a.name>></b> 全部粉丝的 <b><<print _pct>>%</b> · 共 <b><<print WYFanWall.num(_tot)>></b> 人</div>
+        <</if>>
         <div class="fw-slogan">「<<print _m.slogan>>」</div>
       </div>
     </div>
