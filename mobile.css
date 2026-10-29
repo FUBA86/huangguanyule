@@ -1,0 +1,332 @@
+/* =========================================================================
+   mobile.css —— 手机适配补丁（只在窄屏生效）
+   -------------------------------------------------------------------------
+   为什么单独一个文件：
+   原来的 style.css / style_v5.css 是两套叠着用的，媒体查询互相打架
+   （比如 style.css 写了 430px 以下改单列，style_v5.css 又写回两列，
+   后加载的赢，于是那条规则从来没生效过）。与其在旧文件里翻找，
+   不如在最后挂一份只针对手机的补丁，不动桌面端一根手指。
+
+   规则：所有内容都包在 @media (max-width: 860px) 里，
+        桌面端（≥861px）完全不受影响。
+   ========================================================================= */
+
+/* =========================================================================
+   0b. 存档键常驻（所有宽度都生效）
+   -------------------------------------------------------------------------
+   侧栏是「内容多就滚动」的。艺人一多，存档/读档这排按钮会被顶到看不见的
+   地方，玩家以为功能不存在。让它们贴着侧栏底部常驻。
+   ========================================================================= */
+#ui-bar-tools {
+  position: sticky;
+  bottom: 0;
+  z-index: 6;
+  margin-top: auto;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px !important;
+  padding: 10px 0 calc(8px + env(safe-area-inset-bottom)) !important;
+  background: rgba(255, 255, 255, .97);
+  border-top: 1px solid rgba(30, 45, 70, .07);
+  box-shadow: 0 -10px 18px -14px rgba(30, 45, 70, .35);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+#ui-bar-tools button {
+  min-width: 0 !important;
+  padding: 8px 4px !important;
+  font-size: 12px !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---------- 0c. 全局兜底：任何地方都不许横向溢出 ---------- */
+@media (max-width: 860px) {
+  html, body { max-width: 100%; overflow-x: hidden; }
+  .passage, .passage * { min-width: 0; }
+  .passage img, .passage video, .passage canvas { max-width: 100%; height: auto; }
+
+  /* 长英文/数字不再把卡片撑破 */
+  .passage p, .passage div, .passage span, .passage li, .passage td, .passage th {
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  /* 表格一律允许横向滑动，而不是把布局顶破 */
+  .passage table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .passage table thead, .passage table tbody { display: table; width: 100%; }
+}
+
+/* =========================================================================
+   1. 顶部状态条：把「存档 / 读档」露出来
+   -------------------------------------------------------------------------
+   原来手机上只有一个「📊 状态面板」，存档键藏在展开后的底部，得先展开、
+   再往下滚才看得到 —— 很多人以为存档功能不存在。现在收起来的状态条上
+   就直接带两个键。
+   ========================================================================= */
+#ui-bar-quick { display: none; }
+
+@media (max-width: 860px) {
+  #ui-bar { padding: calc(8px + env(safe-area-inset-top)) 10px 8px !important; }
+  #ui-bar-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  #ui-bar-toggle {
+    flex: 1 1 auto;
+    min-width: 0;
+    justify-content: flex-start !important;
+    padding: 6px 4px !important;
+  }
+  #ui-bar-quick {
+    display: flex;
+    gap: 6px;
+    flex: 0 0 auto;
+  }
+  #ui-bar-quick .qk {
+    border: 1px solid #DCE7F6;
+    background: #F5F9FE;
+    color: #3E5B8C;
+    font: 700 12.5px/1 inherit;
+    font-family: inherit;
+    padding: 8px 11px;
+    border-radius: 10px;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  #ui-bar-quick .qk-save { background: #2F4A7C; border-color: #2F4A7C; color: #fff; }
+  #ui-bar-quick .qk.is-done { background: #2E8B62 !important; border-color: #2E8B62 !important; }
+
+  /* 展开后的面板别占满整屏，留出正文 */
+  #ui-bar.open #ui-bar-body { max-height: 52vh !important; max-height: 52dvh !important; }
+
+  #ui-bar-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  #ui-bar-tools button {
+    flex: 1 1 calc(50% - 4px);
+    min-height: 38px;
+  }
+}
+
+/* =========================================================================
+   2. 艺人信息条（通告中心 / 公关 / 作品库都用它）
+   -------------------------------------------------------------------------
+   症状：390px 宽时「展鹏 二线 口碑: 60」挤成两行，口碑数字掉出标签框；
+        右边的「⚡ 体力: 150 / 150」断成两截，边框对不上。
+   原因：一行里塞了 4 个标签 + 1 个胶囊，父级是 space-between 不换行。
+   ========================================================================= */
+@media (max-width: 560px) {
+  .actor-mini-card > div[style*="space-between"] {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    align-items: flex-start !important;
+  }
+  .actor-mini-card > div[style*="space-between"] > div { min-width: 0; }
+  .actor-mini-card > div[style*="space-between"] > div:last-child {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+  /* 名字、段位、口碑这些行内标签：不许在标签内部断行 */
+  .actor-mini-card > div[style*="space-between"] span {
+    white-space: nowrap;
+  }
+  /* 标签整体换行时，留给名字一整行 */
+  .actor-mini-card > div[style*="space-between"] > div:first-child {
+    flex: 1 1 100%;
+    line-height: 2.1;
+  }
+}
+
+/* =========================================================================
+   3. 危机公关台 / 各种「左文字 + 右价格 + 右标签」的行
+   -------------------------------------------------------------------------
+   这两套页面（营销部、公关部）里写了大量 inline 的
+   `display:flex; justify-content:space-between`。桌面端够宽没事，
+   手机上一挤：左边说明文字被压成三行，右边的按钮/标签直接压到文字上。
+   统一让它们可以换行 —— 标题独占一行，按钮落到下一行右对齐。
+   ========================================================================= */
+@media (max-width: 560px) {
+  /* 只让「第一个孩子」（通常是说明文字）收缩换行；
+     第二个孩子往往是价格标签 / 爆字徽标 / 按钮，不能跟着被拉宽。 */
+  .passage [style*="justify-content:space-between"] > *:first-child {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  /* 带按钮/链接的行：按钮换到下一行、靠右，别跟说明文字抢宽度。
+     :has() 认不出来的老浏览器会退化成"文字收缩"，也不会溢出。 */
+  .passage [style*="justify-content:space-between"]:has(> .link-internal) {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+  .passage [style*="justify-content:space-between"]:has(> .link-internal) > span:first-child,
+  .passage [style*="justify-content:space-between"]:has(> .link-internal) > b:first-child {
+    flex: 1 1 100%;
+  }
+  .passage [style*="justify-content:space-between"] > .link-internal {
+    margin-left: auto;
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .passage .pr-acts,
+  .passage .pr-acts-2,
+  .passage .pr-acts-3 { grid-template-columns: 1fr !important; }
+
+  .passage .pr-act {
+    flex-wrap: wrap;
+    gap: 4px 8px;
+    padding: 10px 12px;
+  }
+  .passage .pr-act a,
+  .passage .pr-act a.link-internal { flex: 1 1 100%; }
+  .passage .pr-act-cost { flex: 0 0 auto; }
+  .passage .pr-act-tag { flex: 0 0 auto; margin-left: auto; }
+}
+
+/* =========================================================================
+   4. 办公室首页的功能格
+   -------------------------------------------------------------------------
+   style.css 里原本写了「430px 以下改单列」，但 style_v5.css 后加载、
+   又把列数设回两列，于是那条规则从来没生效过。实测两列在 390px 上其实
+   更好用（一屏能看全 8 个入口，字也没挤），所以这里保留两列；
+   只有到 360px 以下（很窄的老机型）才退成单列，免得标题被压断。
+   ========================================================================= */
+@media (max-width: 359px) {
+  .dashboard-grid { grid-template-columns: 1fr !important; gap: 9px !important; }
+  .btn-box {
+    min-height: 0 !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 12px 14px !important;
+    gap: 10px !important;
+  }
+  .btn-box a {
+    width: auto !important;
+    height: auto !important;
+    flex: 1 1 auto !important;
+    flex-direction: row !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+    gap: 8px !important;
+    font-size: 15px !important;
+    text-align: left !important;
+  }
+  .btn-box .btn-sub { display: none !important; }
+}
+
+/* =========================================================================
+   4b. 平板 / 窄窗口（861–1080px）
+   -------------------------------------------------------------------------
+   这个区间是个夹缝：侧边栏还在（占 252px），但内容区只剩 600–800px，
+   功能格却还按 3 列排 —— 每格不到 200px，标题会被压成一个字一行。
+   这里退回 2 列。
+   ========================================================================= */
+@media (min-width: 861px) and (max-width: 1080px) {
+  .dashboard-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  .btn-box { min-height: 92px !important; }
+}
+
+/* =========================================================================
+   5. 顶部小药丸（剧情档案 / 说明书 / 第 N 月）
+   ========================================================================= */
+@media (max-width: 560px) {
+  .status-bar {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 7px !important;
+    justify-content: center;
+  }
+  .status-bar > div, .status-bar > a {
+    white-space: nowrap;
+    flex: 0 1 auto;
+  }
+}
+
+/* =========================================================================
+   6. 说明书 / 攻略页
+   -------------------------------------------------------------------------
+   两个问题：
+   a) 深色卡片里的 <b> 看不见 —— style.css 有 `#passage-main b{color:var(--ink-900)}`，
+      ID 选择器权重比攻略页自己的 `.mn-lead-b b` 高，白字被强行改成深蓝。
+   b) 表格在 390px 下会被挤成一条，横向滑一下更舒服。
+   ========================================================================= */
+#passage-main .mn-lead-b b,
+#passage-main .mn-red b,
+#passage-main .mn-grn b,
+#passage-main .mn-amb b,
+#passage-main .mn-blu b,
+#passage-main .mn-p b,
+#passage-main .mn-tb td b,
+#passage-main .mn-step-b b,
+#passage-main .mn-vd b,
+#passage-main .mn-box b { color: inherit; }
+
+#passage-main .mn-lead-b b { color: #FFFFFF; }
+#passage-main .mn-red b { color: #A83B4C; }
+#passage-main .mn-grn b { color: #256A52; }
+#passage-main .mn-amb b { color: #8A6A2B; }
+#passage-main .mn-blu b { color: #2E4E7C; }
+#passage-main .mn-p b { color: #22314E; }
+#passage-main .mn-tb td b { color: #22314E; }
+#passage-main .mn-step-b b { color: #22314E; }
+#passage-main .mn-vd b { color: #22314E; }
+#passage-main .mn-lead-t { color: #FFFFFF; }
+
+@media (max-width: 620px) {
+  .mn-nav {
+    overflow-x: auto;
+    flex-wrap: nowrap !important;
+    -webkit-overflow-scrolling: touch;
+    padding: 8px 0 9px;
+  }
+  .mn-nav-i { flex: 0 0 auto; font-size: 11px; padding: 4px 9px; }
+  .mn-lead { padding: 17px 16px; }
+  .mn-lead-t { font-size: 16px; }
+  .mn-lead-b, .mn-p, .mn-vd { font-size: 13px; }
+  .mn-tb { display: table; width: 100%; table-layout: fixed; }
+  .mn-tb th:first-child, .mn-tb td:first-child { width: 68px; }
+  .mn-tb .c, .mn-tb .m { white-space: normal; }
+  .mn-tb th, .mn-tb td { padding: 7px 9px; font-size: 12px; }
+  .mn-kpi { flex: 1 1 calc(33.333% - 6px); min-width: 0; }
+  .mn-kpi b { font-size: 15px; }
+  .mn-step-i { flex: 0 0 20px; height: 20px; font-size: 10px; line-height: 20px; }
+}
+
+/* =========================================================================
+   7. 通用按钮组 / 标签页 / 卡片内边距
+   ========================================================================= */
+@media (max-width: 560px) {
+  .btn-group { flex-direction: column !important; }
+  .btn-group > * { width: 100% !important; }
+  .passage button, .passage .link-internal, .passage a.btn-macro {
+    max-width: 100%;
+  }
+  .tech-card { padding-left: 14px !important; padding-right: 14px !important; }
+  .header-banner { font-size: 15px !important; }
+  .wy-modal-body { max-height: 62vh; overflow-y: auto; }
+}
+
+/* =========================================================================
+   8. 触摸手感：可点的东西至少 40px 高，别出现"点了没反应"的错觉
+   ========================================================================= */
+@media (hover: none) and (pointer: coarse) {
+  .link-internal, .passage a, .passage button {
+    min-height: 38px;
+    display: inline-flex;
+    align-items: center;
+  }
+  .passage td .link-internal,
+  .passage .arc-item .link-internal { min-height: 32px; }
+}

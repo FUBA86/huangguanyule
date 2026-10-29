@@ -21,13 +21,14 @@ window.__STORY_PASSAGES = window.__STORY_PASSAGES || [];
 window.__STORY_PASSAGES.push({
   name: "Month_Check_Router",
   src: `<<silently>>
+    <<if not def $story_seen>><<set $story_seen to {}>><</if>>
     
     /* =========================================================
        🟢 第一乐章：信任危机（第25–31月）
        ========================================================= */
 
     /* 第25月 · 突发绯闻（关键分歧：必须 Rank4 一线，否则坏结局） */
-    <<if $month is 25 and $actors.zp.rank_level >= 4>>
+    <<if $month is 25 and $actors.zp.rank_level >= 4 and not $story_seen["Story_Act1_01_Scandal"]>>
         <<set $gossip_count to 1>>
         <<goto "Story_Act1_01_Scandal">>
 
@@ -36,29 +37,29 @@ window.__STORY_PASSAGES.push({
         <<goto "Story_BadEnd_Mediocre">>
 
     /* 第26月 · 路透照流出 */
-    <<elseif $month >= 26 and $gossip_count is 1>>
+    <<elseif $month is 26 and not $story_seen["Story_Act1_02_Car"]>>
         <<set $gossip_count to 2>>
         <<goto "Story_Act1_02_Car">>
 
     /* 第27月 · 周一见：实锤？ */
-    <<elseif $month >= 27 and $gossip_count is 2>>
+    <<elseif $month is 27 and not $story_seen["Story_Act1_03_Hotel"]>>
         <<set $gossip_count to 3>>
         <<goto "Story_Act1_03_Hotel">>
 
     /* 第28月 · 似曾相识的面孔 →（页内直接继续）醉酒与逃避 */
-    <<elseif $month >= 28 and $gossip_count >= 3 and $zp_story_stage is 0 and not $flag_substitute_seen>>
+    <<elseif $month is 28 and $zp_story_stage is 0 and not $story_seen["Story_Act1_04_Substitute"]>>
         <<goto "Story_Act1_04_Substitute">>
 
     /* 第29月 · 暗巷追踪 */
-    <<elseif $month >= 29 and $gossip_count >= 3 and $zp_story_stage is 0 and not $flag_tracking_seen>>
+    <<elseif $month is 29 and $zp_story_stage is 0 and not $story_seen["Story_Act1_06_Tracking"]>>
         <<goto "Story_Act1_06_Tracking">>
 
     /* 第30月 · 帝国娱乐的报价 →（页内直接继续）残酷的真相 */
-    <<elseif $month >= 30 and $gossip_count >= 3 and $zp_story_stage is 0 and not $flag_offer_seen>>
+    <<elseif $month is 30 and $zp_story_stage is 0 and not $story_seen["Story_Act1_07_Offer"]>>
         <<goto "Story_Act1_07_Offer">>
 
     /* 第31月 · 断尾求生（签字离婚 → 展鹏离队、stage=2、黄耀祖入职） */
-    <<elseif $month >= 31 and $gossip_count >= 3 and $zp_story_stage is 0>>
+    <<elseif $month is 31 and $zp_story_stage is 0 and not $story_seen["Story_Act1_09_Divorce"]>>
         <<goto "Story_Act1_09_Divorce">>
 
     /* =========================================================
@@ -66,21 +67,21 @@ window.__STORY_PASSAGES.push({
        ========================================================= */
 
     /* 第32月 · 新的拼图（刘梁周签约；此时黄耀祖已在册） */
-    <<elseif $month >= 32 and $zp_story_stage >= 2 and $has_signed_liu is false>>
+    <<elseif $month is 32 and $zp_story_stage >= 2 and $has_signed_liu is false and not $story_seen["Story_Act2_11_NewBlood"]>>
         <<goto "Story_Act2_11_NewBlood">>
 
     /* 第33月 · 留白（不安排剧情，走日常过场） */
 
     /* 第34月 · 票房惨案（娱乐头条模拟） */
-    <<elseif $month is 34 and $zp_story_stage is 2>>
+    <<elseif $month is 34 and $zp_story_stage is 2 and not $story_seen["Story_Act2_12_News_34"]>>
         <<goto "Story_Act2_12_News_34">>
 
     /* 第35月 · 舆论反噬 */
-    <<elseif $month is 35 and $zp_story_stage is 2>>
+    <<elseif $month is 35 and $zp_story_stage is 2 and not $story_seen["Story_Act2_12_Gossip_35"]>>
         <<goto "Story_Act2_12_Gossip_35">>
 
     /* 第36月 · 暴雨夜归（核心分歧：资金≥5000万 才能开启卧底线） */
-    <<elseif $month is 36 and $zp_story_stage is 2>>
+    <<elseif $month is 36 and $zp_story_stage is 2 and not $story_seen["Story_Act2_13_RainyNight"]>>
         <<goto "Story_Act2_13_RainyNight">>
 
     /* =========================================================
@@ -88,11 +89,11 @@ window.__STORY_PASSAGES.push({
        ========================================================= */
 
     /* 第37月 · 沉默的砖头 */
-    <<elseif $month is 37 and $zp_story_stage is 3>>
+    <<elseif $month is 37 and $zp_story_stage is 3 and not $story_seen["Story_Act3_14_Waiting"]>>
         <<goto "Story_Act3_14_Waiting">>
 
     /* 第38月 · 加密短信（此后第39月起开放卧底联络点） */
-    <<elseif $month is 38 and $zp_story_stage is 3>>
+    <<elseif $month is 38 and $zp_story_stage is 3 and not $story_seen["Story_Act3_15_MissionStart"]>>
         <<goto "Story_Act3_15_MissionStart">>
 
     /* =========================================================
@@ -100,27 +101,27 @@ window.__STORY_PASSAGES.push({
        ========================================================= */
 
     /* 第45月 · 🎬 五亿的邀约（签下洗钱片《深空黎明》） */
-    <<elseif $month is 45 and $zp_story_stage is 3>>
+    <<elseif $month is 45 and $zp_story_stage is 3 and not $story_seen["Story_Movie_45_Offer"]>>
         <<goto "Story_Movie_45_Offer">>
 
     /* 第46月 · 🎥 开机（解锁主界面「剧组探班」入口） */
-    <<elseif $month is 46 and $zp_story_stage is 3>>
+    <<elseif $month is 46 and $zp_story_stage is 3 and not $story_seen["Story_Movie_46_Premiere"]>>
         <<goto "Story_Movie_46_Premiere">>
 
     /* 第50月 · 👶 家里多了个人（黄耀祖带娃，女儿认错妈） */
-    <<elseif $month is 50 and $zp_story_stage is 3>>
+    <<elseif $month is 50 and $zp_story_stage is 3 and not $story_seen["Story_Movie_50_Babysitter"]>>
         <<goto "Story_Movie_50_Babysitter">>
 
     /* 第52月 · 🎬 杀青（关闭探班入口、证据到手） */
-    <<elseif $month is 52 and $zp_story_stage is 3>>
+    <<elseif $month is 52 and $zp_story_stage is 3 and not $story_seen["Story_Movie_52_Wrap"]>>
         <<goto "Story_Movie_52_Wrap">>
 
     /* 第53月 · ❄️ 暴风雪（三楼卧室的影子戏） */
-    <<elseif $month is 53 and $zp_story_stage is 3>>
+    <<elseif $month is 53 and $zp_story_stage is 3 and not $story_seen["Story_Movie_53_Snowstorm"]>>
         <<goto "Story_Movie_53_Snowstorm">>
 
     /* 第54月 · 🌙 废弃仓库（方末身份揭晓） */
-    <<elseif $month is 54 and $zp_story_stage is 3>>
+    <<elseif $month is 54 and $zp_story_stage is 3 and not $story_seen["Story_Act3_18_FangMo"]>>
         <<goto "Story_Act3_18_FangMo">>
 
     /* =========================================================
@@ -128,23 +129,23 @@ window.__STORY_PASSAGES.push({
        ========================================================= */
 
     /* 第56月 · 🌙 黎明前的黑暗（最后一次偷偷回家，羁绊 +10） */
-    <<elseif $month is 56 and $zp_story_stage is 3>>
+    <<elseif $month is 56 and $zp_story_stage is 3 and not $story_seen["Story_Act3_19_LastMoment"]>>
         <<goto "Story_Act3_19_LastMoment">>
 
     /* 第57月 · 📜 三亿与静默（律师送来赠予合同，加密线路关闭） */
-    <<elseif $month is 57 and $zp_story_stage is 3>>
+    <<elseif $month is 57 and $zp_story_stage is 3 and not $story_seen["Story_Act4_19_BlackCard"]>>
         <<goto "Story_Act4_19_BlackCard">>
 
     /* 第58月 · 🚨 收网（帝国娱乐崩塌，展鹏、方末失联） */
-    <<elseif $month is 58 and $zp_story_stage is 3>>
+    <<elseif $month is 58 and $zp_story_stage is 3 and not $story_seen["Story_Act4_20_Collapse"]>>
         <<goto "Story_Act4_20_Collapse">>
 
     /* 第59月 · 🕯️ 焦急的等待（最后一个可经营的月份） */
-    <<elseif $month is 59 and $zp_story_stage is 3>>
+    <<elseif $month is 59 and $zp_story_stage is 3 and not $story_seen["Story_Act4_21_Waiting"]>>
         <<goto "Story_Act4_21_Waiting">>
 
     /* 第60月 · ⚖️ 直接结局判定（不再养成） */
-    <<elseif $month >= 60>>
+    <<elseif $month >= 60 and not $story_seen[\"Story_Act4_22_Judgment\"]>>
         <<goto "Story_Act4_22_Judgment">>
 
     /* =========================================================
@@ -532,7 +533,7 @@ window.__STORY_PASSAGES.push({
             [[查看结局 · 负债累累|Game_Over]]
         <<elseif $month > $total_months>>
             <div class="nm-hint" style="margin-bottom:11px;">五年合约期满。</div>
-            [[查看结局 · 功成名就|Game_Ending]]
+            [[查看结局 · 命运的分岔|Story_Act4_22_Judgment]]
         <<else>>
             <<link "进入下个月">><<goto "Office">><</link>>
             <div class="nm-hint">第 <<print $month + 1>> 月</div>

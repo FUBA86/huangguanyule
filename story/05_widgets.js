@@ -969,6 +969,14 @@ window.__STORY_PASSAGES.push({
     
     <<if not _a.split>><<set _a.split = 0.5>><</if>>
 
+    /* 📇 通告履历（2026-10-28 新增）
+       结局结算页要列出「这几年大家都接过什么活」，所以每结算一次就记一条。
+       drama 记剧名，综艺/时尚/舞台本来就没有剧名，只记类型和档次。
+       只留最近 300 条，防止存档无限长大。 */
+    <<if not def $job_log>><<set $job_log to []>>><</if>>
+    <<run $job_log.push({ a: $current_actor, t: _job_type, n: (_a.project_name || ""), m: $month, r: ($req_res || "c") })>>
+    <<if $job_log.length > 300>><<run $job_log.shift()>><</if>>
+
     /* 标签定义 */
     <<if _job_type is "drama">>
         <<set _income_label to "片酬结算 (Film Salary)">>

@@ -7,8 +7,10 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>无垠娱乐 · CEO</title>
-<link rel="stylesheet" href="style.css?v=251033">
-<link rel="stylesheet" href="style_v5.css?v=41">
+<link rel="stylesheet" href="style.css?v=251056">
+<link rel="stylesheet" href="style_v5.css?v=56">
+<!-- 手机适配补丁：必须放在最后，才压得住上面两套样式 -->
+<link rel="stylesheet" href="mobile.css?v=251056">
 </head>
 <body>
 
@@ -16,15 +18,23 @@
 
   <!-- ============ 状态面板（手机端可折叠） ============ -->
   <div id="ui-bar">
-    <button id="ui-bar-toggle" type="button"
-            onclick="document.getElementById('ui-bar').classList.toggle('open')">
-      <span>📊</span><span>状态面板</span><span class="chev">▾</span>
-    </button>
+    <div id="ui-bar-top">
+      <button id="ui-bar-toggle" type="button"
+              onclick="document.getElementById('ui-bar').classList.toggle('open')">
+        <span>📊</span><span>状态面板</span><span class="chev">▾</span>
+      </button>
+      <!-- 手机上这两个键一直露在外面，不用展开面板也能存档 -->
+      <div id="ui-bar-quick">
+        <button type="button" class="qk qk-save" onclick="window.__quickSave && __quickSave(this)">💾 存档</button>
+        <button type="button" class="qk qk-load" onclick="Save.open('load')">📂 读档</button>
+      </div>
+    </div>
     <div id="ui-bar-body">
       <div id="ui-bar-caption"></div>
       <div id="ui-bar-tools">
-        <button type="button" onclick="TweeEngine.save();UI.toast('进度已保存',{tone:'ok'})">💾 存档</button>
-        <button type="button" onclick="TweeEngine.load()">📂 读档</button>
+        <button type="button" onclick="window.__quickSave && __quickSave(this)">💾 存档</button>
+        <button type="button" onclick="Save.open('load')">📂 读档</button>
+        <button type="button" onclick="window.__openSaveCenter ? __openSaveCenter() : Save.open('load')">🗂️ 存档中心</button>
         <button type="button" onclick="TweeEngine.restart()">🔄 重开</button>
       </div>
     </div>
@@ -43,39 +53,64 @@
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════════════
-     ⚠️ 这里的 ?v=251033 是「防缓存版本号」。
+     ⚠️ 这里的 ?v=251056 是「防缓存版本号」。
      改完 story/ 下任何 js 之后，把这个数字的末位 +1（…241025 改成 …241026），
      浏览器才会重新读取新代码；否则它会继续用旧文件，
      就会出现「找不到 passage：xxx」这种明明代码里有的报错。
      ═══════════════════════════════════════════════════════════════════ -->
 
 <!-- ============ 引擎（不要改） ============ -->
-<script src="engine.js?v=251033"></script>
+<script src="engine.js?v=251056"></script>
 
 <!-- ============ 界面组件：弹窗 / 提示（不要改） ============ -->
-<script src="ui.js?v=251033"></script>
+<script src="ui.js?v=251056"></script>
+
+<!-- ============ 存档系统（多槽位 / 导出导入 / 存档中心） ============ -->
+<script src="save.js?v=251056"></script>
 
 <!-- ============ 故事内容（要改剧情就改这些文件） ============ -->
-<script src="story/05_widgets.js?v=251033"></script>
-<script src="story/10_core.js?v=251033"></script>
-<script src="story/15_patch.js?v=251033"></script>
-<script src="story/20_prologue.js?v=251033"></script>
-<script src="story/30_act1.js?v=251033"></script>
-<script src="story/40_act2.js?v=251033"></script>
-<script src="story/50_act3.js?v=251033"></script>
-<script src="story/52_movie.js?v=251033"></script>
-<script src="story/53_film.js?v=251033"></script>
-<script src="story/60_act4.js?v=251033"></script>
-<script src="story/70_endings.js?v=251033"></script>
-<script src="story/80_work.js?v=251033"></script>
-<script src="story/85_business.js?v=251033"></script>
-<script src="story/90_marketing.js?v=251033"></script>
-<script src="story/92_fanwall.js?v=251033"></script>
-<script src="story/95_artist.js?v=251033"></script>
-<script src="story/96_month.js?v=251033"></script>
+<script src="story/05_widgets.js?v=251056"></script>
+<script src="story/10_core.js?v=251056"></script>
+<script src="story/15_patch.js?v=251056"></script>
+<script src="story/20_prologue.js?v=251056"></script>
+<script src="story/30_act1.js?v=251056"></script>
+<script src="story/40_act2.js?v=251056"></script>
+<script src="story/50_act3.js?v=251056"></script>
+<script src="story/52_movie.js?v=251056"></script>
+<script src="story/53_film.js?v=251056"></script>
+<script src="story/60_act4.js?v=251056"></script>
+<script src="story/70_endings.js?v=251056"></script>
+<script src="story/80_work.js?v=251056"></script>
+<script src="story/85_business.js?v=251056"></script>
+<script src="story/90_marketing.js?v=251056"></script>
+<script src="story/92_fanwall.js?v=251056"></script>
+<script src="story/95_artist.js?v=251056"></script>
+<script src="story/96_month.js?v=251056"></script>
 
 <script>
 /* ============ 启动 ============ */
+/* 编辑器预览：?p=故事块名&m=月份 —— 用独立存档位，不会动你的真实进度 */
+var _sp = new URLSearchParams(location.search);
+var _q = _sp.get('p');
+var _m = parseInt(_sp.get('m') || '0', 10);
+if (_q && _m > 0) {
+  (window.__STORY_PASSAGES = window.__STORY_PASSAGES || []).push({
+    name: '__preview_boot',
+    src: '<<set $month to ' + _m + '>>'
+      + '<<set $total_months to 60>>'
+      + '<<set $money to 8000>>'
+      + '<<set $zp_story_stage to 3>>'
+      + '<<set $zp_trust to 60>>'
+      + '<<set $zp_bond to 60>>'
+      + '<<set $justice to 60>>'
+      + '<<set $zp_comm_cut to false>>'
+      + '<<set $movie_signed to true>>'
+      + '<<set $movie_visit_open to true>>'
+      + '<<if def $actors>><<if def $actors.zp>><<set $actors.zp.rank_level to 5>><</if>><</if>>'
+      + '<<goto "' + _q + '">>'
+  });
+}
+
 TweeEngine.init({
   passages: window.__STORY_PASSAGES || [],
   start: 'Game_Notice',
@@ -83,17 +118,44 @@ TweeEngine.init({
   caption: 'ui-bar-caption'
 });
 
-/* 编辑器预览：?p=故事块名 —— 用独立存档位，不会动你的真实进度 */
-var _q = new URLSearchParams(location.search).get('p');
 if (_q) {
   TweeEngine.setPreview(true);
   TweeEngine.newGame();
-  TweeEngine.goto(_q);
-} else if (TweeEngine.hasSave()) {
-  TweeEngine.load();
+  TweeEngine.goto((_q && _m > 0) ? '__preview_boot' : _q);
 } else {
-  TweeEngine.newGame();
+  /* 启动：从「最新的那个槽」继续（自动存档 / 手动 1-3 里取时间最近的） */
+  var _resumed = false;
+  try {
+    var _slot = Save.newest();
+    if (_slot) _resumed = Save.load(_slot).ok;
+    window.__boot = { slot: _slot || null, resumed: _resumed, meta: Save.meta() };
+  } catch (e) { _resumed = false; }
+  if (!_resumed) TweeEngine.newGame();
 }
+
+/* ============ 快速存档：点一下真的写进去，并且把结果说清楚 ============ */
+window.__quickSave = function (btn) {
+  if (Save && !Save.isEnabled()) {
+    if (window.UI && UI.toast) UI.toast('这是编辑器预览页，不会写存档', { tone: 'warn' });
+    return;
+  }
+  var r = Save.save(Save.getCurrent());
+  var m = TweeEngine.state.vars.month || 0;
+  if (r.ok) {
+    if (window.UI && UI.toast) UI.toast('已存档 · 第 ' + m + ' 月 · ' + Save.slotName(Save.getCurrent()), { tone: 'ok' });
+    if (btn) {
+      var old = btn.innerHTML;
+      btn.innerHTML = '✅ 已保存';
+      btn.classList.add('is-done');
+      setTimeout(function () { btn.innerHTML = old; btn.classList.remove('is-done'); }, 1400);
+    }
+  } else {
+    if (window.UI && UI.toast) UI.toast('存档没成功：' + r.msg, { tone: 'danger', duration: 4200 });
+    if (window.UI && UI.alert) UI.alert('存档失败：' + r.msg + '\n\n可以试试「存档中心 → 导出存档文件」把进度存成文件。');
+  }
+};
+
+window.__openSaveCenter = function () { Save.open('load'); };
 
 /* 编辑器点了保存后，这里自动刷新，立刻能看到改动 */
 try {

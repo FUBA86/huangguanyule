@@ -369,74 +369,290 @@ window.__STORY_PASSAGES.push({
 window.__STORY_PASSAGES.push({
   name: "Game_Manual",
   src: `<<nobr>>
-<div class="tech-card" style="padding: 30px; line-height: 1.8;">
+<div class="tech-card" style="padding:26px 30px 24px;">
     <div class="header-banner" style="margin-bottom:20px; background: linear-gradient(to right, #1e293b, #334155);">
-        <span>📘 无垠娱乐 · CEO 经营手册</span>
+        <span>📘 通关攻略</span>
     </div>
 
-    <div style="height: 550px; overflow-y: auto; padding-right: 15px;">
-        
-        <p style="color:#64748b; font-style:italic; text-align:center;">
-            “韩总，欢迎回到战场。这是为您整理的公司运营指南。”
-        </p>
-        
-        /* ===================================================
-           🚨 核心目标 (最重要，置顶)
-           =================================================== */
-        <div style="background:#fef2f2; padding:15px; border-radius:8px; border:2px solid #ef4444; margin-bottom:25px; text-align:center;">
-            <p style="color:#b91c1c; font-weight:bold; font-size:1.1em; margin-bottom:5px;">🚨 绝对核心指标 🚨</p>
-            <p style="color:#7f1d1d; margin-bottom:0;">
-                主线剧情触发条件：<br>
-                请务必在 <b>第 25 个月</b> 之前，将 <b>展鹏</b> 培养至 <b>一线巨星 (Rank 4)</b>。<br>
-                <span style="font-size:0.9em; opacity:0.8;">(若未达成，可能会导致主线停滞或进入坏结局)</span>
-            </p>
-        </div>
+    <div style="max-height:76vh; min-height:480px; overflow-y:auto; padding-right:14px;">
 
-        <hr>
+<style>
+.mn-wrap{max-width:880px;margin:0 auto;}
+.mn-nav{position:sticky;top:0;z-index:9;display:flex;gap:5px;flex-wrap:wrap;padding:9px 0 10px;margin:-4px 0 4px;background:linear-gradient(180deg,#FFFFFF 78%,rgba(255,255,255,0));border-bottom:1px solid #EDF2FA;}
+.mn-nav-i{display:inline-flex;align-items:center;list-style:none;font-size:11.5px;font-weight:800;letter-spacing:.02em;color:#4A6FA3 !important;background:#F1F6FD;border:1px solid #E1EAF6;border-radius:999px;padding:3px 10px;cursor:pointer;text-decoration:none !important;}
+.mn-nav-i::marker{content:none;}
+.mn-nav-i:hover{background:#E4EEFB;color:#2E4E7C !important;}
+.mn-h{display:flex;align-items:baseline;gap:9px;margin:28px 0 10px;padding-bottom:8px;border-bottom:2px solid #EDF2FA;scroll-margin-top:48px;}
+.mn-n{flex:0 0 24px;height:24px;border-radius:7px;background:#2F4A7C;color:#fff;font:900 12px/24px ui-monospace,Menlo,monospace;text-align:center;transform:translateY(-1px);}
+.mn-t{font-size:16.5px;font-weight:900;color:#22314E;letter-spacing:.02em;}
+.mn-s{font-size:10.5px;color:#A2AEC1;letter-spacing:.18em;margin-left:auto;text-transform:uppercase;}
+.mn-p{font-size:13.5px;line-height:1.9;color:#4A5870;margin:0 0 10px;}
+.mn-p b{color:#22314E;}
+.mn-tb{width:100%;border-collapse:collapse;font-size:12.8px;margin:6px 0 10px;}
+.mn-tb th{background:#F3F7FD;color:#3E5B8C;font-weight:800;text-align:left;padding:8px 10px;border-bottom:1px solid #E1EAF6;white-space:nowrap;}
+.mn-tb td{padding:8px 10px;border-bottom:1px solid #EFF4FB;color:#4A5870;line-height:1.7;vertical-align:top;}
+.mn-tb td b{color:#22314E;}
+.mn-tb tr:last-child td{border-bottom:none;}
+.mn-tb .c{white-space:nowrap;}
+.mn-tb .m{font-family:ui-monospace,Menlo,monospace;font-weight:800;color:#2F4A7C;}
+.mn-box{border-radius:10px;padding:12px 15px;margin:8px 0 12px;font-size:12.8px;line-height:1.85;}
+.mn-box b{font-weight:800;}
+.mn-red{background:#FDF1F3;border:1px solid #F2D5DA;color:#8E3B47;}
+.mn-red b{color:#A83B4C;}
+.mn-grn{background:#EFF8F3;border:1px solid #CFE9DC;color:#2F6E56;}
+.mn-grn b{color:#256A52;}
+.mn-amb{background:#FDF7EC;border:1px solid #F0E2C4;color:#7C6231;}
+.mn-amb b{color:#8A6A2B;}
+.mn-blu{background:#F1F6FD;border:1px solid #D8E6F8;color:#395A87;}
+.mn-blu b{color:#2E4E7C;}
+.mn-check{border:1px solid #DCE7F6;border-radius:13px;padding:15px 17px;background:linear-gradient(160deg,#FBFDFF,#F4F8FE);margin-top:6px;}
+.mn-check-h{font-size:11.5px;letter-spacing:.16em;color:#7C90AF;font-weight:800;margin-bottom:10px;}
+.mn-kpis{display:flex;gap:9px;flex-wrap:wrap;}
+.mn-kpi{flex:1 1 84px;min-width:80px;background:#fff;border:1px solid #E5EDF8;border-radius:9px;padding:9px 10px;text-align:center;}
+.mn-kpi span{display:block;font-size:10.5px;color:#93A2B8;letter-spacing:.08em;margin-bottom:4px;}
+.mn-kpi b{font:900 17px/1.1 ui-monospace,Menlo,monospace;white-space:nowrap;display:block;}
+.k-good{color:#2F6E56;} .k-warn{color:#B4813A;} .k-bad{color:#B4515F;} .k-idle{color:#8A98AE;}
+.mn-vd{margin-top:12px;padding-top:11px;border-top:1px dashed #DCE7F6;font-size:12.8px;line-height:1.85;color:#4A5870;}
+.mn-vd b{font-weight:900;}
+.mn-tag{display:inline-block;padding:1px 7px;border-radius:999px;font-size:10.5px;font-weight:800;letter-spacing:.04em;vertical-align:1px;}
+.tg-req{background:#FDECEF;color:#B4515F;}
+.tg-rec{background:#E9F5EF;color:#2F6E56;}
+.tg-ok{background:#EEF3FB;color:#4A6FA3;}
+.mn-swipe{display:none;}
+@media (max-width:860px){ .mn-swipe{display:block;font-size:11px;color:#A2AEC1;margin:-4px 0 6px;} }
+</style>
 
-        /* 1. 基础经营 */
-        <h3 style="color:#3b82f6; border-left:4px solid #3b82f6; padding-left:10px;">1. 公司的生存法则</h3>
-        <p>作为一家新生的娱乐公司，您的日常工作遵循以下闭环：</p>
-        <div style="background:#eff6ff; padding:15px; border-radius:8px; border:1px dashed #bfdbfe; font-weight:bold; color:#1e40af; text-align:center; font-size:0.9em;">
-            🏢 商务部谈资源 ➔ 🗓️ 给艺人排通告 ➔ 💰 月末结算
-        </div>
-        <ul>
-            <li><b>资源匹配：</b> 资源分为 S/A/B/C 四个等级。咖位低的艺人接不了S级大饼，强行接会翻车；大咖接C级资源会掉身价。</li>
-            <li><b>体力管理：</b> 艺人不是机器。过度劳累会生病住院，记得安排 <b style="color:#10b981">休假</b> 或去 <b style="color:#f59e0b">疗养院</b>（未实装）。</li>
-            <li><b>资金流：</b> 没钱公司会破产。每一项操作都要钱，尤其是买流量，你会发现水军真的很贵。</li>
-        </ul>
+<div class="mn-wrap">
 
-        /* 2. 艺人养成 */
-        <h3 style="color:#8b5cf6; border-left:4px solid #8b5cf6; padding-left:10px;">2. 艺人：从糊咖到顶流</h3>
-        <p>娱乐圈逆水行舟，不进则退。</p>
-        <ul>
-            <li><b>咖位 (Rank)：</b> 决定了艺人的出场费和能接的资源等级。提升属性是升咖的唯一途径。</li>
-            <li><b>流量 (Topic)：</b> <span style="color:#ef4444; font-weight:bold;">至关重要！</span> 咖位越高，每月消耗的维护流量越大。如果流量枯竭，顶流也会掉咖。</li>
-        </ul>
+<div class="mn-nav">
+    <a class="mn-nav-i" href="#mn1">① 生死线</a>
+    <a class="mn-nav-i" href="#mn2">② 结局</a>
+    <a class="mn-nav-i" href="#mn3">③ 剧情月份</a>
+    <a class="mn-nav-i" href="#mn4">④ 一线</a>
+    <a class="mn-nav-i" href="#mn5">⑤ 选项</a>
+    <a class="mn-nav-i" href="#mn6">⑥ 加密线路</a>
+    <a class="mn-nav-i" href="#mn7">⑦ 每月</a>
+    <a class="mn-nav-i" href="#mn8">⑧ 死法</a>
+    <a class="mn-nav-i" href="#mn9">⑨ 存档</a>
+</div>
 
-        /* 3. 危机与舆论 */
-        <h3 style="color:#ef4444; border-left:4px solid #ef4444; padding-left:10px;">3. 舆论就是战场</h3>
-        <p>时刻关注主界面的 <b style="color:#ef4444">危险值</b>。</p>
-        <ul>
-            <li><b>全网抵制：</b> 危险值过高时，所有艺人将被迫停工，没有任何收入。</li>
-            <li><b>公关手段：</b> 去 <b style="color:#3b82f6">公关部</b> 花钱炸词条、发律师函，或者做公益洗白。</li>
-            <li><b>粉丝战争：</b> 不同的粉丝群体（如毒唯、CP粉、梦女）会引发不同的粉圈事件。您需要在 <b style="color:#db2777">粉丝后援会</b> 中引导粉丝属性，甚至利用粉丝撕逼来维持热度。</li>
-        </ul>
+<div class="mn-check">
+    <div class="mn-check-h">现在这一档 · 照这样打下去的结局</div>
+    <div class="mn-kpis">
+        <div class="mn-kpi"><span>月份</span><b class="k-idle"><<print $month>>/60</b></div>
+        <div class="mn-kpi"><span>资金(万)</span><b class="<<if $money < 5000>>k-warn<<else>>k-good<</if>>"><<print $money>></b></div>
+        <div class="mn-kpi"><span>信任</span><b class="<<if $month < 25>>k-idle<<elseif $zp_trust < 40>>k-bad<<else>>k-good<</if>>"><<print ($zp_trust || 0)>></b></div>
+        <div class="mn-kpi"><span>正义</span><b class="<<if $month < 25>>k-idle<<elseif $justice < 70>>k-bad<<else>>k-good<</if>>"><<print ($justice || 0)>></b></div>
+        <div class="mn-kpi"><span>羁绊</span><b class="k-idle"><<print ($zp_bond || 0)>></b></div>
+        <div class="mn-kpi"><span>暴露</span><b class="<<if def $exposure>><<if $exposure >= 55>>k-bad<<else>>k-idle<</if>><<else>>k-idle<</if>>"><<if def $exposure>><<print $exposure>><<else>>—<</if>></b></div>
+    </div>
+    <div class="mn-vd">
+        <<if $month < 25>>
+            <<set _zp_fans to FanSum($actors.zp)>>
+            <<set _zp_star to _zp_fans + ($actors.zp.topic || 0) * 60 + ($actors.zp.reputation || 0) * 80 + Math.max($actors.zp.acting || 0, $actors.zp.fashion || 0, $actors.zp.stage || 0) * 60 + ($actors.zp.looks || 0) * 20>>
+            展鹏：<<print $actors.zp.rank_label>> · 粉丝 <b><<print _zp_fans>></b> · 星光 <b><<print Math.round(_zp_star)>></b>。
+            <<if _zp_star <= 150000>>离一线还差 <b><<print Math.ceil(150001 - _zp_star)>></b> 星光，补法见 ④。<</if>>
+            <<if _zp_fans < 80000>>粉丝也差 <b><<print 80000 - _zp_fans>></b>。<</if>>
+        <<elseif $month < 36>>
+            下一道坎：第 36 月暴雨夜要拿 5000 万。现在账上 <<print $money>> 万，
+            <<if $money < 5000>>差 <<print 5000 - $money>> 万，接下来别买流量、别组局。<</if>>
+        <<elseif $month < 60>>
+            照现在这样走到第 60 月：
+            <<if $zp_story_stage is 99>>
+                <b class="k-bad">BE</b>（卧底线已断）
+            <<elseif ($zp_trust || 0) < 40>>
+                <b class="k-bad">BE</b>——信任 <<print ($zp_trust || 0)>>，不足 40，补不回来，只能读档
+            <<elseif ($justice || 0) < 70>>
+                <b class="k-bad">BE</b>——正义 <<print ($justice || 0)>>，还差 <<print 70 - ($justice || 0)>> 点
+                <<if $month < 57>>，加密线路「抹黑展鹏」一次 +5<</if>>
+            <<elseif ($justice || 0) > 70 and ($justice || 0) > ($zp_bond || 0)>>
+                <b class="k-good">归队（HE）</b>——正义压过羁绊
+            <<else>>
+                <b class="k-good">留下（HE）</b>——正义够，但没高过羁绊
+            <</if>>
+        <<else>>
+            已经是结局判定的月份了。
+        <</if>>
+    </div>
+</div>
 
-        /* 4. 人员管理 */
-        <h3 style="color:#f59e0b; border-left:4px solid #f59e0b; padding-left:10px;">4. 既然是CEO，就要有远见</h3>
-        <p>虽然展鹏是您最亲密的爱人，也是目前的顶梁柱，但经营公司切忌把鸡蛋放在同一个篮子里。</p>
-        <ul>
-            <li><b>展鹏：</b> 全能型艺人，也是您的丈夫。但他性格散漫（咸鱼属性），且经常有突发状况。请在爱护他的同时，为公司寻找后路。</li>
-            <li><b>培养梯队：</b> 随着公司发展，您会遇到形形色色的新人。<b>尽早培养新人</b>，建立多元化的人才梯队是公司长治久安的关键。</li>
-        </ul>
+<div class="mn-h" id="mn1"><span class="mn-n">01</span><span class="mn-t">五道生死线</span><span class="mn-s">Hard Gates</span></div>
+<table class="mn-tb">
+    <tr><th>月份</th><th>硬条件</th><th>没做到</th></tr>
+    <tr><td class="c m">第 25 月</td><td>展鹏是一线：星光 &gt; 150,000 且 粉丝 ≥ 80,000</td><td>直接进【平庸的宁静】，游戏结束</td></tr>
+    <tr><td class="c m">第 60 月</td><td>信任 ≥ 40（低于即 BE）</td><td>BE【无声的牺牲】</td></tr>
+    <tr><td class="c m">第 60 月</td><td>正义 ≥ 70</td><td>BE。两条 HE 也都要求正义 ≥ 70</td></tr>
+    <tr><td class="c m">第 36 月</td><td>暴雨夜现金 ≥ 5000 万</td><td>卧底线关闭、展鹏失联 → BE，不给选项</td></tr>
+    <tr><td class="c m">第 39–56 月</td><td>暴露值 &lt; 70</td><td>加密线路强制切断 → BE</td></tr>
+</table>
+<div class="mn-box mn-red">
+    <b>信任只有 4 次机会</b>：第 25、26、27、28 月各一次，每次 +10，合计正好 40。错一次就永远差 10 点，无法补救。
+</div>
 
-    
+<div class="mn-h" id="mn2"><span class="mn-n">02</span><span class="mn-t">结局判定</span><span class="mn-s">Endings</span></div>
+<p class="mn-p">顺序固定，从上往下第一条命中即停：</p>
+<table class="mn-tb">
+    <tr><th>顺序</th><th>条件</th><th>结果</th></tr>
+    <tr><td class="c m">1</td><td>卧底线断了（stage = 99）</td><td>BE</td></tr>
+    <tr><td class="c m">2</td><td>信任 &lt; 40</td><td>BE</td></tr>
+    <tr><td class="c m">3</td><td>正义 &lt; 70</td><td>BE</td></tr>
+    <tr><td class="c m">4</td><td>正义 &gt; 70 <b>且</b> 正义 &gt; 羁绊</td><td>HE · 荣耀归队</td></tr>
+    <tr><td class="c m">5</td><td>其余（正义 ≥ 70 但没高过羁绊）</td><td>HE · 人间烟火</td></tr>
+</table>
+<div class="mn-box mn-amb">
+    第 4 条是<b>严格大于</b>。正义正好 70 既不算 BE，也进不了归队，会落到「留下」。要归队就把正义做到 75 以上。
+</div>
+<p class="mn-p"><b>归队</b>：正义 ≥ 75，且羁绊低于正义。少拿羁绊——不探班，第 28 月选「考虑一下」，第 29 月选「他是线人」，第 30 月选「先拒绝方末」。躲不掉的三笔羁绊：第 36 月、第 53 月、第 56 月，各 +10。</p>
+<p class="mn-p"><b>留下</b>：羁绊尽量高，正义做到 71 以上就停。<b>不能低于 70。</b></p>
+
+<div class="mn-h" id="mn3"><span class="mn-n">03</span><span class="mn-t">剧情固定在哪些月份</span><span class="mn-s">Timeline</span></div>
+<p class="mn-p">每一段剧情只在它自己那个月结算时触发，不会提前也不会补发。跳月跳过的剧情，去<b>「🎞️ 剧情档案」</b>看，那里标着「没看到」，可以点开补看。</p>
+
+<table class="mn-tb">
+    <tr><th>月份</th><th>剧情</th><th>触发条件</th></tr>
+    <tr><td class="c m">1–24</td><td>自由经营</td><td>—</td></tr>
+    <tr><td class="c m">25</td><td>突发绯闻</td><td><b>展鹏须已一线</b>，否则当场结局</td></tr>
+    <tr><td class="c m">26</td><td>路透照流出</td><td>—</td></tr>
+    <tr><td class="c m">27</td><td>周一见：实锤？</td><td>—</td></tr>
+    <tr><td class="c m">28</td><td>似曾相识的面孔 → 当面对峙</td><td>同月两段，都有选项</td></tr>
+    <tr><td class="c m">29</td><td>暗巷追踪</td><td>—</td></tr>
+    <tr><td class="c m">30</td><td>帝国娱乐的报价 → 残酷的真相</td><td>同月两段，都有选项</td></tr>
+    <tr><td class="c m">31</td><td>断尾求生（签字离婚）</td><td>触发后展鹏离队、黄耀祖入职</td></tr>
+    <tr><td class="c m">32</td><td>新的拼图（刘梁周签约）</td><td>须已离婚</td></tr>
+    <tr><td class="c m">34</td><td>票房惨案</td><td>须已离婚</td></tr>
+    <tr><td class="c m">35</td><td>舆论反噬</td><td>须已离婚</td></tr>
+    <tr><td class="c m">36</td><td>暴雨夜归</td><td>须已离婚 + <b>现金 ≥ 5000 万</b></td></tr>
+    <tr><td class="c m">37</td><td>沉默的砖头</td><td>须已进入卧底线</td></tr>
+    <tr><td class="c m">38</td><td>加密短信</td><td>须已进入卧底线。此后办公室出现「加密线路」</td></tr>
+    <tr><td class="c m">45</td><td>五亿的邀约（《深空黎明》）</td><td>须已进入卧底线</td></tr>
+    <tr><td class="c m">46</td><td>开机</td><td>解锁「剧组探班」，只在杀青前有效</td></tr>
+    <tr><td class="c m">50</td><td>家里多了个人</td><td>固定 +正义 10、+信任 10</td></tr>
+    <tr><td class="c m">52</td><td>杀青</td><td>探班入口关闭</td></tr>
+    <tr><td class="c m">53</td><td>暴风雪 → 天亮之后</td><td>固定 +羁绊 10</td></tr>
+    <tr><td class="c m">54</td><td>废弃仓库（方末身份揭晓）</td><td>须已进入卧底线</td></tr>
+    <tr><td class="c m">56</td><td>黎明前的黑暗</td><td>固定 +羁绊 10。最后一个还能刷数值的月份</td></tr>
+    <tr><td class="c m">57</td><td>三亿与静默</td><td>加密线路永久关闭</td></tr>
+    <tr><td class="c m">58</td><td>收网</td><td>—</td></tr>
+    <tr><td class="c m">59</td><td>焦急的等待</td><td>最后一个能经营的月份</td></tr>
+    <tr><td class="c m">60</td><td>命运的分岔</td><td>判定结局</td></tr>
+</table>
+<div class="mn-box mn-blu">
+    <b>剧组探班</b>（第 47–51 月开放，每次耗 10 体力，每篇只能拿一次）：<br>
+    ① 第 47 月 +羁绊 6　② 第 47 月 +羁绊 8　③ 第 48 月 +羁绊 6、+正义 5　④ 第 49 月 +羁绊 8　⑤ 第 51 月需羁绊 &gt; 70，+羁绊 12、+信任 5。<br>
+    五篇全看共 +羁绊 40、+正义 5、+信任 5。归队线不要碰，留下线靠它堆羁绊。
+</div>
+
+<div class="mn-h" id="mn4"><span class="mn-n">04</span><span class="mn-t">把展鹏推上一线</span><span class="mn-s">Rank Up</span></div>
+<div class="mn-box mn-blu">
+    <b>星光</b> = 粉丝总数 + 话题 × 60 + 口碑 × 80 + 最高技能 × 60 + 颜值 × 20<br>
+    最终段位取「星光段位」和「粉丝段位」<b>较低的那个</b>，两个都得够。
+</div>
+<table class="mn-tb">
+    <tr><th>段位</th><th>星光</th><th>粉丝总数</th></tr>
+    <tr><td class="c">三线</td><td>&gt; 20,000</td><td>5,000</td></tr>
+    <tr><td class="c">二线</td><td>&gt; 60,000</td><td>25,000</td></tr>
+    <tr><td class="c"><b>一线</b></td><td><b>&gt; 150,000</b></td><td><b>80,000</b></td></tr>
+    <tr><td class="c">顶流</td><td>&gt; 420,000</td><td>300,000</td></tr>
+</table>
+<p class="mn-p">展鹏开局：粉丝 81,500、星光 96,960。<b>粉丝刚好够一线，星光差 53,041。</b>只靠接戏涨不到，必须在第 25 月前手动刷。</p>
+<table class="mn-tb">
+    <tr><th>手段</th><th>成本</th><th>星光变化</th></tr>
+    <tr><td>🍬 工业糖精 ×10（粉丝后援）</td><td>400 万 + 5 万流量 + 1 行动点</td><td><b>+15,200</b>（CP 粉 +20000，毒唯 −3000，妈粉 −1000，口碑 −10）</td></tr>
+    <tr><td>😭 卖惨虐粉 ×10</td><td>300 万 + 3 万流量 + 1 行动点</td><td>+7,800（口碑 −15）</td></tr>
+    <tr><td>📸 官方营业 ×10</td><td>300 万 + 2 万流量 + 1 行动点</td><td>+6,600（口碑 −10）</td></tr>
+</table>
+<div class="mn-box mn-grn">
+    <b>最省事：连续做 4 次「工业糖精 ×10」。</b>星光 96,960 → 157,760，过线。<br>
+    总成本 1600 万 + 20 万流量 + 4 行动点。流量在「公关作战 → 流量加油站」买，2000 万换 6 万流量。<br>
+    想留余量就做 5 次（星光约 17.3 万），代价是口碑掉到 10 左右。
+</div>
+
+<div class="mn-h" id="mn5"><span class="mn-n">05</span><span class="mn-t">每个岔路口选哪句</span><span class="mn-s">Choices</span></div>
+<p class="mn-p"><b>第 25–31 月</b>（前四行是信任，必须全对）</p>
+
+<table class="mn-tb">
+    <tr><th>月份</th><th>选这句</th><th>效果</th></tr>
+    <tr><td class="c m">25</td><td>「信任他」<span class="mn-tag tg-req">必选</span></td><td>信任 +10；「询问他」不加</td></tr>
+    <tr><td class="c m">26</td><td>「安慰展鹏」<span class="mn-tag tg-req">必选</span></td><td>信任 +10；「质问展鹏」不加</td></tr>
+    <tr><td class="c m">27</td><td>「展鹏不愿意让你担心」<span class="mn-tag tg-req">必选</span></td><td>信任 +10；「展鹏背叛了你们的婚姻」不加</td></tr>
+    <tr><td class="c m">28</td><td>「他有难言的苦衷」<span class="mn-tag tg-req">必选</span></td><td>信任 +10；「你不得不怀疑了」不加</td></tr>
+    <tr><td class="c m">28</td><td>「明确拒绝」／「考虑一下」</td><td>前者羁绊 +10，后者不加</td></tr>
+    <tr><td class="c m">29</td><td>「他是警察！」／「他是线人」</td><td>前者羁绊 +10，后者不加</td></tr>
+    <tr><td class="c m">30</td><td>「先向展鹏解释」／「先拒绝方末」</td><td>前者羁绊 +10，后者不加</td></tr>
+    <tr><td class="c m">30</td><td>「答应他」／「拒绝他」</td><td>前者正义 +10，后者羁绊 +10</td></tr>
+    <tr><td class="c m">31</td><td>「故意承认」／「避而不谈」</td><td>前者正义 +10，后者羁绊 +10</td></tr>
+</table>
+<p class="mn-p"><b>第 32–36 月</b></p>
+<table class="mn-tb">
+    <tr><th>月份</th><th>选这句</th><th>效果</th></tr>
+    <tr><td class="c m">32</td><td>「天才学霸」人设<span class="mn-tag tg-rec">归队</span></td><td>正义 +10</td></tr>
+    <tr><td class="c m">32</td><td>「咸鱼替身」人设<span class="mn-tag tg-rec">留下</span></td><td>羁绊 +10，刘梁周话题 +300、黄耀祖话题 +200</td></tr>
+    <tr><td class="c m">35</td><td>「不帮 · 相信他能自己处理」<span class="mn-tag tg-rec">归队</span></td><td>正义 +10；「帮他压下去」花 50 万，不加数值</td></tr>
+    <tr><td class="c m">36</td><td>「给钱」<span class="mn-tag tg-req">必选</span></td><td>花 5000 万，羁绊 +10，开启卧底线；「不给」= BE</td></tr>
+</table>
+<p class="mn-p"><b>不用选、到点自动加的</b>：第 50 月 正义 +10 / 信任 +10；第 52 月 正义 +10；第 53 月 羁绊 +10；第 56 月 羁绊 +10。</p>
+
+<div class="mn-h" id="mn6"><span class="mn-n">06</span><span class="mn-t">加密线路</span><span class="mn-s">CH-007</span></div>
+<p class="mn-p">第 39 月起办公室出现入口，第 57 月关闭。每执行一次任务进度 +5，同时涨暴露值，暴露到 70 就断线。</p>
+<table class="mn-tb">
+    <tr><th>操作</th><th>成本</th><th>收益</th></tr>
+    <tr><td>📢 全网抹黑展鹏</td><td>200 万</td><td>正义 +5、信任 +5</td></tr>
+    <tr><td>⚔️ 狙击帝国娱乐</td><td>300 万</td><td>羁绊 +10</td></tr>
+    <tr><td>💗 高调宠爱「替身」</td><td>100 流量</td><td>正义 +5、羁绊 −5</td></tr>
+</table>
+<div class="mn-box mn-blu">
+    <b>每次涨多少暴露</b>：信任 ≥ 60 → +5；信任 40–59 → +10；信任 &lt; 40 → +15。上限 70。<br>
+    信任 60 时能刷 13 次，信任 40 时只能刷 6 次。所以先把信任做高再来刷。
+</div>
+<div class="mn-box mn-amb">
+    <b>归队</b>：只做「全网抹黑展鹏」，一次正义 +5。<br>
+    <b>留下</b>：做「狙击帝国娱乐」堆羁绊，再用抹黑把正义顶到 71 以上。<br>
+    任务进度到 100 后不再有操作，别指望用它刷分。
+</div>
+
+<div class="mn-h" id="mn7"><span class="mn-n">07</span><span class="mn-t">每月固定收支</span><span class="mn-s">Loop</span></div>
+<table class="mn-tb">
+    <tr><th>项目</th><th>金额</th></tr>
+    <tr><td>公司运营</td><td>300 万</td></tr>
+    <tr><td>艺人工资</td><td>每人「段位 × 100」万：糊咖 100、三线 200、二线 300、一线 400、顶流 500</td></tr>
+    <tr><td>流量维护</td><td>糊咖 200、三线 1,000、二线 3,000、一线 8,000、顶流 26,000</td></tr>
+    <tr><td>每年 12 月</td><td>额外 500 万</td></tr>
+</table>
+<div class="mn-box mn-red">
+    流量不足时<b>全员话题 −20、集体掉咖</b>。顶流一个人每月吃 26,000 流量，比三个一线加起来还多——别把所有人都推上去。
+</div>
+<p class="mn-p"><b>每月 8 点行动点</b>，通告、培训、粉丝运营各 1 点；组局、买资源、探班不花行动点，只花体力。</p>
+<p class="mn-p"><b>接戏</b>：S/A/B/C 要求咖位 4/3/2/1。差 2 级以上面试直接被拒；艺人比资源高 2 级以上，口碑 −10（一线别去接 C 级）。</p>
+<p class="mn-p"><b>顺序</b>：通告中心派资源 → 剩余行动点给粉丝运营或报班 → 缺钱去资源筹备组局 → 点「休息 · 结束本月」，剧情在结算时插入。</p>
+
+<div class="mn-h" id="mn8"><span class="mn-n">08</span><span class="mn-t">六种死法</span><span class="mn-s">Traps</span></div>
+<table class="mn-tb">
+    <tr><th>症状</th><th>原因</th><th>补救</th></tr>
+    <tr><td>第 25 月直接结局</td><td>展鹏没到一线</td><td>开局就刷糖精，别等他慢慢涨</td></tr>
+    <tr><td>结局写「信任不足」</td><td>25–28 月错一次</td><td><b>无法补救</b>，只能读档</td></tr>
+    <tr><td>结局写「正义不足」</td><td>只走感情线</td><td>56 月前用「抹黑展鹏」补，每次 +5</td></tr>
+    <tr><td>第 36 月展鹏失联</td><td>现金不足 5000 万</td><td>35 月前别买流量、别组局</td></tr>
+    <tr><td>加密线路突然断</td><td>暴露到 70</td><td><b>无法补救</b>，刷之前先把信任做到 60</td></tr>
+    <tr><td>艺人被全网抵制</td><td>危险值到 100</td><td>危险值 50 以上就去公关部洗地，或做公益清零</td></tr>
+</table>
+
+<div class="mn-h" id="mn9"><span class="mn-n">09</span><span class="mn-t">存档</span><span class="mn-s">Save</span></div>
+<p class="mn-p">三个值得存档的点：<b>第 24 月</b>（进剧情前确认一线 + 5000 万）、<b>第 35 月</b>（确认现金够）、<b>第 59 月</b>（判定前，可以刷三个结局）。</p>
+<div class="mn-box mn-blu">
+    顶部永远能看到<b>「💾 存档」</b>和<b>「📂 读档」</b>。<br>
+    · 存档：点一下写进「手动存档」，提示当前月份。<br>
+    · 读档：打开存档中心，有自动存档 + 手动 1/2/3 四格，每格写着「第几月 · 资金 · 时间」。<br>
+    · 每翻一页都会自动存档，忘存也能接着玩。<br>
+    · 换设备：存档中心 →「⬇️ 导出存档文件」，新设备「⬆️ 导入存档」。
+</div>
+<p class="mn-p">存档存在浏览器本地，绑定网址，不需要服务器。通了之后有一页总结算：评级、五年成绩单、每个艺人的去向。</p>
+
+</div>
 
     </div>
 
     <div style="text-align:center; margin-top:20px;">
-        <<button "🔙 我已阅知 (返回办公室)" "Office">><</button>>
+        <<button "🔙 已阅，回办公室" "Office">><</button>>
     </div>
 </div>
 <</nobr>>`
@@ -572,7 +788,7 @@ window.__STORY_PASSAGES.push({
             </li>
             <li>
                 <span class="nt-ico">🎭</span>
-                <span>韩证飞、展鹏、黄耀祖、刘梁周的原型为演员杨旭文饰演的角色，其余人物为原创。</span>
+                <span>韩证飞、展鹏、黄耀祖、刘梁周的原型为演员杨旭文饰演的角色，方末为秦俊杰饰演角色。</span>
             </li>
             <li>
                 <span class="nt-ico">🔒</span>
@@ -972,6 +1188,10 @@ window.__STORY_PASSAGES.push({
 <<set $film_lib to []>>
 <<set $film_used to { s: [], a: [], b: [], c: [] }>>
 <<set $film_air_results to []>>
+
+/* 通告履历（2026-10-28 新增）：结局结算页要用它列「大家都接过什么活」。
+   每结算一次通告就往里记一条，最多留 300 条。（05_widgets.js 的 Job_Settle 里写） */
+<<set $job_log to []>>
 
 /* 危机与情报 */
 <<set $current_crisis_desc to "暂无异常">>

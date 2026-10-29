@@ -651,7 +651,7 @@ window.__STORY_PASSAGES.push({
             <div class="choice-item">
                 <<link "要给黄耀祖涨分成">>
                     <<if def $actors.huang>><<set $actors.huang.split to Math.max(0.5, $actors.huang.split - 0.1)>><</if>>
-                    <<run alert("【善良资本家】黄耀祖的分成涨了。他第二天知道后，抱着剧本在角落里偷偷哭了很久。")>>
+                    <<run alert("【善良资本家】黄耀祖的分成涨了。他第二天知道后，抱着剧本在角落里偷偷傻乐了很久。")>>
                     <<goto "Next_Month_End">>
                 <</link>>
             </div>
