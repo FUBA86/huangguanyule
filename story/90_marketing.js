@@ -553,12 +553,12 @@ window.__STORY_PASSAGES.push({
             <b><<print _band.name>></b>
             <span class="fd-pct"><<print _pct>>%</span>
           </div>
-          <<if ($action_points || 0) > 0 and $money >= 300>>
+          <<if ($action_points || 0) > 0 and $money >= 120>>
             <<link "🧹 清理" "Fan_Purge">>
               <<set $purge_key to _k>>
             <</link>>
           <<else>>
-            <span class="fd-disabled">清理需 1 行动点 + 300 万</span>
+            <span class="fd-disabled">清理需 1 行动点 + 120 万</span>
           <</if>>
         </div>
       <</capture>>
@@ -578,14 +578,14 @@ window.__STORY_PASSAGES.push({
 <div class="fan-act">
   <div class="fan-act-head">
     <span class="fan-act-name">📸 媚粉福利</span>
-    <span class="fan-act-cost">30w · 2000 流</span>
+    <span class="fan-act-cost">15w · 2000 流</span>
   </div>
   <div class="fan-act-btns">
     <<link "发一组" "Fan_Action">>
-      <<set $action to "visual", $cost to 30, $cost_traffic to 2000>>
+      <<set $action to "visual", $cost to 15, $cost_traffic to 2000>>
     <</link>>
     <<link "×10 连发" "Fan_Action">>
-      <<set $action to "visual_x10", $cost to 300, $cost_traffic to 20000>>
+      <<set $action to "visual_x10", $cost to 150, $cost_traffic to 20000>>
     <</link>>
   </div>
   <div class="fan-act-warn">⚠️ 短时间大量水军操作效果递减，且会引起路人反感</div>
@@ -594,14 +594,14 @@ window.__STORY_PASSAGES.push({
 <div class="fan-act">
   <div class="fan-act-head">
     <span class="fan-act-name">😭 卖惨虐粉</span>
-    <span class="fan-act-cost">30w · 3000 流</span>
+    <span class="fan-act-cost">15w · 3000 流</span>
   </div>
   <div class="fan-act-btns">
     <<link "卖一波" "Fan_Action">>
-      <<set $action to "miserable", $cost to 30, $cost_traffic to 3000>>
+      <<set $action to "miserable", $cost to 15, $cost_traffic to 3000>>
     <</link>>
     <<link "×10 扩散" "Fan_Action">>
-      <<set $action to "miserable_x10", $cost to 300, $cost_traffic to 30000>>
+      <<set $action to "miserable_x10", $cost to 150, $cost_traffic to 30000>>
     <</link>>
   </div>
   <div class="fan-act-warn">⚠️ 短时间大量水军操作效果递减，且会引起路人反感</div>
@@ -610,14 +610,14 @@ window.__STORY_PASSAGES.push({
 <div class="fan-act">
   <div class="fan-act-head">
     <span class="fan-act-name">🍬 工业糖精</span>
-    <span class="fan-act-cost">40w · 5000 流</span>
+    <span class="fan-act-cost">20w · 5000 流</span>
   </div>
   <div class="fan-act-btns">
     <<link "炒一轮" "Fan_Action">>
-      <<set $action to "fake_cp", $cost to 40, $cost_traffic to 5000>>
+      <<set $action to "fake_cp", $cost to 20, $cost_traffic to 5000>>
     <</link>>
     <<link "×10 加码" "Fan_Action">>
-      <<set $action to "fake_cp_x10", $cost to 400, $cost_traffic to 50000>>
+      <<set $action to "fake_cp_x10", $cost to 200, $cost_traffic to 50000>>
     <</link>>
   </div>
   <div class="fan-act-warn">⚠️ 短时间大量水军操作效果递减，且会引起路人反感</div>
@@ -626,14 +626,14 @@ window.__STORY_PASSAGES.push({
 <div class="fan-act">
   <div class="fan-act-head">
     <span class="fan-act-name">☠️ 脂粉下场</span>
-    <span class="fan-act-cost">50w · 转 3000 流</span>
+    <span class="fan-act-cost">25w · 转 3000 流</span>
   </div>
   <div class="fan-act-btns">
     <<link "带一次节奏" "Fan_Action">>
-      <<set $action to "guide_war", $cost to 50, $cost_traffic to 0>>
+      <<set $action to "guide_war", $cost to 25, $cost_traffic to 0>>
     <</link>>
     <<link "×10 猛攻" "Fan_Action">>
-      <<set $action to "guide_war_x10", $cost to 500, $cost_traffic to 0>>
+      <<set $action to "guide_war_x10", $cost to 250, $cost_traffic to 0>>
     <</link>>
   </div>
   <div class="fan-act-warn">⚠️ 短时间大量水军操作效果递减，且会引起路人反感</div>
@@ -709,23 +709,23 @@ window.__STORY_PASSAGES.push({
                  </div>
             <<else>>
                  <<if _top.type is "my_bad">>
-                    <<link "📉 200w | 紧急撤热搜" "PR_Execute">>
-                        <<set $type to "lower_top1">><<set $cost to 200>><<set $cost_t to 3000>>
+                    <<link "📉 100w | 紧急撤热搜" "PR_Execute">>
+                        <<set $type to "lower_top1">><<set $cost to 100>><<set $cost_t to 3000>>
                         <<set $hot_search_list[0].handled to true>>
                     <</link>>
                  <<elseif _top.type is "rival_bad">>
-                    <<link "🔥 200w | 帮他对家买热搜" "PR_Execute">>
-                        <<set $type to "raise_top1">><<set $cost to 200>><<set $cost_t to 3000>>
+                    <<link "🔥 100w | 帮他对家买热搜" "PR_Execute">>
+                        <<set $type to "raise_top1">><<set $cost to 100>><<set $cost_t to 3000>>
                         <<set $hot_search_list[0].handled to true>>
                     <</link>>
                  <<elseif _top.type is "my_good">>
-                    <<link "🔥 200w | 趁热打铁推广" "PR_Execute">>
-                        <<set $type to "raise_top1">><<set $cost to 200>><<set $cost_t to 3000>>
+                    <<link "🔥 100w | 趁热打铁推广" "PR_Execute">>
+                        <<set $type to "raise_top1">><<set $cost to 100>><<set $cost_t to 3000>>
                         <<set $hot_search_list[0].handled to true>>
                     <</link>>
                  <<elseif _top.type is "rival_good">>
-                    <<link "📉 200w | 压他热度" "PR_Execute">>
-                        <<set $type to "lower_top1">><<set $cost to 200>><<set $cost_t to 3000>>
+                    <<link "📉 100w | 压他热度" "PR_Execute">>
+                        <<set $type to "lower_top1">><<set $cost to 100>><<set $cost_t to 3000>>
                         <<set $hot_search_list[0].handled to true>>
                     <</link>>
                  <<else>>
@@ -781,13 +781,13 @@ window.__STORY_PASSAGES.push({
                     <<else>>
                         <<if _item.type.includes("my_good") or _item.type.includes("rival_bad")>>
                              <<button "🔥升热搜">>
-                                <<set $type to "raise_top1">><<set $cost to 100>><<set $cost_t to 1000>>
+                                <<set $type to "raise_top1">><<set $cost to 60>><<set $cost_t to 1000>>
                                 <<set $hot_search_list[_i].handled to true>>
                                 <<goto "PR_Execute">>
                              <</button>>
                         <<elseif _item.type.includes("my_bad") or _item.type.includes("rival_good")>>
                              <<button "📉降热搜">>
-                                <<set $type to "lower_top1">><<set $cost to 100>><<set $cost_t to 1000>>
+                                <<set $type to "lower_top1">><<set $cost to 60>><<set $cost_t to 1000>>
                                 <<set $hot_search_list[_i].handled to true>>
                                 <<goto "PR_Execute">>
                              <</button>>
@@ -1152,10 +1152,10 @@ window.__STORY_PASSAGES.push({
                     <<if _top_news.type is "my_bad">>
                         <div style="display:flex; justify-content:space-between; align-items:center;">
                             <span style="color:#fca5a5;">⚠️ 警报：舆论发酵，需重金压制！</span>
-                            <<button "📉 紧急降温 (200w)">>
+                            <<button "📉 紧急降温 (100w)">>
                                 <<set $top1_solved_month to $month>> /* 打时间戳 */
                                 <<set $is_top1_handled to true>>
-                                <<set $type to "lower_top1">><<set $cost to 200>><<set $cost_t to 3000>>
+                                <<set $type to "lower_top1">><<set $cost to 100>><<set $cost_t to 3000>>
                                 <<goto "PR_Execute">>
                             <</button>>
                         </div>
@@ -1164,10 +1164,10 @@ window.__STORY_PASSAGES.push({
                     <<elseif _top_news.type is "rival_bad">>
                         <div style="display:flex; justify-content:space-between; align-items:center;">
                             <span style="color:#86efac;">✨ 机会：对手翻车，全力进攻？</span>
-                            <<button "👊 全力进攻 (200w)">>
+                            <<button "👊 全力进攻 (100w)">>
                                 <<set $top1_solved_month to $month>> /* 打时间戳 */
                                 <<set $is_top1_handled to true>>
-                                <<set $type to "raise_top1">><<set $cost to 200>><<set $cost_t to 3000>>
+                                <<set $type to "raise_top1">><<set $cost to 100>><<set $cost_t to 3000>>
                                 <<goto "PR_Execute">>
                             <</button>>
                         </div>
@@ -1176,10 +1176,10 @@ window.__STORY_PASSAGES.push({
                     <<elseif _top_news.type is "my_good">>
                         <div style="display:flex; justify-content:space-between; align-items:center;">
                             <span style="color:#fbbf24;">📈 利好：正面热搜，全网推广？</span>
-                            <<button "🔥 全网推广 (200w)">>
+                            <<button "🔥 全网推广 (100w)">>
                                  <<set $top1_solved_month to $month>> /* 打时间戳 */
                                  <<set $is_top1_handled to true>>
-                                 <<set $type to "raise_top1">><<set $cost to 200>><<set $cost_t to 3000>>
+                                 <<set $type to "raise_top1">><<set $cost to 100>><<set $cost_t to 3000>>
                                  <<goto "PR_Execute">>
                             <</button>>
                         </div>
@@ -1188,10 +1188,10 @@ window.__STORY_PASSAGES.push({
                     <<elseif _top_news.type is "rival_good">>
                         <div style="display:flex; justify-content:space-between; align-items:center;">
                             <span style="color:#fbbf24;">⚔️ 竞争：对手起势，重金打压？</span>
-                            <<button "📉 重金打压 (200w)">>
+                            <<button "📉 重金打压 (100w)">>
                                  <<set $top1_solved_month to $month>> /* 打时间戳 */
                                  <<set $is_top1_handled to true>>
-                                 <<set $type to "lower_top1">><<set $cost to 200>><<set $cost_t to 3000>>
+                                 <<set $type to "lower_top1">><<set $cost to 100>><<set $cost_t to 3000>>
                                  <<goto "PR_Execute">>
                             <</button>>
                         </div>
@@ -1265,13 +1265,13 @@ window.__STORY_PASSAGES.push({
               <span class="pr-act-tag">危险 −2</span>
             </div>
             <div class="pr-act">
-              <<link "🌪️ 祸水东引" "PR_Execute">><<set $type to "divert", $cost to 20, $cost_t to 2000>><</link>>
-              <span class="pr-act-cost">20w · 2k 流</span>
+              <<link "🌪️ 祸水东引" "PR_Execute">><<set $type to "divert", $cost to 10, $cost_t to 2000>><</link>>
+              <span class="pr-act-cost">10w · 2k 流</span>
               <span class="pr-act-tag">危险 −10</span>
             </div>
             <div class="pr-act">
-              <<link "🌊 全网洗地" "PR_Execute">><<set $type to "water", $cost to 50, $cost_t to 5000>><</link>>
-              <span class="pr-act-cost">50w · 5k 流</span>
+              <<link "🌊 全网洗地" "PR_Execute">><<set $type to "water", $cost to 25, $cost_t to 5000>><</link>>
+              <span class="pr-act-cost">25w · 5k 流</span>
               <span class="pr-act-tag good">危险 −30</span>
             </div>
             <div class="pr-act">
@@ -1322,9 +1322,9 @@ window.__STORY_PASSAGES.push({
           <div class="pr-acts pr-acts-2">
             <div class="pr-act">
               <<link "👊 流量硬刚" "Marketing_Battle">>
-                  <<set $battle_type to "traffic", $cost to 50, $cost_t to 5000, $cost_s to 0>>
+                  <<set $battle_type to "traffic", $cost to 25, $cost_t to 5000, $cost_s to 0>>
               <</link>>
-              <span class="pr-act-cost">50w · 5k 流</span>
+              <span class="pr-act-cost">25w · 5k 流</span>
             </div>
             <<if $gossips.length > 0>>
             <div class="pr-act">
@@ -1346,15 +1346,15 @@ window.__STORY_PASSAGES.push({
           <div class="pr-acts pr-acts-2">
             <div class="pr-act">
               <<link "💔 独自美丽" "Marketing_Battle">>
-                  <<set $battle_type to "solo", $cost to 50, $cost_t to 3000, $cost_s to 0>>
+                  <<set $battle_type to "solo", $cost to 25, $cost_t to 3000, $cost_s to 0>>
               <</link>>
-              <span class="pr-act-cost">50w · 3k 流</span>
+              <span class="pr-act-cost">25w · 3k 流</span>
             </div>
             <div class="pr-act">
               <<link "❤️ 捆绑炒作" "Marketing_Battle">>
-                  <<set $battle_type to "cp_bundle", $cost to 50, $cost_t to 3000, $cost_s to 0>>
+                  <<set $battle_type to "cp_bundle", $cost to 25, $cost_t to 3000, $cost_s to 0>>
               <</link>>
-              <span class="pr-act-cost">50w · 3k 流</span>
+              <span class="pr-act-cost">25w · 3k 流</span>
             </div>
           </div>
         </div>
@@ -1364,16 +1364,16 @@ window.__STORY_PASSAGES.push({
           <b>💖 公益慈善</b> <span style="font-size:0.8em; color:#ef4444;">(每月限一次)</span>
           <div class="pr-acts pr-acts-3">
              <div class="pr-act">
-               <<link "📦 物资捐赠" "PR_Execute">><<set $type to "charity", $cost to 100, $cost_t to 0>><</link>>
-               <span class="pr-act-cost">100w</span>
+               <<link "📦 物资捐赠" "PR_Execute">><<set $type to "charity", $cost to 60, $cost_t to 0>><</link>>
+               <span class="pr-act-cost">60w</span>
              </div>
              <div class="pr-act">
-               <<link "🏫 希望小学" "PR_Execute">><<set $type to "charity", $cost to 300, $cost_t to 0>><</link>>
-               <span class="pr-act-cost">300w</span>
+               <<link "🏫 希望小学" "PR_Execute">><<set $type to "charity", $cost to 150, $cost_t to 0>><</link>>
+               <span class="pr-act-cost">150w</span>
              </div>
              <div class="pr-act">
-               <<link "🎗️ 成立基金会" "PR_Execute">><<set $type to "charity", $cost to 500, $cost_t to 0>><</link>>
-               <span class="pr-act-cost">500w</span>
+               <<link "🎗️ 成立基金会" "PR_Execute">><<set $type to "charity", $cost to 260, $cost_t to 0>><</link>>
+               <span class="pr-act-cost">260w</span>
              </div>
           </div>
         </div>
@@ -1671,7 +1671,7 @@ window.__STORY_PASSAGES.push({
             <h3 style="color:#1e40af; margin-top:0;">数据维护与水军采购</h3>
             <p style="font-size:0.9em; color:#64748b; margin-bottom:20px;">
                 "老板，量大从优。最近平台算法又变了，建议您多囤点。" <br>
-                <span style="color:#ef4444; font-weight:bold;">基础汇率：50万资金 = 1,000 流量</span>
+                <span style="color:#ef4444; font-weight:bold;">基础汇率：30万资金 = 1,000 流量</span>
             </p>
             
             <div style="display:flex; flex-direction:column; gap:12px; max-width:400px; margin:0 auto;">
@@ -1679,40 +1679,40 @@ window.__STORY_PASSAGES.push({
                 /* 档位 1: 50万 -> 1000流量 */
                 <div style="display:flex; justify-content:space-between; align-items:center; background:#fff; padding:10px 15px; border-radius:6px; border:1px solid #cbd5e1;">
                     <span style="color:#334155; font-weight:bold;">💧 基础体验包</span>
-                    <<link "¥50万 (+1000流)" "Buy_Traffic">>
-                        <<set $buy_cost to 50>><<set $buy_amount to 1000>>
+                    <<link "¥30万 (+1000流)" "Buy_Traffic">>
+                        <<set $buy_cost to 30>><<set $buy_amount to 1000>>
                     <</link>>
                 </div>
                 
                 /* 档位 2: 200万 -> 4500流量 (多送500) */
                 <div style="display:flex; justify-content:space-between; align-items:center; background:#fff; padding:10px 15px; border-radius:6px; border:1px solid #93c5fd;">
                     <span style="color:#2563eb; font-weight:bold;">🌊 进阶包 <span style="font-size:0.8em; color:#ef4444;">(+12%)</span></span>
-                    <<link "¥200万 (+4500流)" "Buy_Traffic">>
-                        <<set $buy_cost to 200>><<set $buy_amount to 4500>>
+                    <<link "¥120万 (+4500流)" "Buy_Traffic">>
+                        <<set $buy_cost to 120>><<set $buy_amount to 4500>>
                     <</link>>
                 </div>
 
                 /* 档位 3: 500万 -> 12000流量 (多送2000) */
                 <div style="display:flex; justify-content:space-between; align-items:center; background:#fff; padding:10px 15px; border-radius:6px; border:1px solid #60a5fa;">
                     <span style="color:#1d4ed8; font-weight:bold;">⚡ 商务包 <span style="font-size:0.8em; color:#ef4444;">(+20%)</span></span>
-                    <<link "¥500万 (+1.2万流)" "Buy_Traffic">>
-                        <<set $buy_cost to 500>><<set $buy_amount to 12000>>
+                    <<link "¥300万 (+1.2万流)" "Buy_Traffic">>
+                        <<set $buy_cost to 300>><<set $buy_amount to 12000>>
                     <</link>>
                 </div>
 
                 /* 档位 4: 1000万 -> 26000流量 (多送6000) */
                 <div style="display:flex; justify-content:space-between; align-items:center; background:#fff; padding:10px 15px; border-radius:6px; border:1px solid #fcd34d;">
                     <span style="color:#b45309; font-weight:bold;">🔥 霸榜包 <span style="font-size:0.8em; color:#ef4444;">(+30%)</span></span>
-                    <<link "¥1000万 (+2.6万流)" "Buy_Traffic">>
-                        <<set $buy_cost to 1000>><<set $buy_amount to 26000>>
+                    <<link "¥650万 (+2.6万流)" "Buy_Traffic">>
+                        <<set $buy_cost to 650>><<set $buy_amount to 26000>>
                     <</link>>
                 </div>
 
                 /* 档位 5: 2000万 -> 60000流量 (多送20000) */
                 <div style="display:flex; justify-content:space-between; align-items:center; background:#fff; padding:10px 15px; border-radius:6px; border:1px solid #f87171;">
                     <span style="color:#b91c1c; font-weight:bold;">🚀 造神包 <span style="font-size:0.8em; color:#ef4444;">(+50%!)</span></span>
-                    <<link "¥2000万 (+6万流)" "Buy_Traffic">>
-                        <<set $buy_cost to 2000>><<set $buy_amount to 60000>>
+                    <<link "¥1300万 (+6万流)" "Buy_Traffic">>
+                        <<set $buy_cost to 1300>><<set $buy_amount to 60000>>
                     <</link>>
                 </div>
             </div>
@@ -1848,11 +1848,11 @@ window.__STORY_PASSAGES.push({
             [[🔙 返回粉丝管理|Fan_Management]]
         </div>
 
-    <<elseif $money < 300>>
+    <<elseif $money < 120>>
         <div style="text-align:center; padding:30px;">
             <div style="font-size:2.4em; margin-bottom:10px;">💸</div>
             <h3 style="color:#ef4444;">预算不够</h3>
-            <p>清理 <b><<print _band.name>></b> 需要 300 万的公关预算（买水军、控评、发通稿）。</p>
+            <p>清理 <b><<print _band.name>></b> 需要 120 万的公关预算（买水军、控评、发通稿）。</p>
             [[🔙 返回粉丝管理|Fan_Management]]
         </div>
 
@@ -1869,7 +1869,7 @@ window.__STORY_PASSAGES.push({
             <</if>>
         <</for>>
         <<set _a.reputation to Math.max(0, (_a.reputation || 0) - 8)>>
-        <<set $money -= 300>>
+        <<set $money -= 120>>
         <<set $action_points to Math.max(0, ($action_points || 0) - 1)>>
         <<set _after to FanPct(_a, $purge_key)>>
 
@@ -1894,9 +1894,9 @@ window.__STORY_PASSAGES.push({
             ⚠️ “官方亲自下场赶粉”已经冲上热搜。路人觉得这家公司冷血，粉丝觉得被背叛。
         </div>
 
-        <<if $money >= 200>>
-            <<link "💸 再花 200 万压热搜（口碑 +4）" "Fan_Management">>
-                <<set $money -= 200>>
+        <<if $money >= 80>>
+            <<link "💸 再花 80 万压热搜（口碑 +4）" "Fan_Management">>
+                <<set $money -= 80>>
                 <<set _a.reputation += 4>>
             <</link>>
             <span style="margin:0 8px; color:#CBD3E2;">|</span>

@@ -467,20 +467,31 @@ window.__STORY_PASSAGES.push({
                     </div>
                 </div>\`>>
 
-            /* 2. 唯粉反泥塑 (甚至连CP粉一起打) */
+            /* 2. 唯粉反泥塑 (甚至连CP粉一起打)
+               2026-10-29 改：强调硬汉人设换不来路人口碑。真实代价是——
+               话题掉、戏路被钉死（演技成长变慢）、下次妆造更容易翻车
+               （硬汉要涂黑粉，涂完比同框的人黑两个色号，很容易被艳压）。 */
             <<elseif _war_type == 2>> 
-                <<set _gain_rep to 5>>
                 <<set _loss_cp to random(300, 500)>>
                 <<set _loss_clown to random(200, 400)>> /* 嬷嬷通常也是乐子人/泥塑粉 */
-                <<set _target.reputation += _gain_rep>>
+                <<set _topic_loss to random(6, 12)>>
+                <<set _target.topic to Math.max(0, (_target.topic || 0) - _topic_loss)>>
                 <<set _target.fans.cp = Math.max(0, _target.fans.cp - _loss_cp)>>
                 <<set _target.fans.clown = Math.max(0, _target.fans.clown - _loss_clown)>>
-                <<set _comments to ["拒绝泥塑，他是男人！", "玩梗要有度。", "叫什么老婆？恶心。", "唯粉管太宽了吧，无趣。"]>>
+                <<set _target.hardman to Math.min(4, (_target.hardman || 0) + 1)>>
+                <<set _hd_now to _target.hardman>>
+                <<set _hd_fail to _hd_now * 3>>
+                <<set _comments to ["拒绝泥塑，他是男人！", "玩梗要有度。", "叫什么老婆？恶心。", "唯粉管太宽了吧，无趣。", "他上次红毯那个色号……认真的吗？"]>>
                 <<set _comment to _comments.random()>>
                 <<set $fan_war_report to \`
                 <div style='background:#F5F6F9; border-left:3px solid #B4B2A9; padding:10px; margin:10px 0; color:#4A4A55;'>
                     🛡️ <b>展鹏粉圈：净化行动</b><br>
-                    唯粉大规模投诉“老婆/泥塑”言论，强调硬汉人设。路人口碑 <span style='color:green'>+5</span>，但得罪了CP粉和嬷嬷(乐子人) <span style='color:red'>-\${_loss_cp + _loss_clown}</span>。<br>
+                    唯粉大规模投诉“老婆/泥塑”言论，把“硬汉”刷上热搜。路人并没有因此买账——
+                    话题 <span style='color:red'>-\${_topic_loss}</span>，CP 粉与嬷嬷合计 <span style='color:red'>-\${_loss_cp + _loss_clown}</span>。<br>
+                    <div style='margin-top:6px; padding-top:6px; border-top:1px dashed #E6E1EC;'>
+                        🥊 <b>硬汉包袱 ×\${_hd_now}</b>：下次妆造翻车率 <span style='color:red'>+\${_hd_fail}%</span>（硬汉要涂黑粉，涂完比同框的人黑两个色号，很容易被艳压）；
+                        演技成长 <span style='color:red'>-\${_hd_now}</span>，戏路被钉在“硬汉”这一格。
+                    </div>
                     <div style='margin-top:5px; padding-top:5px; border-top:1px dashed #E6E1EC; font-size:0.85em; color:#6E6A78;'>
                         💬 <b>热评：</b>“\${_comment}”
                     </div>
@@ -988,9 +999,9 @@ window.__STORY_PASSAGES.push({
 
     /* --- 2. 收入计算 --- */
     /* 💰 2026-10-27 重配：底层不动，顶端压平（顶流单部戏从 3000 降到 1900） */
-    <<set _base_drama_map to   {1: 90, 2: 350, 3: 700, 4: 1350, 5: 1900}>>
-    <<set _base_variety_map to {1: 45, 2: 120, 3: 290, 4: 560,  5: 780}>>
-    <<set _base_fashion_map to {1: 45, 2: 120, 3: 290, 4: 560,  5: 780}>>
+    <<set _base_drama_map to   {1: 252, 2: 980, 3: 1960, 4: 3780, 5: 5320}>>
+    <<set _base_variety_map to {1: 100, 2: 265, 3: 640, 4: 1230, 5: 1720}>>
+    <<set _base_fashion_map to {1: 100, 2: 265, 3: 640, 4: 1230, 5: 1720}>>
     <<set _base_stage_map to   {1: 70, 2: 420, 3: 900, 4: 1800, 5: 2600}>>
 
     <<set _res_mult_map to {
@@ -1065,9 +1076,10 @@ window.__STORY_PASSAGES.push({
     <</if>>
     <<set _stu_rate to (_studio_map[_studio] || 70)>>
 
-    /* 翻车率：基准 15%，颜值越高越不容易，工作室越烂越容易 */
+    /* 翻车率：基准 15%，颜值越高越不容易，工作室越烂越容易；
+       硬汉包袱每层 +3pp（涂黑粉 = 比别人黑两个色号，同框直接被艳压）。 */
     <<set _looks_v to (_a.looks || 70)>>
-    <<set _fail_rate to 15 - (_looks_v / 12)>>
+    <<set _fail_rate to 15 - (_looks_v / 12) + ((_a.hardman || 0) * 3)>>
     <<set _fail_rate to _fail_rate * (1 + (70 - _stu_rate) / 100)>>
     <<set _fail_rate to Math.max(3, Math.min(28, Math.round(_fail_rate)))>>
     /* 惊艳率：好工作室更容易出神图 */
@@ -1129,11 +1141,13 @@ window.__STORY_PASSAGES.push({
     <<set _msg to "">>
     
     <<if _job_type is "drama">>
-        /* 限制演技不超过上限 */
-        <<set _a.acting to Math.min(_a.acting + 3, _a.limit_acting)>>
+        /* 硬汉包袱：戏路被钉在硬汉这一格，演技成长最少也有 +1 */
+        <<set _act_gain to Math.max(1, 3 - (_a.hardman || 0))>>
+        <<set _a.acting to Math.min(_a.acting + _act_gain, _a.limit_acting)>>
         <<set _a.fans.career += _main_fan_growth>>
         <<set _a.reputation += _rep_gain>> 
-        <<set _msg to "演技 +3 | 事业粉 +"+_main_fan_growth+" | 口碑 +"+_rep_gain>>
+        <<set _msg to "演技 +"+_act_gain+" | 事业粉 +"+_main_fan_growth+" | 口碑 +"+_rep_gain>>
+        <<if (_a.hardman || 0) > 0>><<set _msg to _msg + " | 硬汉包袱 −"+(_a.hardman || 0)+"（戏路窄，演技长不动）">><</if>>
         
     <<elseif _job_type is "variety">>
         <<set _a.topic += 10>>
@@ -1167,7 +1181,7 @@ window.__STORY_PASSAGES.push({
         <<set _mk_rep to 3>>
         <<set _mk_topic_d to 18>>
     <<elseif _mk is "fail">>
-        <<set _mk_face_delta to -Math.floor((_a.fans.face || 0) * 0.25)>>
+        <<set _mk_face_delta to -Math.floor((_a.fans.face || 0) * (0.25 + (_a.hardman || 0) * 0.04))>>
         <<set _mk_rep to -5>>
         <<set _mk_topic_d to 8>>
     <<elseif _mk is "sabotage">>
@@ -1196,6 +1210,8 @@ window.__STORY_PASSAGES.push({
        登记之后这部戏会出现在办公室「作品库」里，播出时再结算成绩。 */
     <<if _job_type is "drama">>
         <<Film_Archive>>
+        /* 进组被导演重新打磨，硬汉包袱淡一层 */
+        <<set _a.hardman to Math.max(0, (_a.hardman || 0) - 1)>>
     <</if>>
     
     /* 界面显示（马卡龙小票样式，2026-10-25 替换原灰色表格） */
@@ -1863,10 +1879,12 @@ window.__STORY_PASSAGES.push({
 window.__STORY_PASSAGES.push({
   name: "Widget_Logic_Finance",
   src: `<<widget "Logic_Finance">>
+    /* 2026-10-29 经济重做：老存档里 $monthly_cost 还是 300，这里统一纠正到 100 */
+    <<if ($monthly_cost || 0) > 100>><<set $monthly_cost to 100>><</if>>
     /* --- A. 基础运营费 + 艺人工资 --- */
     <<set _is_year_end to ($month % 12 == 0)>>
 
-    /* 艺人工资：每人按段位计（糊咖100 / 三线200 / 二线300 / 一线400 / 顶流500）
+    /* 艺人工资：每人按段位计（糊咖40 / 三线80 / 二线120 / 一线160 / 顶流200）
        只给「真的在公司」的人发：未签约的占位角色 / 已离队的不算 */
     <<set $salary_cost to 0>>
     <<for _key range Object.keys($actors)>>
@@ -1877,24 +1895,39 @@ window.__STORY_PASSAGES.push({
         <<if _key is "huang" and $has_signed_huang isnot true>><<set _pay to false>><</if>>
         <<if _key is "liu" and $has_signed_liu isnot true>><<set _pay to false>><</if>>
         <<if _pay is true>>
-            <<set $salary_cost += ((_pp.rank_level || 1) * 100)>>
+            <<set $salary_cost += ((_pp.rank_level || 1) * 40)>>
         <</if>>
     <</for>>
     
     <<if _is_year_end>>
-        <<set _actual_cost to $monthly_cost + $salary_cost + 500>>
+        <<set _actual_cost to $monthly_cost + $salary_cost + 200>>
     <<else>>
         <<set _actual_cost to $monthly_cost + $salary_cost>>
     <</if>>
     
     <<set $money -= _actual_cost>>
 
+    /* --- A2. 代言费（2026-10-29 新增；原名「版权尾款」——经纪公司不持有版权，改成代言）
+       公司捧的人越红，品牌方给的代言费越高。每月自动到账：
+       全公司粉丝总量 / 3000 万，封顶 2000 万。 */
+    <<set _fan_total to 0>>
+    <<for _pk range Object.keys($actors)>>
+        <<set _pa to $actors[_pk]>>
+        <<if _pa.status isnot "left" and _pa.status isnot "hidden">>
+            <<for _fk range ["career", "mom", "face", "clown", "toxic", "cp", "dream", "moe", "passerby"]>>
+                <<set _fan_total += (_pa.fans[_fk] || 0)>>
+            <</for>>
+        <</if>>
+    <</for>>
+    <<set $passive_income to Math.min(2000, Math.floor(_fan_total / 3000))>>
+    <<set $money += $passive_income>>
+
     /* --- B. 流量维护费 (之前新增的逻辑) --- */
     <<set _total_traffic_cost to 0>>
     <<set _traffic_decay_msg to "">>
     
-    /* 定义维护费标准 (顶流 15000→26000：红到这个位置，热搜包月就是天价) */
-    <<set _maintenance_map to {1: 200, 2: 1000, 3: 3000, 4: 8000, 5: 26000}>>
+    /* 定义维护费标准（顶流 8000：红到这个位置，热搜包月就是天价） */
+    <<set _maintenance_map to {1: 100, 2: 400, 3: 1200, 4: 3000, 5: 8000}>>
     
     /* 🛠️ 只算「真的在公司」的人，避免未签约占位角色/离队艺人白扣流量 */
     <<for _key range Object.keys($actors)>>
@@ -2236,9 +2269,9 @@ window.__STORY_PASSAGES.push({
     <<else>><<set _calc_type to $type>><</if>>
 
     /* 🔴【核心同步】必须与 Job_Settle 完全一致 */
-    <<set _base_drama_map to   {1: 90, 2: 350, 3: 700, 4: 1350, 5: 1900}>>
-    <<set _base_variety_map to {1: 45, 2: 120, 3: 290, 4: 560,  5: 780}>>
-    <<set _base_fashion_map to {1: 45, 2: 120, 3: 290, 4: 560,  5: 780}>>
+    <<set _base_drama_map to   {1: 252, 2: 980, 3: 1960, 4: 3780, 5: 5320}>>
+    <<set _base_variety_map to {1: 100, 2: 265, 3: 640, 4: 1230, 5: 1720}>>
+    <<set _base_fashion_map to {1: 100, 2: 265, 3: 640, 4: 1230, 5: 1720}>>
     <<set _base_stage_map to   {1: 70, 2: 420, 3: 900, 4: 1800, 5: 2600}>>
 
     /* 🛠️ 修复：未知 $type / 缺字段时不再算出 NaN，统一兜底为 1 / 0 */
@@ -2316,7 +2349,7 @@ window.__STORY_PASSAGES.push({
             <<set $zp_lazy_streak += 1>>
             
             /* 计算理论工资用于打折 */
-            <<set _base_map to {1: 90, 2: 350, 3: 700, 4: 1350, 5: 1900}>>
+            <<set _base_map to {1: 252, 2: 980, 3: 1960, 4: 3780, 5: 5320}>>
             <<set _res_mult_map to {s: 1.4, a: 1.2, b: 1.0, c: 0.9}>>
             <<if not def $req_res>><<set $req_res to "c">><</if>>
             

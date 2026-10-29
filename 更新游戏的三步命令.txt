@@ -1,0 +1,20 @@
+更新游戏的三步命令
+把所有修改过的文件添加到暂存区
+
+Bash
+
+
+git add .
+提交到本地仓库，并写一句你这次修改的说明（引号里的内容可以自己随便写）
+
+Bash
+
+
+git commit -m "Update game content"
+推送到 GitHub 远程仓库
+
+Bash
+
+
+git push
+(如果你之前用过 -u，以后每次直接敲 git push 就可以了！)

@@ -963,7 +963,7 @@ window.__STORY_PASSAGES.push({
                     <div class="fl-op">
                         <div class="fl-op-h">
                             <span class="fl-op-t">🔥 买热搜造势</span>
-                            <span class="fl-op-c">400 万</span>
+                            <span class="fl-op-c">180 万</span>
                         </div>
                         <div class="fl-op-d">话题 +28 · 粉丝 +6%</div>
                         <div class="fl-op-r">30% 翻车：热搜太尬被群嘲，口碑 −5</div>
@@ -973,7 +973,7 @@ window.__STORY_PASSAGES.push({
                     <div class="fl-op">
                         <div class="fl-op-h">
                             <span class="fl-op-t">🛡️ 口碑维护</span>
-                            <span class="fl-op-c">600 万</span>
+                            <span class="fl-op-c">260 万</span>
                         </div>
                         <div class="fl-op-d">口碑 +3 · 稳定不翻车</div>
                         <div class="fl-op-r">片子本身不行（评分 &lt;52）时有 40% 被识破</div>
@@ -983,7 +983,7 @@ window.__STORY_PASSAGES.push({
                     <div class="fl-op">
                         <div class="fl-op-h">
                             <span class="fl-op-t">✂️ 二创投放</span>
-                            <span class="fl-op-c">300 万</span>
+                            <span class="fl-op-c">140 万</span>
                         </div>
                         <div class="fl-op-d">CP 粉 +6% · 梦女 +4% · 话题 +12</div>
                         <div class="fl-op-r">15% 翻车：剪辑太烂被嘲，反招乐子人</div>
@@ -1023,9 +1023,9 @@ window.__STORY_PASSAGES.push({
 <<set _desc to "">>
 <<set _lines to []>>
 
-<<if $live_action is "hot">><<set _cost to 400>><<set _title to "🔥 买热搜造势">>
-<<elseif $live_action is "pr">><<set _cost to 600>><<set _title to "🛡️ 口碑维护">>
-<<elseif $live_action is "vid">><<set _cost to 300>><<set _title to "✂️ 二创投放">>
+<<if $live_action is "hot">><<set _cost to 180>><<set _title to "🔥 买热搜造势">>
+<<elseif $live_action is "pr">><<set _cost to 260>><<set _title to "🛡️ 口碑维护">>
+<<elseif $live_action is "vid">><<set _cost to 140>><<set _title to "✂️ 二创投放">>
 <</if>>
 
 <<set _a to $actors[_lf.actor]>>

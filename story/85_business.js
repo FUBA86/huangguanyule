@@ -21,14 +21,14 @@ window.__STORY_PASSAGES.push({
 <div class="tech-card">
     <div class="header-banner"><span>📡 正在联络狗仔...</span></div>
     <div style="padding:30px; text-align:center;">
-        <<set $money -= 50>>
+        <<set $money -= 30>>
         <<set $stamina -= 10>>
         
         /* 调用 Widget 生成瓜 */
         <<Generate_Gossip>>
         
         <div style="font-size:4em; margin-bottom:20px;">📸</div>
-        <p>你支付了 50万 信息费，消耗了 10点体力。</p>
+        <p>你支付了 30万 信息费，消耗了 10点体力。</p>
         <p>狗仔发来了一个加密文档...</p>
         
         <div style="background:#f1f5f9; padding:15px; border-radius:8px; margin:20px auto; max-width:400px; font-weight:bold;">
@@ -87,9 +87,9 @@ window.__STORY_PASSAGES.push({
             <div style="margin-top:auto;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; background:#f8fafc; padding:8px; border-radius:4px; border:1px solid #f1f5f9;">
                     <span>📄 <b>C级包</b> (5个)</span>
-                    <<if $money >= 400 and $stamina >= 10>>
-                        <<button "¥400万 (-10体力)">>
-                             <<set $money -= 400>><<set $stamina -= 10>>
+                    <<if $money >= 120 and $stamina >= 10>>
+                        <<button "¥120万 (-10体力)">>
+                             <<set $money -= 120>><<set $stamina -= 10>>
                              <<set $resources.c += 5>>
                              <<set $last_gained_res to "c">><<set $last_gained_count to 5>>
                              <<goto "Resource_Get">>
@@ -101,9 +101,9 @@ window.__STORY_PASSAGES.push({
                 
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; background:#f8fafc; padding:8px; border-radius:4px; border:1px solid #f1f5f9;">
                     <span>📜 <b>B级</b> (1个)</span>
-                    <<if $money >= 200 and $stamina >= 10>>
-                        <<button "¥200万 (-10体力)">>
-                             <<set $money -= 200>><<set $stamina -= 10>>
+                    <<if $money >= 60 and $stamina >= 10>>
+                        <<button "¥60万 (-10体力)">>
+                             <<set $money -= 60>><<set $stamina -= 10>>
                              <<set $resources.b += 1>>
                              <<set $last_gained_res to "b">><<set $last_gained_count to 1>>
                              <<goto "Resource_Get">>
@@ -115,9 +115,9 @@ window.__STORY_PASSAGES.push({
 
                 <div style="display:flex; justify-content:space-between; align-items:center; background:#f8fafc; padding:8px; border-radius:4px; border:1px solid #f1f5f9;">
                     <span>⭐ <b>A级</b> (1个)</span>
-                    <<if $money >= 500 and $stamina >= 10>>
-                        <<button "¥500万 (-10体力)">>
-                             <<set $money -= 500>><<set $stamina -= 10>>
+                    <<if $money >= 160 and $stamina >= 10>>
+                        <<button "¥160万 (-10体力)">>
+                             <<set $money -= 160>><<set $stamina -= 10>>
                              <<set $resources.a += 1>>
                              <<set $last_gained_res to "a">><<set $last_gained_count to 1>>
                              <<goto "Resource_Get">>
@@ -149,10 +149,10 @@ window.__STORY_PASSAGES.push({
                         (概率: S 3% | A 12% | B 35% | C 50%)
                     </div>
                     <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span style="color:#9f1239; font-size:0.9em;">¥100万/次</span>
-                        <<if $money >= 100 and $stamina >= 25>>
+                        <span style="color:#9f1239; font-size:0.9em;">¥40万/次</span>
+                        <<if $money >= 40 and $stamina >= 25>>
                             <<button "🎲 组局 (B/C级为主)">>
-                                <<Social_Gacha 100 "normal">>
+                                <<Social_Gacha 40 "normal">>
                                 <<goto "Resource_Get">>
                             <</button>>
                         <<else>>
@@ -171,11 +171,11 @@ window.__STORY_PASSAGES.push({
                         (概率: S 8% | A 30% | B 40% | C 22%)
                     </div>
                     <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span style="color:#db2777; font-size:0.9em;">¥500万/次</span>
+                        <span style="color:#db2777; font-size:0.9em;">¥160万/次</span>
                         /* 检查条件修改为 >= 50 */
-                        <<if $money >= 500 and $stamina >= 50>>
+                        <<if $money >= 160 and $stamina >= 50>>
                             <<button "🥂 请柬 (A级概率UP)">>
-                                <<Social_Gacha 500 "high">>
+                                <<Social_Gacha 160 "high">>
                                 <<goto "Resource_Get">>
                             <</button>>
                         <<else>>
@@ -192,13 +192,13 @@ window.__STORY_PASSAGES.push({
                 🤝 资源置换
             </h4>
             <div class="text-muted" style="font-size:0.9em; margin-bottom: 15px;">
-                用<span style="color:#d97706; font-weight:bold;">🟡机密情报</span>作为筹码，<span style="color:#b45309; font-weight:bold;">额外支付500万</span>，换取顶级资源。
+                用<span style="color:#d97706; font-weight:bold;">🟡机密情报</span>作为筹码，<span style="color:#b45309; font-weight:bold;">额外支付160万</span>，换取顶级资源。
             </div>
             
             <div style="margin-top:auto; text-align:center; padding:15px; background:#fef2f2; border-radius:5px; border:1px solid #fee2e2;">
                 <div style="font-size:1.2em; font-weight:bold; color:#b45309; margin-bottom:5px;">S级 顶级大饼</div>
                 <div style="font-size:0.9em; color:#7f1d1d; margin-bottom:15px;">
-                    消耗: 机密情报x1 + 20体力 + <span style="color:#b91c1c; font-weight:bold;">500万资金</span>
+                    消耗: 机密情报x1 + 20体力 + <span style="color:#b91c1c; font-weight:bold;">160万资金</span>
                 </div>
                 <div style="font-size:0.8em; color:#059669; margin-bottom:15px; background:#dcfce7; padding:5px; border-radius:4px;">
                     ✨ <b>定向获取：</b>只要有机密情报，必得S级资源！
@@ -206,8 +206,8 @@ window.__STORY_PASSAGES.push({
                 
                 <<set _has_secret to $gossips.some(g => g.type === 'gold')>>
                 
-                 <<if _has_secret and $stamina >= 20 and $money >= 500>>
-                    <<button "🤫 确认置换 (500万)">>
+                 <<if _has_secret and $stamina >= 20 and $money >= 160>>
+                    <<button "🤫 确认置换 (160万)">>
                         <<Trade_Secret_For_Res>>
                         <<goto "Resource_Get">>
                       <</button>>
@@ -215,7 +215,7 @@ window.__STORY_PASSAGES.push({
                     <<if !_has_secret>>
                         <div style="color:#ef4444; font-size:0.85em; background:rgba(255,255,255,0.5); padding:5px; border-radius:4px;">⛔ 暂无机密情报</div>
                     <<elseif $money < 500>>
-                        <div style="color:#ef4444; font-size:0.85em;">⛔ 资金不足 (需500万)</div>
+                        <div style="color:#ef4444; font-size:0.85em;">⛔ 资金不足 (需160万)</div>
                     <<else>>
                         <div style="color:#ef4444; font-size:0.85em;">⛔ 体力不足</div>
                     <</if>>
@@ -288,18 +288,18 @@ window.__STORY_PASSAGES.push({
             
             <div style="font-size:0.95em; color:#020617; margin-bottom:15px; line-height:1.6; font-weight:500;">
                 联系业内的狗仔、代拍、营销号，获取第一手黑料或内幕。<br>
-                <span style="color:#ef4444; font-size:0.9em;">⚠️ 需要消耗：50万资金 + 10点体力</span>
+                <span style="color:#ef4444; font-size:0.9em;">⚠️ 需要消耗：30万资金 + 10点体力</span>
             </div>
 
   <div style="text-align:center;">
-    <<if $money >= 50 and $stamina >= 10>>
+    <<if $money >= 30 and $stamina >= 10>>
         <div data-passage="Buy_Gossip" 
              style="cursor:pointer; font-size:1em; padding:12px 30px; background:linear-gradient(to bottom, #3b82f6, #2563eb); border-radius:6px; box-shadow:0 4px 6px rgba(37,99,235,0.3); color:#ffffff; font-weight:bold; transition:transform 0.1s;">
             💸 购买情报
         </div>
-    <<elseif $money < 50>>
+    <<elseif $money < 30>>
         <div style="background:#e2e8f0; color:#475569; padding:10px; border-radius:6px; font-weight:bold; border:1px solid #cbd5e1;">
-            🚫 资金不足 (需50万)
+            🚫 资金不足 (需30万)
         </div>
     <<else>>
         <div style="background:#e2e8f0; color:#475569; padding:10px; border-radius:6px; font-weight:bold; border:1px solid #cbd5e1;">
@@ -860,12 +860,12 @@ window.__STORY_PASSAGES.push({
                     </div>
                 </div>
                 <div class="st-op-r">
-                    <div class="st-op-cost">-200 万</div>
+                    <div class="st-op-cost">-80 万</div>
                     <<if $mission_progress >= 100>>
                         <span class="st-nocost">任务已完成</span>
-                    <<elseif $money >= 200>>
+                    <<elseif $money >= 80>>
                         <<link "执行" class="st-exec">>
-                            <<set $money -= 200>>
+                            <<set $money -= 80>>
                             <<set $justice += 5>>
                             <<set $zp_trust += 5>>
                             <<set $exposure += _expo_gain>>
@@ -895,12 +895,12 @@ window.__STORY_PASSAGES.push({
                     </div>
                 </div>
                 <div class="st-op-r">
-                    <div class="st-op-cost">-300 万</div>
+                    <div class="st-op-cost">-120 万</div>
                     <<if $mission_progress >= 100>>
                         <span class="st-nocost">任务已完成</span>
-                    <<elseif $money >= 300>>
+                    <<elseif $money >= 120>>
                         <<link "执行" class="st-exec">>
-                            <<set $money -= 300>>
+                            <<set $money -= 120>>
                             <<set $zp_bond += 10>>
                             <<set $exposure += _expo_gain>>
                             <<set $mission_progress to Math.min(100, $mission_progress + 5)>>
@@ -1278,16 +1278,16 @@ window.__STORY_PASSAGES.push({
         <<elseif $action is "exchange">>
             <<set _qty to random(1, 2)>>
             <<set $resources.s += _qty>>
-            <<set $money -= 500>>
+            <<set $money -= 160>>
             <<set $stamina -= 20>>
             
             <div class="pr-card card-sell" style="border-left-color:#d97706;">
                 <div class="rank-badge" style="background:#d97706;">VIP</div><span class="result-icon">🏆</span>
                 <span class="news-title" style="color:#b45309;">顶级资源置换</span>
-                <p>你利用商业机密与500万封口费，换取了顶级资源。</p>
+                <p>你利用商业机密与160万封口费，换取了顶级资源。</p>
                 <div class="reward-box">
                     <div style="color:#d97706;">S级资源 x _qty</div>
-                    <div style="color:#78350f; font-size:0.9em;">消耗: 500万</div>
+                    <div style="color:#78350f; font-size:0.9em;">消耗: 160万</div>
                 </div>
             </div>
 

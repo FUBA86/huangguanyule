@@ -392,10 +392,16 @@ window.__STORY_PASSAGES.push({
             <div class="k">艺人工资</div>
             <div class="v">− <<print $salary_cost>> 万</div>
         </div>
+        <<if ($passive_income || 0) > 0>>
+        <div class="nm-kpi in">
+            <div class="k">代言费</div>
+            <div class="v">+ <<print $passive_income>> 万</div>
+        </div>
+        <</if>>
         <<if _is_year_end>>
         <div class="nm-kpi out">
             <div class="k">年终福利</div>
-            <div class="v">− 500 万</div>
+            <div class="v">− 200 万</div>
         </div>
         <</if>>
         <div class="nm-kpi bal <<if $money < 0>>is-neg<</if>>">
@@ -528,15 +534,17 @@ window.__STORY_PASSAGES.push({
 
     /* --- 进入下个月 --- */
     <div class="nm-next">
-        <<if $money < 0>>
-            <div class="nm-hint" style="margin-bottom:11px;">账户已经见底，撑不下去了。</div>
+        <<if $money <= -2000>>
+            <div class="nm-hint" style="margin-bottom:11px;">账面已经透支 <<print 0 - $money>> 万，债主上门，撑不下去了。</div>
             [[查看结局 · 负债累累|Game_Over]]
         <<elseif $month > $total_months>>
             <div class="nm-hint" style="margin-bottom:11px;">五年合约期满。</div>
             [[查看结局 · 命运的分岔|Story_Act4_22_Judgment]]
         <<else>>
             <<link "进入下个月">><<goto "Office">><</link>>
-            <div class="nm-hint">第 <<print $month + 1>> 月</div>
+            <div class="nm-hint">
+                <<if $money < 0>>⚠️ 账面已透支 <<print 0 - $money>> 万，透支到 2000 万就会被强制清算。<br><</if>>第 <<print $month + 1>> 月
+            </div>
         <</if>>
     </div>
 

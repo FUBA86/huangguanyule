@@ -260,7 +260,7 @@ window.__STORY_PASSAGES.push({
                 <<link "帮 · 替展鹏公关反黑">>
                     <<set $zp_bond += 10>>
                     /* 稍微扣点钱表示真的公关了 */
-                    <<set $money -= 50>>
+                    <<set $money -= 30>>
                     <<goto "Next_Month_End">>
                 <</link>>
             </div>

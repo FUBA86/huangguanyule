@@ -249,36 +249,36 @@ window.__STORY_PASSAGES.push({
                 /* 初级 */
                 <div style="background:#fff; border:1px solid #cbd5e1; padding:10px; border-radius:6px; text-align:center;">
                     <div style="font-weight:bold; color:#334155;">初级班</div>
-                    <div style="font-size:0.8em; color:#64748b;">效果: +1 | 费用: 50万</div>
-                    <<button "📚 报名 (50w)" "Train_Execute">>
-                        <<set $train_cost to 50>><<set $train_gain to 1>>
+                    <div style="font-size:0.8em; color:#64748b;">效果: +1 | 费用: 30万</div>
+                    <<button "📚 报名 (30w)" "Train_Execute">>
+                        <<set $train_cost to 30>><<set $train_gain to 1>>
                     <</button>>
                 </div>
 
                 /* 中级 */
                 <div style="background:#fff; border:1px solid #93c5fd; padding:10px; border-radius:6px; text-align:center;">
                     <div style="font-weight:bold; color:#1e40af;">中级班</div>
-                    <div style="font-size:0.8em; color:#64748b;">效果: +2 | 费用: 150万</div>
-                    <<button "🏫 报名 (150w)" "Train_Execute">>
-                         <<set $train_cost to 150>><<set $train_gain to 2>>
+                    <div style="font-size:0.8em; color:#64748b;">效果: +2 | 费用: 90万</div>
+                    <<button "🏫 报名 (90w)" "Train_Execute">>
+                         <<set $train_cost to 90>><<set $train_gain to 2>>
                     <</button>>
                 </div>
 
                  /* 高级 */
                 <div style="background:#fff; border:1px solid #fcd34d; padding:10px; border-radius:6px; text-align:center;">
                     <div style="font-weight:bold; color:#b45309;">高级班</div>
-                    <div style="font-size:0.8em; color:#64748b;">效果: +3 | 费用: 300万</div>
-                    <<button "🎓 报名 (300w)" "Train_Execute">>
-                         <<set $train_cost to 300>><<set $train_gain to 3>>
+                    <div style="font-size:0.8em; color:#64748b;">效果: +3 | 费用: 180万</div>
+                    <<button "🎓 报名 (180w)" "Train_Execute">>
+                         <<set $train_cost to 180>><<set $train_gain to 3>>
                     <</button>>
                 </div>
 
                  /* 大师 */
                 <div style="background:#fff; border:1px solid #f87171; padding:10px; border-radius:6px; text-align:center;">
                     <div style="font-weight:bold; color:#991b1b;">大师班</div>
-                    <div style="font-size:0.8em; color:#64748b;">效果: +4 | 费用: 500万</div>
-                    <<button "👑 报名 (500w)" "Train_Execute">>
-                         <<set $train_cost to 500>><<set $train_gain to 4>>
+                    <div style="font-size:0.8em; color:#64748b;">效果: +4 | 费用: 300万</div>
+                    <<button "👑 报名 (300w)" "Train_Execute">>
+                         <<set $train_cost to 300>><<set $train_gain to 4>>
                     <</button>>
                 </div>
             </div>
@@ -304,7 +304,7 @@ window.__STORY_PASSAGES.push({
    缺任意一个都会让结算页显示「+NaN / 当前数值: NaN」。 */
 <<if not def $train_attr>><<set $train_attr to "acting">><</if>>
 <<if not def $train_gain>><<set $train_gain to 1>><</if>>
-<<if not def $train_cost>><<set $train_cost to 50>><</if>>
+<<if not def $train_cost>><<set $train_cost to 30>><</if>>
 <<if not def $current_actor>><<set $current_actor to "zp">><</if>>
 
 /* --- 1. 锁判定 --- */
