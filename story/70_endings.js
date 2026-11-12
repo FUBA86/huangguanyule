@@ -264,9 +264,9 @@ window.__STORY_PASSAGES.push({
 
           <div class="story-box">
               <<if $bankruptcy_count == 0>>
-                  <p>这一次，没有人再能替你兜底了。</p>
+                  <p>没有人再能替你兜底了。</p>
               <<else>>
-                  <p>这一次，连那五千万也烧光了。</p>
+                  <p></p>
               <</if>>
               <p>你看着赤字的报表，无力地瘫坐在椅子上。一切都结束了，叔叔的公司，那么多人的就业，你还是没能保住。</p>
               <div class="scene-break">· · ·</div>

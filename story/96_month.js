@@ -421,21 +421,28 @@ window.__STORY_PASSAGES.push({
   src: `<<nobr>>
 <<if _punishment_triggered>>
 <div class="nm-card nm-alert">
-    <div class="nm-sec evt">危机 · 全网抵制</div>
+    <div class="nm-sec evt">危机 · 资方撤单</div>
     <p class="nm-alert-lead">
-        危险值已经顶到 100。业内口碑彻底崩盘，合作方连夜撤资，旗下艺人被集体停摆。
+        危险值顶到了 100。业内口碑塌了，合作方连夜撤单，资方抽走了大部分库存资源。这一轮不动人，但账要真金白银地赔。
     </p>
 
     <<if _fired_actors.length > 0>>
         <div class="nm-soft pink">
-            <h4>严重违约</h4>
-            <p>合作方愤而解约，把 <<print _fired_actors.join("、")>> 赶出了剧组。</p>
+            <h4>通告被撤</h4>
+            <p>合作方单方面撤单，<<print _fired_actors.join("、")>> 的通告当场作废。</p>
             <p style="margin-top:4px;">违约金 − <<print _total_penalty>> 万</p>
+            <p style="margin-top:4px; color:#A08595; font-size:11.5px;">人已经放回来了，下个月可以重新接活，但这段时间的进度白费。</p>
         </div>
     <</if>>
 
-    <div class="nm-item warn">所有库存资源已被资方撤回</div>
-    <div class="nm-item warn">旗下艺人限制活动 3 个月</div>
+    <<if _res_cut > 0>>
+        <div class="nm-item warn">资方抽走 <<print _res_cut>> 件库存资源（各档保留四成周转）</div>
+    <</if>>
+    <<if _cash_fine > 0>>
+        <div class="nm-item warn">危机公关与渠道疏通 − <<print _cash_fine>> 万</div>
+    <</if>>
+
+    <div class="nm-item good">没有人被封杀，危险值已压回 40 以内——但根子没解决，再顶到 100 还会来一次</div>
 </div>
 <</if>>
 <</nobr>>`
@@ -501,6 +508,15 @@ window.__STORY_PASSAGES.push({
 
     /* --- 危机（只在触发时出现） --- */
     <<include "NM_Punishment">>
+
+    /* --- 老存档解封（改版一次性提示） --- */
+    <<if def $unban_list and $unban_list.length > 0>>
+    <div class="nm-card">
+        <div class="nm-sec biz">解封</div>
+        <div class="nm-item good"><<print $unban_list.join("、")>> 的封杀期提前结束了——新版不再封杀艺人，人已经放回来了。</div>
+    </div>
+    <<set $unban_list to []>>
+    <</if>>
 
     /* --- 财务 --- */
     <<include "NM_Finance">>

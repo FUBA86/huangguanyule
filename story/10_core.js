@@ -676,7 +676,7 @@ window.__STORY_PASSAGES.push({
             </li>
             <li>
                 <span class="nt-ico">🔒</span>
-                <span>唯一 CP 为韩证飞 × 展鹏，可逆不可拆。</span>
+                <span>CP 为韩证飞 × 展鹏。</span>
             </li>
             <li>
                 <span class="nt-ico">🚫</span>

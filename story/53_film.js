@@ -36,9 +36,9 @@ window.FILM_TIER = [
     line: "口碑一路走高，自来水自发安利。不算现象级，但足够让业内记住这个名字。" },
   { min: 60, key: "ok",   t: "📺 平稳播出", pay: 0.06,  fan: 0.0030, rep: [0, 0, 0],
     line: "该看的都看了，没出错也没出彩。播完之后很快被下一部剧盖过去。" },
-  { min: 45, key: "flat", t: "😐 反应平淡", pay: 0.02,  fan: 0.0010, rep: [0, 0, 0],
+  { min: 45, key: "flat", t: "😐 反应平淡", pay: 0.02,  fan: 0.0016, rep: [0, 0, 0],
     line: "热搜一次没上，弹幕稀稀拉拉。观众看完就忘，连吐槽的兴致都没有。" },
-  { min: 0,  key: "bad",  t: "💀 扑了",     pay: -0.05, fan: -0.0020, rep: [-1, -1, 0],
+  { min: 0,  key: "bad",  t: "💀 扑了",     pay: -0.05, fan: -0.0008, rep: [0, 0, 0],
     line: "开分就塌，剪辑和台词被逐条截图。骂声盖过了剧情本身。" }
 ];
 
@@ -408,11 +408,11 @@ window.__STORY_PASSAGES.push({
             <<elseif _fsc >= 75>>
                 <<set _ftier to "good">><<set _frep to 4>><<set _ffan to 0.10>><<set _ftopic to 26>>
             <<elseif _fsc >= 60>>
-                <<set _ftier to "ok">><<set _frep to 1>><<set _ffan to 0.04>><<set _ftopic to 12>>
+                <<set _ftier to "ok">><<set _frep to 1>><<set _ffan to 0.045>><<set _ftopic to 12>>
             <<elseif _fsc >= 45>>
-                <<set _ftier to "flat">><<set _frep to -1>><<set _ffan to 0.01>><<set _ftopic to 5>>
+                <<set _ftier to "flat">><<set _frep to 0>><<set _ffan to 0.018>><<set _ftopic to 6>>
             <<else>>
-                <<set _ftier to "bad">><<set _frep to -5>><<set _ffan to -0.06>><<set _ftopic to 8>>
+                <<set _ftier to "bad">><<set _frep to -2>><<set _ffan to -0.02>><<set _ftopic to 8>>
             <</if>>
 
             /* --- 粉丝增减（顺手把明细记下来，作品详情页要展示） --- */
@@ -427,8 +427,8 @@ window.__STORY_PASSAGES.push({
                 <<set _fp.fans.passerby to ((_fp.fans.passerby || 0) + _fd_p)>>
                 <<set _fp.fans.face to ((_fp.fans.face || 0) + _fd_f)>>
             <<else>>
-                <<set _fd_c to Math.floor(_fgain * 0.6)>>
-                <<set _fd_p to Math.floor(_fgain * 0.4)>>
+                <<set _fd_c to Math.floor(_fgain * 0.3)>>
+                <<set _fd_p to Math.floor(_fgain * 0.7)>>
                 <<set _fp.fans.career to Math.max(0, ((_fp.fans.career || 0) + _fd_c))>>
                 <<set _fp.fans.passerby to Math.max(0, ((_fp.fans.passerby || 0) + _fd_p))>>
             <</if>>
@@ -447,7 +447,7 @@ window.__STORY_PASSAGES.push({
                     <<set _ftopic += 25>>
                     <<set _fp.fans.clown to ((_fp.fans.clown || 0) + Math.floor(_fsum * 0.08))>>
                     <<set _fp.fans.moe to ((_fp.fans.moe || 0) + Math.floor(_fsum * 0.05))>>
-                    <<set _fp.fans.career to Math.max(0, Math.floor((_fp.fans.career || 0) * 0.94))>>
+                    <<set _fp.fans.career to Math.max(0, Math.floor((_fp.fans.career || 0) * 0.97))>>
                 <</if>>
             <</if>>
 

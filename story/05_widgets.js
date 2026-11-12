@@ -1736,7 +1736,7 @@ window.__STORY_PASSAGES.push({
             <<if $actors[_key].rank_level > _max_rank>><<set _max_rank to $actors[_key].rank_level>><</if>>
         <</for>>
         
-        <<set _attack_chance to 30 + (_max_rank * 10)>>
+        <<set _attack_chance to 15 + (_max_rank * 6)>>
         
         <<if random(1, 100) < _attack_chance and _victims.length > 0>>
             
@@ -1756,7 +1756,7 @@ window.__STORY_PASSAGES.push({
                 
                 /* 事件2: 软饭男 */
                 <<elseif _roll == 2>>
-                    <<set _target.reputation -= 20>>
+                    <<set _target.reputation -= 4>>
                     <<set _rival_event to { type: "bad", title: "🍚【软饭硬吃】", desc: "营销号集体发难，嘲讽展鹏是‘靠老婆上位的花瓶’，列举了他所有的资源都来自无垠娱乐。" }>>
                 
                 /* 事件3: 吸血捆绑 */
@@ -1766,7 +1766,7 @@ window.__STORY_PASSAGES.push({
                 
                 /* 事件4: 反串引战 */
                 <<else>>
-                    <<set $danger_level += 20>><<set _target.reputation -= 30>>
+                    <<set $danger_level += 20>><<set _target.reputation -= 5>>
                     <<set _rival_event to { type: "bad", title: "🎭【反串引战】", desc: "一批顶着展鹏头像的‘粉丝’突然在官媒评论区大肆辱骂，随后营销号联动搬运‘粉丝行为偶像买单’。查出是 " + _rival.name + " 的水军。" }>>
                 <</if>>
 
@@ -1775,17 +1775,17 @@ window.__STORY_PASSAGES.push({
                 <<set _roll to random(1, 4)>> /* 扩充到4种 */
                 
                 <<if _roll == 1>>
-                    <<set _target.reputation -= 30>><<set $danger_level += 10>>
+                    <<set _target.reputation -= 6>><<set $danger_level += 10>>
                     <<set _rival_event to { type: "bad", title: "🔞【艳星起底】", desc: "对家扒出了黄耀祖早年拍摄三级片的截图，全网疯传‘滚出娱乐圈’。" }>>
                 <<elseif _roll == 2>>
                     <<set _target.fans.face -= 200>>
                     <<set _rival_event to { type: "bad", title: "🤡【东施效颦】", desc: "黄耀祖模仿展鹏的写真被群嘲‘画虎不成反类犬’，" + _rival.name + " 趁机发通稿踩一捧一。" }>>
                 <<elseif _roll == 3>>
-                    <<set _target.fans.mom += 300>><<set _target.reputation -= 10>>
+                    <<set _target.fans.mom += 300>><<set _target.reputation -= 3>>
                     <<set _rival_event to { type: "bad", title: "🥺【虐粉通稿】", desc: "网上突然流传黄耀祖在片场被当做‘廉价替身’使唤的视频。虽然虐到了妈粉，但业内评价降低了。" }>>
                 /* 事件4 (新): 杀猪盘CP */
                 <<else>>
-                    <<set _target.fans.cp -= 400>><<set _target.reputation -= 20>>
+                    <<set _target.fans.cp -= 400>><<set _target.reputation -= 4>>
                     <<set _rival_event to { type: "bad", title: "🍬【杀猪盘CP】", desc: "某男演员买通稿炒作‘照顾黄耀祖’的暖心人设，傻乎乎的黄耀祖竟然转发互动。对方立刻提纯CP粉，倒打一耙说黄耀祖吸血上位。" }>>
                 <</if>>
 
@@ -1794,14 +1794,14 @@ window.__STORY_PASSAGES.push({
                 <<set _roll to random(1, 3)>> /* 扩充到3种 */
                 
                 <<if _roll == 1>>
-                    <<set _target.reputation -= 20>>
+                    <<set _target.reputation -= 4>>
                     <<set _rival_event to { type: "bad", title: "🛌【潜规则上位】", desc: "有人爆料刘梁周直接签约是因为和高层（你）有不正当关系，" + _rival.name + " 暗示他是资源咖。" }>>
                 <<elseif _roll == 2>>
                     <<set _target.fans.career -= 200>><<set _target.fans.face -= 200>>
                     <<set _rival_event to { type: "bad", title: "🧊【人设崩塌】", desc: "刘梁周私下拒绝媚粉的录音流出。对家营销号狂带节奏，称其‘端起碗吃饭，放下碗骂娘’，以此提纯自家粉丝。" }>>
                 /* 事件3 (新): 碰瓷发糖 */
                 <<else>>
-                    <<set _target.reputation -= 15>><<set $danger_level += 10>>
+                    <<set _target.reputation -= 4>><<set $danger_level += 10>>
                     <<set _rival_event to { type: "bad", title: "🍵【碰瓷发糖】", desc: "某女星疯狂晒出与刘梁周的‘同款’暗示恋情。刘梁周因未回应被骂‘冷暴力渣男’，女方卖惨喜提‘全网心疼’热搜。" }>>
                 <</if>>
 
@@ -1810,11 +1810,11 @@ window.__STORY_PASSAGES.push({
                 <<set _roll to random(1, 3)>>
                 
                 <<if _roll == 1>>
-                    <<set _target.reputation -= 15>>
+                    <<set _target.reputation -= 4>>
                     <<set _rival_event to { type: "bad", title: "😤【耍大牌疑云】", desc: "一段恶意剪辑的视频流出，看起来像是秦飒在对助理翻白眼。" }>>
                 <<elseif _roll == 2>>
                     /* 单方面炒CP */
-                    <<set _target.fans.cp -= 600>><<set _target.reputation -= 10>>
+                    <<set _target.fans.cp -= 600>><<set _target.reputation -= 3>>
                     <<set _rival_event to { type: "bad", title: "🔪【糖里有毒】", desc: _rival.name + " 旗下的男艺人单方面炒作与秦飒的绯闻，热度到手后立刻发声明撇清，倒打一耙说秦飒倒贴。" }>>
                 <<else>>
                     /* 挑拨离间 */
@@ -1828,7 +1828,7 @@ window.__STORY_PASSAGES.push({
                 
                 /* 事件1: 文盲 */
                 <<if _roll == 1>>
-                    <<set _target.reputation -= 10>>
+                    <<set _target.reputation -= 3>>
                     <<set _rival_event to { type: "bad", title: "📚【绝望的文盲】", desc: "白小纯写错常用成语被狂喷‘九年义务教育漏网之鱼’，对家借机大发通稿嘲笑无垠娱乐的签约门槛。" }>>
                 /* 事件2 (新): 恋爱脑 */
                 <<else>>
@@ -1881,6 +1881,17 @@ window.__STORY_PASSAGES.push({
   src: `<<widget "Logic_Finance">>
     /* 2026-10-29 经济重做：老存档里 $monthly_cost 还是 300，这里统一纠正到 100 */
     <<if ($monthly_cost || 0) > 100>><<set $monthly_cost to 100>><</if>>
+    /* 2026-11-12 危险值清算改版：老存档里被「封杀3个月」的人，这里一次性放出来 */
+    <<set $unban_list to ($unban_list || [])>>
+    <<for _bk range Object.keys($actors)>>
+        <<set _ba to $actors[_bk]>>
+        <<if _ba.job_type is "banned">>
+            <<set _ba.busy_months to 0>>
+            <<set _ba.project_name to "">>
+            <<set _ba.job_type to "">>
+            <<set $unban_list.push(_ba.name)>>
+        <</if>>
+    <</for>>
     /* --- A. 基础运营费 + 艺人工资 --- */
     <<set _is_year_end to ($month % 12 == 0)>>
 
@@ -1962,48 +1973,46 @@ window.__STORY_PASSAGES.push({
   name: "Widget_Logic_Punishment",
   src: `<<widget "Logic_Check_Punishment">>
     <<set _punishment_triggered to false>>
-    <<set _fired_actors to []>> /* 记录被退货的艺人名字 */
-    <<set _total_penalty to 0>> /* 记录总违约金 */
-    
-    /* 如果危险值爆表 (大于等于100) */
+    <<set _fired_actors to []>> /* 被撤单的艺人名字 */
+    <<set _total_penalty to 0>> /* 撤单违约金合计 */
+    <<set _cash_fine to 0>> /* 危机公关支出 */
+    <<set _res_cut to 0>> /* 被资方抽走的资源总数 */
+
+    /* 危险值爆表 (大于等于100)：只清算钱和资源，不停工、不封杀 */
     <<if $danger_level >= 100>>
         <<set _punishment_triggered to true>>
-        
-        /* 1. 清空所有资源 & 抹除掉落 */
-        <<set $resources to {s:0, a:0, b:0, c:0}>>
+
+        /* 1. 资方抽走库存资源的六成，留四成做周转 */
+        <<set _rs to ($resources.s || 0)>>
+        <<set _ra to ($resources.a || 0)>>
+        <<set _rb to ($resources.b || 0)>>
+        <<set _rc to ($resources.c || 0)>>
+        <<set _res_cut to (_rs - Math.floor(_rs * 0.4)) + (_ra - Math.floor(_ra * 0.4)) + (_rb - Math.floor(_rb * 0.4)) + (_rc - Math.floor(_rc * 0.4))>>
+        <<set $resources to {s: Math.floor(_rs * 0.4), a: Math.floor(_ra * 0.4), b: Math.floor(_rb * 0.4), c: Math.floor(_rc * 0.4)}>>
         <<set _resource_event to null>>
-        
-        /* 2. 遍历所有艺人进行处理 */
+
+        /* 2. 正在推进的通告被合作方撤单，赔违约金；人当场放回来，可以重新接活 */
         <<for _key range Object.keys($actors)>>
             <<set _a to $actors[_key]>>
-            
-            /* --- 检查是否正在接通告 (非空闲 且 非培训 且 非被封杀 且 非产假) --- */
-            /* 🔴 修复：增加 neq "maternity_leave" 判断 */
-            <<if _a.busy_months > 0 and _a.status isnot "left" and _a.job_type neq "training" and _a.job_type neq "banned" and _a.job_type neq "maternity_leave">>
-                /* 触发退货惩罚 */
+            <<if _a.busy_months > 0 and _a.status isnot "left" and def _a.job_type and _a.job_type neq "" and _a.job_type neq "training" and _a.job_type neq "banned" and _a.job_type neq "maternity_leave">>
                 <<set _fired_actors.push(_a.name)>>
-                <<set _total_penalty += 500>>
-                <<set $money -= 500>> /* 直接扣钱 */
+                <<set _total_penalty += 200>>
+                <<set $money -= 200>>
+                <<set _a.busy_months to 0>>
+                <<set _a.project_name to "">>
+                <<set _a.job_type to "">>
             <</if>>
-            
-            /* --- 统一执行封杀 --- */
-            /* 🔴 修复：如果展鹏正在休产假，不要覆盖他的状态 */
-            <<if _a.status is "left">>
-                /* 已离队的人不参与封杀（展鹏已经不在公司） */
-            <<elseif _key is "zp" and _a.job_type is "maternity_leave">>
-                /* 展鹏保持产假状态，不受封杀状态覆盖影响 */
-                /* (虽然公司已经凉了，但他本来就在家带孩子) */
-            <<else>>
-                /* 其他人(或者没休假的展鹏) 强制回家反省 */
-                <<set _a.busy_months to 3>>
-                <<set _a.project_name to "📉 口碑崩盘 (无人敢用)">>
-                <<set _a.job_type to "banned">>
-            <</if>>
-            
         <</for>>
-        
-        /* 3. 危险值归零 */
-        <<set $danger_level to 0>>
+
+        /* 3. 危机公关、渠道疏通，按账面资金抽一笔（最多扣一半，不会直接把人送进清算） */
+        <<if ($money || 0) > 0>>
+            <<set _cash_fine to Math.min(800, Math.max(120, Math.floor($money * 0.12)))>>
+            <<set _cash_fine to Math.min(_cash_fine, Math.floor($money * 0.5))>>
+            <<set $money -= _cash_fine>>
+        <</if>>
+
+        /* 4. 危险值压回 40，没归零——根子上的问题还在，迟早还会再来一次 */
+        <<set $danger_level to 40>>
     <</if>>
 <</widget>>`
 });
