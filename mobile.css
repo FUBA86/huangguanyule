@@ -42,8 +42,27 @@
 }
 
 /* ---------- 0c. 全局兜底：任何地方都不许横向溢出 ---------- */
+/* ⚠️ 这里绝对不能用 overflow-x: hidden。
+   html 和 body 同时设它，body 会变成独立滚动容器（不再是视口滚动），
+   iOS / 微信内置浏览器上 #ui-bar 的 position:sticky 会直接失效——
+   表现就是顶部状态条跟着正文一起滚走，浮在段落中间挡住字。
+   用 clip：视觉上一样裁剪，但不建立滚动容器，sticky 保持有效。 */
+/* ⚠️ 只在手机上改，桌面端维持原样（桌面侧栏的 sticky 另有各机型适配，别去动） */
 @media (max-width: 860px) {
-  html, body { max-width: 100%; overflow-x: hidden; }
+  html { max-width: 100%; overflow-x: clip; }
+  /* body 必须留 visible：style.css 里给 body 写了 overflow-x:hidden，
+     那一条会让 body 变成独立滚动容器，是 sticky 失效的真正原因。
+     横向溢出交给 html 的 clip 裁，body 不参与裁剪。 */
+  body { max-width: 100%; overflow-x: visible !important; }
+}
+@supports not (overflow-x: clip) {
+  /* 老浏览器兜底：同样只在 html 上挡，别碰 body */
+  @media (max-width: 860px) {
+    html { overflow-x: hidden; }
+  }
+}
+
+@media (max-width: 860px) {
   .passage, .passage * { min-width: 0; }
   .passage img, .passage video, .passage canvas { max-width: 100%; height: auto; }
 
@@ -73,7 +92,15 @@
 #ui-bar-quick { display: none; }
 
 @media (max-width: 860px) {
-  #ui-bar { padding: calc(8px + env(safe-area-inset-top)) 10px 8px !important; }
+  #ui-bar {
+    padding: calc(8px + env(safe-area-inset-top)) 10px 8px !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 60 !important;
+    background: rgba(255, 255, 255, .96) !important;
+    -webkit-backdrop-filter: blur(14px) saturate(150%);
+    backdrop-filter: blur(14px) saturate(150%);
+  }
   #ui-bar-top {
     display: flex;
     align-items: center;
@@ -104,18 +131,49 @@
   #ui-bar-quick .qk-save { background: #2F4A7C; border-color: #2F4A7C; color: #fff; }
   #ui-bar-quick .qk.is-done { background: #2E8B62 !important; border-color: #2E8B62 !important; }
 
-  /* 展开后的面板别占满整屏，留出正文 */
-  #ui-bar.open #ui-bar-body { max-height: 52vh !important; max-height: 52dvh !important; }
+  /* 展开后的面板「挂在」条子下面，不撑高条子——
+     否则展开/收起时正文会跳一段，而且 sticky 高度一变容易算错位置 */
+  #ui-bar.open #ui-bar-body {
+    display: flex !important;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    max-height: 66vh !important;
+    max-height: 66dvh !important;
+    overflow-y: auto;
+    padding: 12px 12px calc(14px + env(safe-area-inset-bottom));
+    /* 必须是纯白：之前用 0.98 透明 + 继承来的入场动画（opacity 0→1），
+       展开瞬间正文会从面板底下透出来，字叠字 */
+    background: #FFFFFF !important;
+    border-radius: 0 0 18px 18px;
+    box-shadow: 0 20px 36px -24px rgba(30, 45, 70, .55);
+    z-index: 61;
+    animation: none !important;
+    opacity: 1 !important;
+    isolation: isolate;
+  }
 
+  /* 0b 那段给所有宽度都设了 sticky bottom，面板里会浮在艺人卡上面、
+     把「展鹏 妻子 二线」那一行压掉半截。手机上改回普通流。 */
   #ui-bar-tools {
-    display: flex;
+    display: flex !important;
     flex-wrap: wrap;
     gap: 8px;
+    position: static !important;
+    margin-top: 2px;
+    padding: 4px 0 2px !important;
+    background: transparent !important;
+    border-top: none !important;
+    box-shadow: none !important;
   }
   #ui-bar-tools button {
     flex: 1 1 calc(50% - 4px);
     min-height: 38px;
   }
+  /* 顶部条上已经有「存档 / 读档」两个常驻键，面板里这两个是重复的，
+     占掉两行高度，藏掉，把空间留给状态数据 */
+  #ui-bar-body #ui-bar-tools button:nth-child(-n+2) { display: none !important; }
 }
 
 /* =========================================================================
@@ -329,4 +387,33 @@
   }
   .passage td .link-internal,
   .passage .arc-item .link-internal { min-height: 32px; }
+}
+
+/* =========================================================================
+   9. 手机正文：把三层边距的叠加压回去
+   -------------------------------------------------------------------------
+   症状：390px 宽的屏上，一行只剩 17–19 个字，读起来不断换行。
+   原因：边距叠了三层 —— #story-wrap 10px + .story-card 外边距 10px
+        + .story-body 内边距 20px = 每边 40px，正文只剩 298px。
+   处理：三层一起收（8 / 4 / 12），每边留 24px，正文回到 340px 左右，
+        一行约 21–22 个字；卡片离屏幕边缘正好 12px，不会贴边。
+   ========================================================================= */
+@media (max-width: 640px) {
+  /* style_v5.css 里这条带 !important，必须同权重压回去 */
+  #story-wrap { padding-left: 8px !important; padding-right: 8px !important; }
+
+  .story-card {
+    margin-left: 4px !important;
+    margin-right: 4px !important;
+    border-radius: 14px !important;
+  }
+  .story-body { padding-left: 12px !important; padding-right: 12px !important; }
+  .story-header { padding-left: 12px !important; padding-right: 12px !important; }
+
+  /* 段落两端对齐在窄屏会把字距拉开，换成左对齐更匀 */
+  .story-body p { text-align: left; }
+
+  /* 月结 / 说明书这类卡片同样收一下，不然还是一屏十几行 */
+  .nm-card { padding-left: 12px !important; padding-right: 12px !important; }
+  .tech-card { padding-left: 12px !important; padding-right: 12px !important; }
 }

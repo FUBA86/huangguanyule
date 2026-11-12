@@ -508,16 +508,16 @@ window.__STORY_PASSAGES.push({
     <tr><td>流量维护</td><td>糊咖 100、三线 400、二线 1,200、一线 3,000、顶流 8,000</td></tr>
     <tr><td>每年 12 月</td><td>额外 200 万（年终）</td></tr>
 </table>
-<p class="mn-p">流量不够时，<b>全员话题 −20、集体掉咖</b>。这是最容易忽视的一笔。</p>
+<p class="mn-p">流量不够时，<b>全员话题 −20、集体掉咖</b>。</p>
 <div class="mn-box mn-amb">
     <b>透支</b>：账面可以是负数，透支到 <b>−2000 万</b>才会被强制清算（走进负债结局）。负数期间月结页会提示已透支多少。
 </div>
 
 <div class="mn-h" id="mn6"><span class="mn-n">06</span><span class="mn-t">剧情与档案</span><span class="mn-s">Story</span></div>
-<p class="mn-p">每一段主线剧情都<b>钉在它自己的月份</b>上，结算那个月时插入，不会提前，也不会补发。同一个月里有两段的（第 28、30 月），是连续播放。</p>
-<p class="mn-p">如果你用跳月、或者某个月直接跳过没触发，这段剧情会留在<b>「🎞️ 剧情档案」</b>里，状态标「没看到」，点「补看」可以只读回放——不结算、不加任何数值、不影响存档里的任何状态。</p>
+<p class="mn-p">主线剧情固定月份出发。<b></b></p>
+<p class="mn-p">如果你用跳月、或者某个月直接跳过没触发，这段剧情会留在<b>「🎞️ 剧情档案」</b>里，状态标「没看到」，点「补看」可以只读回放。</p>
 <div class="mn-box mn-blu">
-    剧情档案里的四种状态：<b>已看</b>（可以重看）、<b>没看到</b>（月份过了但没记录，可补看）、<b>本月</b>（这个月会触发）、<b>未到</b>（还没轮到）。
+    剧情档案里的四种状态：<b>已看</b>（可以重看）、<b>没看到</b>（月份过了但没记录，可补看）、<b>本月</b>（这个月会触发）、<b>未到</b>（还没轮到不能看）。
 </div>
 
 <div class="mn-h" id="mn7"><span class="mn-n">07</span><span class="mn-t">存档</span><span class="mn-s">Save</span></div>
@@ -528,8 +528,8 @@ window.__STORY_PASSAGES.push({
     · 每翻一页都会自动存档，忘存也能接着玩。<br>
     · 换设备或换浏览器：存档中心 →「⬇️ 导出存档文件」，新设备「⬆️ 导入存档」。
 </div>
-<p class="mn-p">存档存在浏览器本地，绑网址，不需要服务器。手机和电脑各存一份，互通要靠导出导入。</p>
-<p class="mn-p">数值门槛、结局判定、剧情月份表、哪个选项加什么，这些不在这页——在项目里的《剧情检索手册.md》。</p>
+<p class="mn-p">存档存在浏览器本地，手机和电脑不互通。</p>
+<p class="mn-p"></p>
 
 </div>
 
@@ -645,11 +645,47 @@ window.__STORY_PASSAGES.push({
     }
     .nt-start:active { transform: translateY(0); }
 
+    /* ===== 免责声明 ===== */
+    .nt-disc {
+        margin: 6px 30px 0;
+        padding: 14px 16px 15px;
+        border-radius: 12px;
+        background: rgba(122, 154, 214, .055);
+        border: 1px solid rgba(122, 154, 214, .15);
+    }
+    .nt-disc-h {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-bottom: 9px;
+        font-size: 11px;
+        font-weight: 900;
+        letter-spacing: .2em;
+        color: #7B8DA8;
+    }
+    .nt-disc-h::after {
+        content: "";
+        flex: 1 1 auto;
+        height: 1px;
+        background: linear-gradient(90deg, rgba(122, 154, 214, .26), rgba(122, 154, 214, 0));
+    }
+    .nt-disc p {
+        margin: 0 0 8px;
+        font-size: 12.5px;
+        line-height: 1.95;
+        color: #74819A;
+        text-align: left;
+    }
+    .nt-disc p:last-child { margin-bottom: 0; }
+    .nt-disc b { color: #566A87; font-weight: 800; }
+
     @media (max-width: 560px) {
         .nt-hero { padding: 22px 20px 16px; }
         .nt-body { padding: 6px 20px 2px; }
         .nt-list li { font-size: 13.2px; padding: 11px 0; }
         .nt-foot { margin: 4px 20px 0; }
+        .nt-disc { margin: 6px 20px 0; padding: 12px 13px 13px; }
+        .nt-disc p { font-size: 12px; line-height: 1.95; }
         .nt-start { margin: 16px 20px 22px; }
     }
 </style>
@@ -668,7 +704,7 @@ window.__STORY_PASSAGES.push({
         <ul class="nt-list">
             <li>
                 <span class="nt-ico">📖</span>
-                <span>免费同人衍生作品，仅供娱乐，禁止商用，请勿上升真人。</span>
+                <span>免费同人作品，仅供个人娱乐，禁止商用与转载售卖。声明见页面下方。</span>
             </li>
             <li>
                 <span class="nt-ico">🎭</span>
@@ -687,6 +723,13 @@ window.__STORY_PASSAGES.push({
                 <span>剧情尚未完结，可能存在 Bug 或数值失衡，请多包涵。</span>
             </li>
         </ul>
+    </div>
+
+    <div class="nt-disc">
+        <div class="nt-disc-h">免责声明 · DISCLAIMER</div>
+        <p><b>本作为非官方同人衍生作品。</b>与任何影视出品方、播出平台、经纪公司及演员本人均无关联，未获其授权或认可。角色姓名与人物关系原型取自相关影视剧中的角色，著作权归原权利方所有，本作仅作个人兴趣向的二次创作。</p>
+        <p>所有剧情、事件、人物言行均为虚构，与现实中任何个人、团体、事件无关；文中涉及舆论攻击、行业乱象、失德行为等负面情节，均不指涉真实主体，也不代表作者对现实事件的立场。<b>请勿将虚构内容与现实人物对应，请勿上升真人。</b></p>
+        <p>本作永久免费，无付费、打赏、广告等任何盈利渠道，不销售周边。若原权利方或相关方对本作有异议，请联系作者，将立即下架。</p>
     </div>
 
     <div class="nt-foot">
